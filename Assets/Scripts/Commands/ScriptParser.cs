@@ -59,7 +59,7 @@ namespace Commands {
                     return labelCommand;
                 case "branch":
                     ValidateCommand(cmd, args, text, 0, 0, true);
-                    BranchBlockCommand branchCommand = new();
+                    BranchBlockCommand branchCommand = new() { Text = text };
                     
                     while (index < lines.Length) {
                         index++;
