@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 36e6470160b04ed42b029d8556f838b7
+guid: a331603a2ae414e4daeba3be4dfa7edb
 TrueTypeFontImporter:
   externalObjects: {}
   serializedVersion: 4
@@ -9,7 +9,7 @@ TrueTypeFontImporter:
   characterPadding: 1
   includeFontData: 1
   fontNames:
-  - Handwriting
+  - Spicy Potatos
   fallbackFontReferences: []
   customCharacters: 
   fontRenderingMode: 0
