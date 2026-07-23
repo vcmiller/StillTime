@@ -1,0 +1,20 @@
+﻿# this is a comment
+gate(Gate1)
+goto(NodeName)
+
+label(NodeName)
+say: this is the text that is being spoken\
+it can extend to multiple lines if the previous line ends with a backslash
+branch: this is the text shown at the top
+choice(NodeName2): this is the text shown for the choice
+choice(NodeName3, Gate1): this choice is only visible if gate1 is unlocked
+end
+
+label(NodeName2)
+unlock(Gate1)
+say: Gate1 is now unlocked.
+goto(NodeName)
+
+label(NodeName3)
+say: You completed the test.
+end
