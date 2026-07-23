@@ -14,7 +14,7 @@ namespace Commands {
                 if (command == null) continue;
 
                 if (command is ChoiceCommand or EndCommand) {
-                    throw new Exception($"Invalid command type for root level: {command}");
+                    throw new ParsingException(i, lines[i], "Invalid command at root level");
                 }
                 
                 commands.Add(command);
@@ -29,7 +29,7 @@ namespace Commands {
             ReadOnlySpan<char> actualSpan = GetActualSpanFromLine(line);
             if (actualSpan.IsEmpty) return null;
                 
-            ReadCommandLine(actualSpan, out string cmd, out string text, out string[] args, 
+            ReadCommandLine(line, index, out string cmd, out string text, out string[] args, 
                 out bool isTextContinued);
 
             while (isTextContinued && index < lines.Length - 1) {
@@ -39,8 +39,8 @@ namespace Commands {
 
             switch (cmd) {
                 case "label":
-                    ValidateCommand(cmd, args, text, 1, 1, false);
-                    LabelBlockCommand labelCommand = new() { Identifier = args[0] };
+                    ValidateCommand(line, index, cmd, args, text, 1, 1, false);
+                    LabelBlockCommand labelCommand = new(index, line, args[0]);
 
                     while (index < lines.Length) {
                         index++;
@@ -49,7 +49,7 @@ namespace Commands {
                         if (labelSubCommand is EndCommand) break;
 
                         if (labelSubCommand is ChoiceCommand or LabelBlockCommand or GateCommand) {
-                            throw new Exception($"Invalid command type in label: {labelSubCommand}");
+                            throw new ParsingException(index, lines[index], "Invalid command inside label");
                         }
 
                         labelCommand.Commands.Add(labelSubCommand);
@@ -59,8 +59,8 @@ namespace Commands {
 
                     return labelCommand;
                 case "branch":
-                    ValidateCommand(cmd, args, text, 0, 0, true);
-                    BranchBlockCommand branchCommand = new() { Text = text };
+                    ValidateCommand(line, index, cmd, args, text, 0, 0, true);
+                    BranchBlockCommand branchCommand = new(index, line, text);
                     
                     while (index < lines.Length) {
                         index++;
@@ -69,7 +69,7 @@ namespace Commands {
                         if (branchSubCommand is EndCommand) break;
 
                         if (branchSubCommand is not ChoiceCommand choiceBranchSubCommand) {
-                            throw new Exception($"Invalid command type in label: {branchSubCommand}");
+                            throw new ParsingException(index, lines[index], "Invalid command in branch");
                         }
 
                         branchCommand.Choices.Add(choiceBranchSubCommand);
@@ -77,37 +77,40 @@ namespace Commands {
 
                     return branchCommand;
                 case "say":
-                    ValidateCommand(cmd, args, text, 0, 0, true);
-                    return new SayCommand { Text = text };
+                    ValidateCommand(line, index, cmd, args, text, 0, 0, true);
+                    return new SayCommand(index, line, text);
                 case "choice":
-                    ValidateCommand(cmd, args, text, 1, 100, true);
-                    ChoiceCommand choiceCommand = new() { TargetLabel = args[0], Text = text };
+                    ValidateCommand(line, index, cmd, args, text, 1, 100, true);
+
+                    List<string> requiredGates = new();
                     for (int i = 1; i < args.Length; i++) {
-                        choiceCommand.RequiredGates.Add(args[i]);
+                        requiredGates.Add(args[i]);
                     }
+
+                    ChoiceCommand choiceCommand = new(index, line, text, args[0], requiredGates);
 
                     return choiceCommand;
                 case "end":
-                    ValidateCommand(cmd, args, text, 0, 0, false);
-                    return new EndCommand();
+                    ValidateCommand(line, index, cmd, args, text, 0, 0, false);
+                    return new EndCommand(index, line);
                 case "goto":
-                    ValidateCommand(cmd, args, text, 1, 1, false);
-                    return new GotoCommand { TargetLabel = args[0] };
+                    ValidateCommand(line, index, cmd, args, text, 1, 1, false);
+                    return new GotoCommand(index, line, args[0]);
                 case "gate":
-                    ValidateCommand(cmd, args, text, 1, 1, false);
-                    return new GateCommand { Name = args[0] };
+                    ValidateCommand(line, index, cmd, args, text, 1, 1, false);
+                    return new GateCommand(index, line, args[0]);
                 case "unlock":
-                    ValidateCommand(cmd, args, text, 1, 1, false);
-                    return new UnlockCommand { Gate = args[0] };
+                    ValidateCommand(line, index, cmd, args, text, 1, 1, false);
+                    return new UnlockCommand(index, line, args[0]);
                 case "cost":
-                    ValidateCommand(cmd, args, text, 1, 1, false);
+                    ValidateCommand(line, index, cmd, args, text, 1, 1, false);
                     if (!float.TryParse(args[0], out float cost)) {
-                        throw new Exception("Failed to parse cost for cost cmd.");
+                        throw new ParsingException(index, lines[index], $"Invalid cost value {args[0]}");
                     }
 
-                    return new CostCommand { Cost = cost };
+                    return new CostCommand(index, line, cost);
                 default:
-                    throw new Exception($"Unrecognized command {cmd}");
+                    throw new ParsingException(index, lines[index], $"Unrecognized command {cmd}");
             }
         }
 
@@ -119,11 +122,17 @@ namespace Commands {
         }
 
         private static void ReadCommandLine(
-            ReadOnlySpan<char> line,
+            string line,
+            int lineNumber,
             out string cmd,
             out string text,
             out string[] args,
             out bool isTextContinued) {
+
+            ReadOnlySpan<char> actualLineSpan = GetActualSpanFromLine(line);
+            if (actualLineSpan.IsEmpty) {
+                throw new Exception("Unexpected state");
+            }
 
             int cmdEnd = 0;
             for (int i = 0; i < line.Length; i++) {
@@ -136,7 +145,7 @@ namespace Commands {
             }
 
             if (cmdEnd == 0) {
-                throw new Exception($"Failed to parse command '{line.ToString()}'");
+                throw new ParsingException(lineNumber, line, "Failed to parse command name");
             }
 
             cmd = line[..cmdEnd].ToString();
@@ -148,7 +157,7 @@ namespace Commands {
             if (remaining.StartsWith("(")) {
                 int indexOfClose = remaining.IndexOf(')');
                 if (indexOfClose < 0) {
-                    throw new Exception($"Failed to parse command '{line.ToString()}'");
+                    throw new ParsingException(lineNumber, line, "Encounter '(' without ')'");
                 }
 
                 args = remaining[1..indexOfClose].ToString().Split(',').Select(s => s.Trim()).ToArray();
@@ -158,7 +167,7 @@ namespace Commands {
             if (remaining.IsEmpty) return;
             
             if (!remaining.StartsWith(":")) {
-                throw new Exception($"Failed to parse command '{line.ToString()}'");
+                throw new ParsingException(lineNumber, line, "Expected ':' before text");
             }
 
             text = ReadText(remaining[1..], out isTextContinued);
@@ -171,17 +180,25 @@ namespace Commands {
         }
 
         private static void ValidateCommand(
-            string cmd, string[] args, string text, int minArgs, int maxArgs, bool expectText) {
+            string line,
+            int lineNumber,
+            string cmd, 
+            string[] args, 
+            string text,
+            int minArgs,
+            int maxArgs,
+            bool expectText) {
 
             int argCount = args?.Length ?? 0;
             if (argCount < minArgs || argCount > maxArgs) {
-                throw new Exception($"Unexpected arg count for cmd {cmd}: {string.Join(", ", args ?? Array.Empty<string>())}");
+                throw new ParsingException(lineNumber, line,
+                    $"Unexpected arg count for command {cmd} - expected between {minArgs} and {maxArgs}");
             }
 
             if (!expectText && text != null) {
-                throw new Exception($"Unexpected text for cmd {cmd}: {text}");
+                throw new ParsingException(lineNumber, line, $"Unexpected text for command {cmd}");
             } else if (expectText && text == null) {
-                throw new Exception($"Expected text for cmd {cmd}.");
+                throw new ParsingException(lineNumber, line, $"Missing expected text for command {cmd}");
             }
         }
     }

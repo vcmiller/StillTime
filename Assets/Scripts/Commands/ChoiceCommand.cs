@@ -2,7 +2,19 @@
 
 namespace Commands {
     public class ChoiceCommand : TextCommand {
-        public string TargetLabel { get; set; }
-        public List<string> RequiredGates { get; } = new();
+        public string TargetLabel { get; }
+        public IReadOnlyList<string> RequiredGates { get; }
+
+        public ChoiceCommand(
+            int lineNumber,
+            string line,
+            string text,
+            string targetLabel,
+            IReadOnlyList<string> requiredGates) :
+            base(lineNumber, line, text) {
+
+            TargetLabel = targetLabel;
+            RequiredGates = requiredGates;
+        }
     }
 }

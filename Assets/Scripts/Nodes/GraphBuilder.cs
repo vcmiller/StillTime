@@ -11,7 +11,7 @@ namespace Nodes {
             // Build gates and labels first.
             foreach (Command command in commands) {
                 if (command is GateCommand gateCommand) {
-                    gates.TryAdd(gateCommand.Name, new Gate { Identifier = gateCommand.Name });
+                    gates.TryAdd(gateCommand.GateName, new Gate { Identifier = gateCommand.GateName });
                 }
 
                 if (command is LabelBlockCommand labelBlockCommand) {
@@ -52,7 +52,8 @@ namespace Nodes {
                         return;
                     case GotoCommand gotoCommand:
                         if (!labelNodes.TryGetValue(gotoCommand.TargetLabel, out EmptyNode targetNode)) {
-                            throw new Exception($"Invalid goto target {gotoCommand.TargetLabel}");
+                            throw new ParsingException(gotoCommand.LineNumber, gotoCommand.Line, 
+                                "Invalid target label");
                         }
 
                         previousNode.Next = targetNode;
@@ -64,8 +65,9 @@ namespace Nodes {
                         break;
                     case UnlockCommand unlockCommand:
                         UnlockNode unlockNode = new();
-                        if (!gates.TryGetValue(unlockCommand.Gate, out Gate gate)) {
-                            throw new Exception($"Invalid gate name {unlockCommand.Gate}.");
+                        if (!gates.TryGetValue(unlockCommand.GateName, out Gate gate)) {
+                            throw new ParsingException(unlockCommand.LineNumber, unlockCommand.Line, 
+                                "Invalid gate name");
                         }
 
                         unlockNode.Gate = gate;
@@ -86,14 +88,14 @@ namespace Nodes {
             Choice choice = new() { Text = command.Text };
             foreach (string gateName in command.RequiredGates) {
                 if (!gates.TryGetValue(gateName, out Gate gate)) {
-                    throw new Exception($"Invalid gate name {gateName}.");
+                    throw new ParsingException(command.LineNumber, command.Line, "Invalid gate name");
                 }
 
                 choice.Gates.Add(gate);
             }
 
             if (!labelNodes.TryGetValue(command.TargetLabel, out EmptyNode choiceTarget)) {
-                throw new Exception($"Invalid choice target {command.TargetLabel}");
+                throw new ParsingException(command.LineNumber, command.Line, "Invalid target label");
             }
 
             choice.Next = choiceTarget;
