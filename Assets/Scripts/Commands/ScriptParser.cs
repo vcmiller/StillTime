@@ -51,7 +51,7 @@ namespace Commands {
                         if (labelSubCommand == null) continue;
                         if (labelSubCommand is EndCommand) break;
 
-                        if (labelSubCommand is ChoiceCommand or LabelBlockCommand or GateCommand) {
+                        if (labelSubCommand is ChoiceCommand or LabelBlockCommand or GateCommand or TimeoutCommand) {
                             throw new ParsingException(indexOfSubCommand, lines[indexOfSubCommand], "Invalid command inside label");
                         }
 
@@ -104,6 +104,9 @@ namespace Commands {
                 case "goto":
                     ValidateCommand(line, index, cmd, args, text, 1, 1, false);
                     return new GotoCommand(index, line, args[0]);
+                case "timeout":
+                    ValidateCommand(line, index, cmd, args, text, 1, 1, false);
+                    return new TimeoutCommand(index, line, args[0]);
                 case "gate":
                     ValidateCommand(line, index, cmd, args, text, 1, 1, false);
                     return new GateCommand(index, line, args[0]);
@@ -112,7 +115,7 @@ namespace Commands {
                     return new UnlockCommand(index, line, args[0]);
                 case "cost":
                     ValidateCommand(line, index, cmd, args, text, 1, 1, false);
-                    if (!float.TryParse(args[0], out float cost)) {
+                    if (!int.TryParse(args[0], out int cost)) {
                         throw new ParsingException(index, lines[index], $"Invalid cost value {args[0]}");
                     }
 
@@ -124,6 +127,45 @@ namespace Commands {
                     }
 
                     return new SpeakerCommand(index, line, args[0], color, text);
+                case "countdown":
+                    ValidateCommand(line, index, cmd, args, text, 1, 2, false);
+                    if (!bool.TryParse(args[0], out bool show)) {
+                        throw new ParsingException(index, lines[index], $"Invalid bool value {args[0]}");
+                    }
+
+                    int? value = null;
+                    if (args.Length > 1) {
+                        if (!int.TryParse(args[1], out int tempValue)) {
+                            throw new ParsingException(index, lines[index], $"Invalid int value {args[1]}");
+                        } else {
+                            value = tempValue;
+                        }
+                    }
+
+                    return new CountdownCommand(index, line, show, value);
+                case "bg":
+                    ValidateCommand(line, index, cmd, args, text, 1, 2, false);
+                    if (!ColorUtility.TryParseHtmlString("#" + args[0], out Color bgColor)) {
+                        throw new ParsingException(index, lines[index], $"Invalid color value {args[1]}");
+                    }
+
+                    float bgTime = 0;
+                    if (args.Length > 1 && !float.TryParse(args[1], out bgTime)) {
+                        throw new ParsingException(index, lines[index], $"Invalid float value {args[1]}");
+                    }
+
+                    return new BgCommand(index, line, bgColor, bgTime);
+                case "delay":
+                    ValidateCommand(line, index, cmd, args, text, 1, 1, false);
+
+                    if (!float.TryParse(args[0], out float delayTime)) {
+                        throw new ParsingException(index, lines[index], $"Invalid float value {args[1]}");
+                    }
+
+                    return new DelayCommand(index, line, delayTime);
+                case "clear":
+                    ValidateCommand(line, index, cmd, args, text, 0, 0, false);
+                    return new ClearCommand(index, line);
                 default:
                     throw new ParsingException(index, lines[index], $"Unrecognized command {cmd}");
             }

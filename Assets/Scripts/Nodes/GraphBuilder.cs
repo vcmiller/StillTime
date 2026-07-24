@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Commands;
 
 namespace Nodes {
     public static class GraphBuilder {
-        public static INode BuildGraph(List<Command> commands) {
+        public static INode BuildGraph(List<Command> commands, out INode nodeForTimeout) {
             Dictionary<string, EmptyNode> labels = new();
             Dictionary<string, Gate> gates = new();
             Dictionary<string, Speaker> speakers = new();
@@ -30,6 +31,29 @@ namespace Nodes {
                 if (command is not LabelBlockCommand labelBlockCommand) continue;
                 EmptyNode labelNode = labels[labelBlockCommand.Identifier];
                 ProcessLinearNodes(labelNode, labelBlockCommand.Commands, labels, gates, speakers);
+            }
+            
+            // Check for timeout command.
+            TimeoutCommand timeoutCommand = null;
+            foreach (Command command in commands) {
+                if (command is not TimeoutCommand temp) continue;
+
+                if (timeoutCommand == null) {
+                    timeoutCommand = temp;
+                } else {
+                    throw new ParsingException(command.LineNumber, command.Line, "Can only have a single timeout command");
+                }
+            }
+
+            if (timeoutCommand != null) {
+                if (labels.TryGetValue(timeoutCommand.Target, out EmptyNode label)) {
+                    nodeForTimeout = label;
+                } else {
+                    throw new ParsingException(timeoutCommand.LineNumber, timeoutCommand.Line, 
+                        "Invalid target label");
+                }
+            } else {
+                nodeForTimeout = null;
             }
 
             EmptyNode rootNode = new();
@@ -91,6 +115,26 @@ namespace Nodes {
                         unlockNode.Gate = gate;
                         previousNode.Next = unlockNode;
                         previousNode = unlockNode;
+                        break;
+                    case CountdownCommand countdownCommand:
+                        CountdownNode countdownNode = new(countdownCommand.Show, countdownCommand.Value);
+                        previousNode.Next = countdownNode;
+                        previousNode = countdownNode;
+                        break;
+                    case BgCommand bgCommand:
+                        BgNode bgNode = new(bgCommand.Color, bgCommand.Time);
+                        previousNode.Next = bgNode;
+                        previousNode = bgNode;
+                        break;
+                    case DelayCommand delayCommand:
+                        DelayNode delayNode = new(delayCommand.Time);
+                        previousNode.Next = delayNode;
+                        previousNode = delayNode;
+                        break;
+                    case ClearCommand clearCommand:
+                        ClearNode clearNode = new();
+                        previousNode.Next = clearNode;
+                        previousNode = clearNode;
                         break;
                     default:
                         continue;

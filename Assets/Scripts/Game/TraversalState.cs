@@ -1,32 +1,41 @@
 ﻿using System.Collections.Generic;
+using Nodes;
+using UnityEngine;
 
-namespace Nodes {
+namespace Game {
     public class TraversalState {
         private readonly HashSet<Gate> _unlockedGates;
         private readonly HashSet<INode> _visitedNodesCurrentRun;
         private readonly HashSet<INode> _visitedNodesOverall;
 
         public INode CurrentNode { get; }
+        
+        public INode NodeForTimeout { get; }
+        
+        public bool ShowCountdown { get; }
 
-        public float TimeBudget { get; }
+        public int? CountdownValue { get; }
 
         public bool HasReachedUnexploredNode { get; }
 
         public TraversalState(
             INode node,
-            float timeBudget,
+            INode nodeForTimeout,
+            bool showCountdown,
+            int? countdownValue,
             IEnumerable<Gate> unlockedGates,
             IEnumerable<INode> visitedNodesCurrentRun,
             IEnumerable<INode> visitedNodesOverall,
             bool hasReachedUnexploredNode) {
             CurrentNode = node;
-            TimeBudget = timeBudget;
+            NodeForTimeout = nodeForTimeout;
+            ShowCountdown = showCountdown;
+            CountdownValue = countdownValue;
             _unlockedGates = new HashSet<Gate>(unlockedGates);
             _visitedNodesCurrentRun = new HashSet<INode>(visitedNodesCurrentRun);
             _visitedNodesOverall = new HashSet<INode>(visitedNodesOverall);
             HasReachedUnexploredNode = hasReachedUnexploredNode;
 
-            _visitedNodesCurrentRun.Add(node);
             HasReachedUnexploredNode |= _visitedNodesCurrentRun.Add(node);
 
             if (node is UnlockNode unlockNode) {
@@ -57,15 +66,36 @@ namespace Nodes {
         }
 
         public TraversalState Advance(INode next) {
-            float cost = next.Cost;
-            while (next is EmptyNode { Next: not null } emptyNode) {
-                next = emptyNode.Next;
-                cost += next.Cost;
+            int? countdownValue = CountdownValue;
+
+            if (ShowCountdown && countdownValue.HasValue) {
+                int cost = CurrentNode.Cost;
+                while (next is EmptyNode { Next: not null } emptyNode) {
+                    cost += next.Cost;
+                    next = emptyNode.Next;
+                }
+
+                countdownValue = Mathf.Max(0, countdownValue.Value - cost);
+            }
+
+            bool showCountdown = ShowCountdown;
+
+            if (next is CountdownNode countdownNode) {
+                showCountdown = countdownNode.Show;
+                countdownValue = countdownNode.Value ?? countdownValue;
+            }
+
+            INode nodeForTimeout = NodeForTimeout;
+            if (countdownValue == 0 && ShowCountdown && nodeForTimeout != null) {
+                next = nodeForTimeout;
+                nodeForTimeout = null;
             }
 
             TraversalState nextState = new(
                 next,
-                TimeBudget - cost,
+                nodeForTimeout,
+                showCountdown,
+                countdownValue,
                 _unlockedGates,
                 _visitedNodesCurrentRun,
                 _visitedNodesOverall,

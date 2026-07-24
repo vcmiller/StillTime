@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using DG.Tweening;
 using Infohazard.Core;
 using Nodes;
 using TMPro;
@@ -8,11 +9,17 @@ using UnityEngine.UI;
 
 namespace Game {
     public class GameView : MonoBehaviour {
+        public GameObject _mainPanel;
         public TMP_Text _mainText;
         public Button _mainButton;
 
         public ChoiceView _choiceViewPrefab;
         public Transform _choiceViewParent;
+
+        public TMP_Text _countdownText;
+        public GameObject _countdownObject;
+
+        public Camera _camera;
 
         public PassiveTimer _showWordTimer;
         public PassiveTimer _showButtonTimer;
@@ -27,6 +34,8 @@ namespace Game {
             
             _showWordTimer.Initialize();
             _showButtonTimer.Initialize();
+            
+            _countdownObject.SetActive(false);
         }
 
         private void OnDisable() {
@@ -76,6 +85,24 @@ namespace Game {
             }
         }
 
+        public void ShowCountdown(string text) {
+            _countdownObject.SetActive(true);
+            _countdownText.text = text;
+        }
+
+        public void HideCountdown() {
+            _countdownObject.SetActive(false);
+        }
+
+        public void SetBgColor(Color color, float time) {
+            _camera.DOKill();
+            if (time == 0) {
+                _camera.backgroundColor = color;
+            } else {
+                _camera.DOColor(color, time);
+            }
+        }
+
         private void Update() {
             if (_mainText.isActiveAndEnabled &&
                 _mainText.text.Length > 0 && 
@@ -104,14 +131,15 @@ namespace Game {
             }
         }
 
-        public void Clear() {
+        public void Clear(bool hidePanel = false) {
             _choiceViewParent.DestroyChildren();
             _mainButtonAction = null;
             _mainText.text = string.Empty;
             _mainText.maxVisibleWords = 0;
-            _mainButton.gameObject.SetActive(true);
+            _mainButton.gameObject.SetActive(!hidePanel);
             _visibleButtonCount = 0;
             _currentChoices.Clear();
+            _mainPanel.SetActive(!hidePanel);
         }
     }
 }

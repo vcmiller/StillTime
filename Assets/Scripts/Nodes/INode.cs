@@ -1,6 +1,6 @@
 ﻿namespace Nodes {
     public interface INode {
-        float Cost { get; set; }
+        int Cost { get; set; }
         
         string Identifier { get; set; }
     }

@@ -1,6 +1,6 @@
 namespace Nodes {
     public abstract class Node : INode {
-        public float Cost { get; set; }
+        public int Cost { get; set; }
     
         public string Identifier { get; set; }
     }

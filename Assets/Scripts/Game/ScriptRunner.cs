@@ -9,14 +9,20 @@ namespace Game {
     public class ScriptRunner : MonoBehaviour {
         public TextAsset _script;
         public NodeRunner _nodeRunner;
-        public float _timeBudget;
 
         private void OnEnable() {
             List<Command> commands = ScriptParser.ParseScript(_script.text);
-            INode graphRoot = GraphBuilder.BuildGraph(commands);
+            INode graphRoot = GraphBuilder.BuildGraph(commands, out INode nodeForTimeout);
 
-            TraversalState state = new(graphRoot, _timeBudget, Enumerable.Empty<Gate>(), Enumerable.Empty<INode>(),
-                Enumerable.Empty<INode>(), false);
+            TraversalState state = new(
+                graphRoot,
+                nodeForTimeout,
+                false,
+                null, 
+                Enumerable.Empty<Gate>(), 
+                Enumerable.Empty<INode>(),
+                Enumerable.Empty<INode>(),
+                false);
             
             _nodeRunner.RunNode(state);
         }
