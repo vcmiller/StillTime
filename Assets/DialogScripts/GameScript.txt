@@ -17,7 +17,7 @@ gate(Sign_WantSister)
 gate(Sign_Haircut)
 
 # Unlockable names
-gate(UnlockName_Hazel)
+gate(Name_Hazel)
 
 ######################################### Introduction Scene ##############################################
 
@@ -46,7 +46,7 @@ goto(InitialChoice)
 
 label(InitialChoice)
 branch: Nobody seems to want ot break the silence.
-choice(ParentConversation_Entry): What... the fuck..."
+choice(ParentConversation_Entry): "Mom... Dad..."
 choice(Bedroom_Entry): "I need to be alone."
 choice(TryToDriveAlone_Entry): "What are you doing? We need to get out of here!"
 end
@@ -57,7 +57,7 @@ label(ParentConversation_Entry)
 say: Mom: "Oh sweetie... I don't know what to say."
 say: Dad: "It just doesn't feel real."
 say: Mom: "Come here you guys."
-say: She brings us in for a hug. My dad loses his composure. Tears I've never seen fall freely down his face.
+say: She brings us in for a hug. My dad loses his composure. Tears I've never seen before fall freely down his face.
 say: Mom: "If this is it, I'm so glad we're here together."
 branch: Dad: "I just... Everett..."
 choice(ParentConversation_ChooseTopic_Warm): "I really love you both."
@@ -100,7 +100,7 @@ say: Dad: "I remember all the boys changing together no problem when I was in sc
 say: Oh god please no, I don't want to relive this.
 say: The boys made fun of me. Called me "queer" and some worse terms.
 say: All for <i>not</i> wanting to look at naked male bodies. How does that make sense?
-unlock(SignLockerRoom)
+unlock(Sign_LockerRoom)
 say: Mom: "Everett? Can you come back to us dear?"
 say: Mom: "You know, that was around the time I started to feel you pulling away from us."
 goto(ParentConversation_Childhood_Choice)
@@ -284,6 +284,7 @@ label(ParentConversation_ComingOut)
 branch: Dad: "What it it son? You can tell us anything."
 choice(ParentConversation_ComingOut_Confident, ComingOutPrep, Sign_WantSister): "Mom, Dad, I'm trans."
 choice(ParentConversation_ComingOut_NotConfident): "I think I might be trans."
+end
 
 label(ParentConversation_ComingOut_Confident)
 say: "Yeah. My name is {ChosenName} and my pronouns are she/her."
@@ -379,7 +380,7 @@ choice(ParentConversation_ComingOut_Confident_Driving_Alone_Highway): No. I have
 choice(ParentConversation_ComingOut_Confident_Driving_Alone_SecretRoad, SecretRoad): Wait... the secret road!
 end
 
-label(ParentConversation_ComingOut_Confident_Driving_Alone_Highway):
+label(ParentConversation_ComingOut_Confident_Driving_Alone_Highway)
 say: I have to survive. I have to try.
 say: The hope I'm trying to kindle gradually fades into dread.
 say: Dad was right, surely. The highways will all be at a standstill with the amount of people trying to get out.
@@ -410,7 +411,7 @@ say: <b>INTERLUDE:</b> If you choose to keep playing, you may find that there is
 say: <b>INTERLUDE:</b> There is always still time.
 end
 
-label(ParentConversation_ComingOut_Confident_Driving_Alone_SecretRoad):
+label(ParentConversation_ComingOut_Confident_Driving_Alone_SecretRoad)
 say: That's it. The secret road. By Reed's house.
 say: Where did I even hear about that? It almost feels like a dream.
 say: But I've been there. I'm sure of it.
@@ -441,6 +442,10 @@ say: Maybe a hint of disappointment too, that I didn't escape against all odds.
 say: Nothing needs to be said. I know they understand. 
 say: I know they forgive me.
 goto(ParentConversation_ComingOut_Confident_Ending)
+
+label(ParentConversation_ComingOut_Confident_Driving_Together)
+say: WIP
+end
 
 label(ParentConversation_ComingOut_NotConfident)
 say: There's a long pause. My specialty.
@@ -474,6 +479,12 @@ say: And for a few brief moments, I do.
 unlock(ParentsNeedTime)
 end
 
+######################################### Bedroom ##############################################
+
+label(Bedroom_Entry)
+say: WIP
+end
+
 ######################################### Try to Drive Alone ##############################################
 
 label(TryToDriveAlone_Entry)
@@ -486,6 +497,26 @@ say: Mom: "I know you don't want this to be the end."
 say: Mom: "But if it's a choice between dying on the freeway while sitting in traffic, and spending my last moments in my home with the two people I love most, I know what I'm choosing."
 branch: What now then?
 choice(InitialChoice): "Yeah. You're right."
-choice(ParentConversation_ComingOut_Confident_Driving_Alone): "No. I can't. I need to go, even if it's alone."
-choice(ParentConversation_ComingOut_Confident_Driving_Together, ParentsNeedTime, SecretRoad): "Oh my god. I've got it!"
+choice(TryToDriveAlone_TryToLeave): "No. I can't. I need to go, even if it's alone."
 end
+
+label(TryToDriveAlone_TryToLeave)
+say: Dad: "Just where do you think you're going young man??"
+say: Mom: "I..."
+say: Mom: "Sweetie..."
+say: Mom: "Everett..."
+say: Mom: "I just can't support this. I can't lose you, even now."
+say: "I love you Mom. I love you Dad."
+say: Mom: "Please. Everett. Don't go."
+say: But I'm determined.
+say: Without really thinking about what I'm doing, I get up.
+say: I walk to the door. I grab the keys to the station wagon.
+say: I walk out the door, into the humid night air.
+say: I've always loved the smell of rain in the summer.
+say: I can hear crickets chirping. Dogs barking in the distance. The white noise of raindrops hitting the ground.
+say: I guess the world hasn't figured out it's about to end.
+say: Without really thinking about it, I'm in the car. Turning the key. Pressing the clutch and moving the stick into first.
+say: <b>AUTHOR'S NOTE:</b> The author does not know how to operate a stick shift.
+say: But I can't. I can't steal my parents' car. I can't leave them alone like this.
+say: And with that I'm back in the house. I guess I'm not making some daring escape to a young-adult dystopian novel.
+goto(InitialChoice)

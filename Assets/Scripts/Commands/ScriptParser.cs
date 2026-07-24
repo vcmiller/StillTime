@@ -45,13 +45,14 @@ namespace Commands {
                     while (index < lines.Length) {
                         index++;
                         if (index >= lines.Length) break;
+                        int indexOfSubCommand = index;
                         
                         Command labelSubCommand = ParseCommand(lines, ref index);
                         if (labelSubCommand == null) continue;
                         if (labelSubCommand is EndCommand) break;
 
                         if (labelSubCommand is ChoiceCommand or LabelBlockCommand or GateCommand) {
-                            throw new ParsingException(index, lines[index], "Invalid command inside label");
+                            throw new ParsingException(indexOfSubCommand, lines[indexOfSubCommand], "Invalid command inside label");
                         }
 
                         labelCommand.Commands.Add(labelSubCommand);
@@ -66,12 +67,15 @@ namespace Commands {
                     
                     while (index < lines.Length) {
                         index++;
+                        if (index >= lines.Length) break;
+                        int indexOfSubCommand = index;
+                        
                         Command branchSubCommand = ParseCommand(lines, ref index);
                         if (branchSubCommand == null) continue;
                         if (branchSubCommand is EndCommand) break;
 
                         if (branchSubCommand is not ChoiceCommand choiceBranchSubCommand) {
-                            throw new ParsingException(index, lines[index], "Invalid command in branch");
+                            throw new ParsingException(indexOfSubCommand, lines[indexOfSubCommand], "Invalid command in branch");
                         }
 
                         branchCommand.Choices.Add(choiceBranchSubCommand);

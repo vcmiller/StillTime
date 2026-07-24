@@ -33,9 +33,9 @@ namespace Game {
         }
 
         private void HandleButton() {
-            if (_mainText.maxVisibleWords < _mainText.textInfo.wordCount ||
+            if (_mainText.maxVisibleWords < _mainText.textInfo.wordCount + 1 ||
                 _visibleButtonCount < _currentChoices.Count) {
-                _mainText.maxVisibleWords = _mainText.textInfo.wordCount;
+                _mainText.maxVisibleWords = _mainText.textInfo.wordCount + 1;
                 for (int i = 0; i < _currentChoices.Count; i++) {
                     _currentChoices[i].transform.localScale = Vector3.one;
                 }
@@ -71,13 +71,13 @@ namespace Game {
         private void Update() {
             if (_mainText.isActiveAndEnabled &&
                 _mainText.text.Length > 0 && 
-                _mainText.maxVisibleWords < _mainText.textInfo.wordCount &&
+                _mainText.maxVisibleWords < _mainText.textInfo.wordCount + 1 &&
                 _showWordTimer.TryConsume()) {
                 _mainText.maxVisibleWords++;
                 _showButtonTimer.StartInterval();
             }
 
-            if (_mainText.maxVisibleWords >= _mainText.textInfo.wordCount &&
+            if (_mainText.maxVisibleWords >= _mainText.textInfo.wordCount + 1 &&
                 _currentChoices.Count > 0 &&
                 _visibleButtonCount < _currentChoices.Count) {
 
