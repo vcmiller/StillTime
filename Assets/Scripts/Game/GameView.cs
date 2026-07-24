@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Infohazard.Core;
+using Nodes;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -47,18 +48,25 @@ namespace Game {
             }
         }
 
-        public void SetSingleText(string text, Action next) {
+        private string AddSpeakerToText(string text, Speaker speaker) {
+            if (speaker == null) return text;
+
+            string color = ColorUtility.ToHtmlStringRGB(speaker.Color);
+            return $"<color=#{color}>{speaker.Text}</color>\n{text}";
+        }
+
+        public void SetSingleText(string text, Speaker speaker, Action next) {
             Clear();
 
-            _mainText.text = text;
+            _mainText.text = AddSpeakerToText(text, speaker);
             _showWordTimer.StartInterval();
             _mainButtonAction = next;
         }
 
-        public void SetChoices(string mainText, List<(string text, Action action)> choices) {
+        public void SetChoices(string mainText, Speaker speaker, List<(string text, Action action)> choices) {
             Clear();
 
-            _mainText.text = mainText;
+            _mainText.text = AddSpeakerToText(mainText, speaker);
             _showWordTimer.StartInterval();
             foreach ((string text, Action action) in choices) {
                 ChoiceView choiceView = Instantiate(_choiceViewPrefab, _choiceViewParent, false);

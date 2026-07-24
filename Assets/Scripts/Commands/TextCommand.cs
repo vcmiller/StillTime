@@ -1,8 +1,10 @@
 ﻿namespace Commands {
     public class TextCommand : Command {
+        public string Speaker { get; }
         public string Text { get; }
 
-        public TextCommand(int lineNumber, string line, string text) : base(lineNumber, line) {
+        public TextCommand(int lineNumber, string line, string speaker, string text) : base(lineNumber, line) {
+            Speaker = speaker;
             Text = text;
         }
     }

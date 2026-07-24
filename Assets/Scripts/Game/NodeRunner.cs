@@ -13,10 +13,15 @@ namespace Game {
 
                 switch (state.CurrentNode) {
                     case SingleTextNode singleTextNode:
-                        _gameView.SetSingleText(singleTextNode.Text, () => Advance(state, singleTextNode.Next));
+                        _gameView.SetSingleText(
+                            singleTextNode.Text, 
+                            singleTextNode.Speaker, 
+                            () => Advance(state, singleTextNode.Next));
                         break;
                     case BranchNode branchNode:
-                        _gameView.SetChoices(branchNode.Text,
+                        _gameView.SetChoices(
+                            branchNode.Text,
+                            branchNode.Speaker,
                             branchNode.Choices
                                       .Where(state.IsChoiceAvailable)
                                       .Select(c => (c.Text, new Action(() => Advance(state, c.Next))))

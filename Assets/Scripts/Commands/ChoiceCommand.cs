@@ -11,7 +11,7 @@ namespace Commands {
             string text,
             string targetLabel,
             IReadOnlyList<string> requiredGates) :
-            base(lineNumber, line, text) {
+            base(lineNumber, line, null, text) {
 
             TargetLabel = targetLabel;
             RequiredGates = requiredGates;

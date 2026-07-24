@@ -7,7 +7,7 @@ namespace Commands {
         public string CustomMessage { get; set; }
         
         public ParsingException(int lineNumber, string text, string customMessage = null) : 
-            base($"line {lineNumber + 1}: {customMessage ?? "Parsing error"}\nFull line: '{text.Trim()}'") {
+            base($"line {lineNumber + 1}: {customMessage ?? "Parsing error"}\nFull line: '{text?.Trim()}'") {
 
             LineNumber = lineNumber;
             Text = text;

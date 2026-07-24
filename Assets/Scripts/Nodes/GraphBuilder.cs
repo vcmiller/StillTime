@@ -7,6 +7,7 @@ namespace Nodes {
         public static INode BuildGraph(List<Command> commands) {
             Dictionary<string, EmptyNode> labels = new();
             Dictionary<string, Gate> gates = new();
+            Dictionary<string, Speaker> speakers = new();
 
             // Build gates and labels first.
             foreach (Command command in commands) {
@@ -17,33 +18,50 @@ namespace Nodes {
                 if (command is LabelBlockCommand labelBlockCommand) {
                     labels.Add(labelBlockCommand.Identifier, new EmptyNode());
                 }
+
+                if (command is SpeakerCommand speakerCommand) {
+                    speakers.Add(speakerCommand.Name,
+                        new Speaker(speakerCommand.Name, speakerCommand.Color, speakerCommand.Text));
+                }
             }
 
             // Initialize the label blocks.
             foreach (Command command in commands) {
                 if (command is not LabelBlockCommand labelBlockCommand) continue;
                 EmptyNode labelNode = labels[labelBlockCommand.Identifier];
-                ProcessLinearNodes(labelNode, labelBlockCommand.Commands, labels, gates);
+                ProcessLinearNodes(labelNode, labelBlockCommand.Commands, labels, gates, speakers);
             }
 
             EmptyNode rootNode = new();
-            ProcessLinearNodes(rootNode, commands, labels, gates);
+            ProcessLinearNodes(rootNode, commands, labels, gates, speakers);
             return rootNode;
+        }
+
+        private static Speaker GetSpeaker(TextCommand command, Dictionary<string, Speaker> speakers) {
+            if (string.IsNullOrEmpty(command.Speaker)) return null;
+            
+            if (!speakers.TryGetValue(command.Speaker, out Speaker speaker)) {
+                throw new ParsingException(command.LineNumber, command.Line, "Invalid speaker name");
+            }
+
+            return speaker;
         }
 
         private static void ProcessLinearNodes(
             ISingleNextNode previousNode,
             List<Command> commands,
             Dictionary<string, EmptyNode> labelNodes,
-            Dictionary<string, Gate> gates) {
+            Dictionary<string, Gate> gates,
+            Dictionary<string, Speaker> speakers) {
             
             foreach (Command command in commands) {
+                Speaker speaker = command is TextCommand tc ? GetSpeaker(tc, speakers) : null;
                 switch (command) {
                     case CostCommand costCommand:
                         previousNode.Cost += costCommand.Cost;
                         break;
                     case BranchBlockCommand branchBlockCommand:
-                        BranchNode branchNode = new() { Text = branchBlockCommand.Text };
+                        BranchNode branchNode = new(branchBlockCommand.Text, speaker);
                         foreach (ChoiceCommand choiceCommand in branchBlockCommand.Choices) {
                             branchNode.Choices.Add(ProcessChoice(choiceCommand, labelNodes, gates));
                         }
@@ -59,7 +77,7 @@ namespace Nodes {
                         previousNode.Next = targetNode;
                         return;
                     case SayCommand sayCommand:
-                        SingleTextNode sayNode = new() { Text = sayCommand.Text };
+                        SingleTextNode sayNode = new(sayCommand.Text, speaker);
                         previousNode.Next = sayNode;
                         previousNode = sayNode;
                         break;

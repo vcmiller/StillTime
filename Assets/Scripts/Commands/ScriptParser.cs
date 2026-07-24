@@ -62,8 +62,9 @@ namespace Commands {
 
                     return labelCommand;
                 case "branch":
-                    ValidateCommand(line, index, cmd, args, text, 0, 0, true);
-                    BranchBlockCommand branchCommand = new(index, line, text);
+                    ValidateCommand(line, index, cmd, args, text, 0, 1, true);
+                    string branchSpeaker = args?.Length > 0 ? args[0] : null;
+                    BranchBlockCommand branchCommand = new(index, line, branchSpeaker, text);
                     
                     while (index < lines.Length) {
                         index++;
@@ -83,8 +84,9 @@ namespace Commands {
 
                     return branchCommand;
                 case "say":
-                    ValidateCommand(line, index, cmd, args, text, 0, 0, true);
-                    return new SayCommand(index, line, text);
+                    ValidateCommand(line, index, cmd, args, text, 0, 1, true);
+                    string saySpeaker = args?.Length > 0 ? args[0] : null;
+                    return new SayCommand(index, line, saySpeaker, text);
                 case "choice":
                     ValidateCommand(line, index, cmd, args, text, 1, 100, true);
 
@@ -115,6 +117,13 @@ namespace Commands {
                     }
 
                     return new CostCommand(index, line, cost);
+                case "speaker":
+                    ValidateCommand(line, index, cmd, args, text, 2, 2, true);
+                    if (!ColorUtility.TryParseHtmlString("#" + args[1], out Color color)) {
+                        throw new ParsingException(index, lines[index], $"Invalid color value {args[1]}");
+                    }
+
+                    return new SpeakerCommand(index, line, args[0], color, text);
                 default:
                     throw new ParsingException(index, lines[index], $"Unrecognized command {cmd}");
             }
