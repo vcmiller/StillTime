@@ -1,5 +1,5 @@
 ﻿namespace Nodes {
-    public class Gate {
-        public string Identifier { get; set; }
+    public class Gate : Resource {
+        public Gate(string identifier) : base(identifier) { }
     }
 }

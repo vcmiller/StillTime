@@ -1,13 +1,17 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Mono.Collections.Generic;
 using Nodes;
 using UnityEngine;
+using Utility;
 
 namespace Game {
     public class TraversalState {
-        private readonly HashSet<Gate> _unlockedGates;
-        private readonly HashSet<INode> _visitedNodesCurrentRun;
-        private readonly HashSet<INode> _visitedNodesOverall;
+        public ReadOnlySet<Gate> UnlockedGates { get; }
+        
+        public ReadOnlySet<INode> VisitedNodesCurrentRun { get; }
+        
+        public ReadOnlySet<INode> VisitedNodesOverall { get; }
 
         public INode CurrentNode { get; }
         
@@ -18,6 +22,8 @@ namespace Game {
         public int? CountdownValue { get; }
         
         public bool WasSelfNodeUnexplored { get; }
+        
+        public Color BgColor { get; }
 
         public TraversalState(
             INode node,
@@ -26,21 +32,39 @@ namespace Game {
             int? countdownValue,
             IEnumerable<Gate> unlockedGates,
             IEnumerable<INode> visitedNodesCurrentRun,
-            IEnumerable<INode> visitedNodesOverall) {
+            IEnumerable<INode> visitedNodesOverall,
+            bool wasSelfNodeUnexplored,
+            Color bgColor) {
             CurrentNode = node;
             NodeForTimeout = nodeForTimeout;
             ShowCountdown = showCountdown;
             CountdownValue = countdownValue;
-            _unlockedGates = new HashSet<Gate>(unlockedGates);
-            _visitedNodesCurrentRun = new HashSet<INode>(visitedNodesCurrentRun);
-            _visitedNodesOverall = new HashSet<INode>(visitedNodesOverall);
+            UnlockedGates = new ReadOnlySet<Gate>(unlockedGates);
+            VisitedNodesCurrentRun = new ReadOnlySet<INode>(visitedNodesCurrentRun);
+            VisitedNodesOverall = new ReadOnlySet<INode>(visitedNodesOverall);
+            WasSelfNodeUnexplored = wasSelfNodeUnexplored;
+            BgColor = bgColor;
+        }
 
-            _visitedNodesCurrentRun.Add(node);
-            WasSelfNodeUnexplored = _visitedNodesOverall.Add(node);
-
-            if (node is UnlockNode unlockNode) {
-                _unlockedGates.Add(unlockNode.Gate);
-            }
+        private TraversalState(
+            INode node,
+            INode nodeForTimeout,
+            bool showCountdown,
+            int? countdownValue,
+            ReadOnlySet<Gate> unlockedGates,
+            ReadOnlySet<INode> visitedNodesCurrentRun,
+            ReadOnlySet<INode> visitedNodesOverall,
+            bool wasSelfNodeUnexplored,
+            Color bgColor) {
+            CurrentNode = node;
+            NodeForTimeout = nodeForTimeout;
+            ShowCountdown = showCountdown;
+            CountdownValue = countdownValue;
+            UnlockedGates = unlockedGates;
+            VisitedNodesCurrentRun = visitedNodesCurrentRun;
+            VisitedNodesOverall = visitedNodesOverall;
+            WasSelfNodeUnexplored = wasSelfNodeUnexplored;
+            BgColor = bgColor;
         }
 
         public IEnumerable<INode> GetAvailableNodes() {
@@ -60,47 +84,65 @@ namespace Game {
         }
 
         public bool IsChoiceAvailable(Choice choice) {
-            if (!choice.AlwaysAllow && _visitedNodesCurrentRun.Contains(choice.Next)) return false;
-            if (!choice.Gates.TrueForAll(_unlockedGates.Contains)) return false;
+            if (!choice.AlwaysAllow && VisitedNodesCurrentRun.Contains(choice.Next)) return false;
+            if (!choice.Gates.TrueForAll(UnlockedGates.Contains)) return false;
             return true;
         }
 
         public TraversalState Advance(INode next) {
             int? countdownValue = CountdownValue;
+            bool showCountdown = ShowCountdown;
+            HashSet<Gate> unlockedSet = new(UnlockedGates);
+            HashSet<INode> visitedSetCurrentRun = new(VisitedNodesCurrentRun);
+            HashSet<INode> visitedSetOverall = new(VisitedNodesOverall);
+            Color bgColor = BgColor;
 
-            if (ShowCountdown && countdownValue.HasValue) {
+            visitedSetCurrentRun.Add(next);
+
+            if (showCountdown && countdownValue.HasValue) {
                 countdownValue = Mathf.Max(0, countdownValue.Value - CurrentNode.Cost);
             }
 
-            bool showCountdown = ShowCountdown;
-
-            if (next is CountdownNode countdownNode) {
-                showCountdown = countdownNode.Show;
-                countdownValue = countdownNode.Value ?? countdownValue;
-            }
-
             INode nodeForTimeout = NodeForTimeout;
-            if (countdownValue == 0 && ShowCountdown && nodeForTimeout != null) {
+            if (countdownValue == 0 && showCountdown && nodeForTimeout != null) {
                 next = nodeForTimeout;
                 nodeForTimeout = null;
             }
 
-            IEnumerable<INode> visitedNodesCurrentRun = _visitedNodesCurrentRun;
-            
-            if (next is ResetRunNode) {
-                showCountdown = false;
-                countdownValue = null;
-                visitedNodesCurrentRun = Enumerable.Empty<INode>();
+            switch (next) {
+                case CountdownNode countdownNode:
+                    showCountdown = countdownNode.Show;
+                    countdownValue = countdownNode.Value ?? countdownValue;
+                    break;
+                case ResetRunNode:
+                    showCountdown = false;
+                    countdownValue = null;
+                    visitedSetCurrentRun.Clear();
+                    nodeForTimeout = null;
+                    break;
+                case TimeoutNode timeoutNode:
+                    nodeForTimeout = timeoutNode.TimeoutTarget;
+                    break;
+                case BgNode bgNode:
+                    bgColor = bgNode.Color;
+                    break;
+                case UnlockNode unlockNode:
+                    unlockedSet.Add(unlockNode.Gate);
+                    break;
             }
-
+            
+            bool wasSelfNodeUnexplored = visitedSetOverall.Add(next);
+            
             TraversalState nextState = new(
                 next,
                 nodeForTimeout,
                 showCountdown,
                 countdownValue,
-                _unlockedGates,
-                visitedNodesCurrentRun,
-                _visitedNodesOverall);
+                new ReadOnlySet<Gate>(unlockedSet),
+                new ReadOnlySet<INode>(visitedSetCurrentRun),
+                new ReadOnlySet<INode>(visitedSetOverall),
+                wasSelfNodeUnexplored,
+                bgColor);
 
             return nextState;
         }

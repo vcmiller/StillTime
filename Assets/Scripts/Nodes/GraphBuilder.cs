@@ -1,102 +1,97 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using Commands;
+using Game;
 
 namespace Nodes {
     public static class GraphBuilder {
-        public static INode BuildGraph(List<Command> commands, out INode nodeForTimeout) {
-            Dictionary<string, EmptyNode> labels = new();
-            Dictionary<string, Gate> gates = new();
-            Dictionary<string, Speaker> speakers = new();
+        public static GameGraph BuildGraph(List<Command> commands) {
+            Dictionary<string, Resource> resources = new();
+            Dictionary<string, INode> nodesByIdentifier = new();
 
             // Build gates and labels first.
             foreach (Command command in commands) {
                 if (command is GateCommand gateCommand) {
-                    gates.TryAdd(gateCommand.GateName, new Gate { Identifier = gateCommand.GateName });
-                }
-
-                if (command is LabelBlockCommand labelBlockCommand) {
-                    labels.Add(labelBlockCommand.Identifier, new EmptyNode());
+                    Gate gate = new(gateCommand.GateName);
+                    resources.TryAdd(gate.Identifier, gate);
                 }
 
                 if (command is SpeakerCommand speakerCommand) {
-                    speakers.Add(speakerCommand.Name,
-                        new Speaker(speakerCommand.Name, speakerCommand.Color, speakerCommand.Text));
+                    Speaker speaker = new(speakerCommand.Name, speakerCommand.Color, speakerCommand.Text);
+                    resources.Add(speakerCommand.Name, speaker);
+                }
+
+                if (command is LabelBlockCommand labelBlockCommand) {
+                    EmptyNode labelRoot = new() { FullIdentifier = labelBlockCommand.Identifier };
+                    nodesByIdentifier.Add(labelRoot.FullIdentifier, labelRoot);
                 }
             }
 
             // Initialize the label blocks.
             foreach (Command command in commands) {
                 if (command is not LabelBlockCommand labelBlockCommand) continue;
-                EmptyNode labelNode = labels[labelBlockCommand.Identifier];
-                ProcessLinearNodes(labelNode, labelBlockCommand.Commands, labels, gates, speakers);
-            }
-            
-            // Check for timeout command.
-            TimeoutCommand timeoutCommand = null;
-            foreach (Command command in commands) {
-                if (command is not TimeoutCommand temp) continue;
-
-                if (timeoutCommand == null) {
-                    timeoutCommand = temp;
-                } else {
-                    throw new ParsingException(command.LineNumber, command.Line, "Can only have a single timeout command");
-                }
-            }
-
-            if (timeoutCommand != null) {
-                if (labels.TryGetValue(timeoutCommand.Target, out EmptyNode label)) {
-                    nodeForTimeout = label;
-                } else {
-                    throw new ParsingException(timeoutCommand.LineNumber, timeoutCommand.Line, 
-                        "Invalid target label");
-                }
-            } else {
-                nodeForTimeout = null;
+                string labelId = labelBlockCommand.Identifier;
+                EmptyNode labelNode = (EmptyNode)nodesByIdentifier[labelId];
+                ProcessLinearNodes($"{labelId}:", labelNode, labelBlockCommand.Commands, nodesByIdentifier, resources);
             }
 
             EmptyNode rootNode = new();
-            ProcessLinearNodes(rootNode, commands, labels, gates, speakers);
-            return rootNode;
+            ProcessLinearNodes(string.Empty, rootNode, commands, nodesByIdentifier, resources);
+            return new GameGraph(rootNode, nodesByIdentifier, resources);
         }
 
-        private static Speaker GetSpeaker(TextCommand command, Dictionary<string, Speaker> speakers) {
+        private static Speaker GetSpeaker(TextCommand command, Dictionary<string, Resource> resources) {
             if (string.IsNullOrEmpty(command.Speaker)) return null;
-            
-            if (!speakers.TryGetValue(command.Speaker, out Speaker speaker)) {
+            return GetResource<Speaker>(command, command.Speaker, resources);
+        }
+
+        private static T GetResource<T>(Command command, string name, Dictionary<string, Resource> resources) {
+            if (!resources.TryGetValue(name, out Resource resource)) {
                 throw new ParsingException(command.LineNumber, command.Line, "Invalid speaker name");
             }
 
-            return speaker;
+            if (resource is not T typed) {
+                throw new ParsingException(command.LineNumber, command.Line,
+                    $"Resource {name} is wrong type {resource} (expected {typeof(T).Name})");
+            }
+
+            return typed;
+        }
+
+        private static INode GetNode(Command command, string name, Dictionary<string, INode> nodes) {
+            if (!nodes.TryGetValue(name, out INode targetNode)) {
+                throw new ParsingException(command.LineNumber, command.Line, "Invalid target node");
+            }
+
+            return targetNode;
         }
 
         private static void ProcessLinearNodes(
+            string identifierBase,
             ISingleNextNode previousNode,
             List<Command> commands,
-            Dictionary<string, EmptyNode> labelNodes,
-            Dictionary<string, Gate> gates,
-            Dictionary<string, Speaker> speakers) {
+            Dictionary<string, INode> nodesByIdentifier,
+            Dictionary<string, Resource> resources) {
+
+            Dictionary<string, int> countByLocalId = new();
             
             foreach (Command command in commands) {
-                Speaker speaker = command is TextCommand tc ? GetSpeaker(tc, speakers) : null;
+                if (previousNode == null) break;
+                INode createdNode = null;
+                
+                Speaker speaker = command is TextCommand tc ? GetSpeaker(tc, resources) : null;
                 switch (command) {
-                    case CostCommand costCommand:
-                        previousNode.Cost += costCommand.Cost;
-                        break;
                     case BranchBlockCommand branchBlockCommand:
                         BranchNode branchNode = new(branchBlockCommand.Text, speaker);
                         foreach (ChoiceCommand choiceCommand in branchBlockCommand.Choices) {
-                            branchNode.Choices.Add(ProcessChoice(choiceCommand, labelNodes, gates));
+                            branchNode.Choices.Add(ProcessChoice(choiceCommand, nodesByIdentifier, resources));
                         }
 
+                        createdNode = branchNode;
                         previousNode.Next = branchNode;
-                        return;
+                        previousNode = null;
+                        break;
                     case GotoCommand gotoCommand:
-                        if (!labelNodes.TryGetValue(gotoCommand.TargetLabel, out EmptyNode targetNode)) {
-                            throw new ParsingException(gotoCommand.LineNumber, gotoCommand.Line, 
-                                "Invalid target label");
-                        }
+                        INode gotoTarget = GetNode(gotoCommand, gotoCommand.TargetLabel, nodesByIdentifier);
 
                         if (gotoCommand.ResetRunState) {
                             ResetRunNode resetNode = new();
@@ -104,23 +99,31 @@ namespace Nodes {
                             previousNode = resetNode;
                         }
 
-                        previousNode.Next = targetNode;
-                        return;
+                        previousNode.Next = gotoTarget;
+                        previousNode = null;
+                        break;
+                    case CostCommand costCommand:
+                        previousNode.Cost += costCommand.Cost;
+                        break;
+                    case TimeoutCommand timeoutCommand:
+                        INode timeoutTarget = GetNode(timeoutCommand, timeoutCommand.TargetLabel, nodesByIdentifier);
+                        TimeoutNode timeoutNode = new(timeoutTarget);
+                        previousNode.Next = timeoutNode;
+                        previousNode = timeoutNode;
+                        createdNode = timeoutNode;
+                        break;
                     case SayCommand sayCommand:
                         SingleTextNode sayNode = new(sayCommand.Text, speaker);
                         previousNode.Next = sayNode;
                         previousNode = sayNode;
+                        createdNode = sayNode;
                         break;
                     case UnlockCommand unlockCommand:
-                        UnlockNode unlockNode = new();
-                        if (!gates.TryGetValue(unlockCommand.GateName, out Gate gate)) {
-                            throw new ParsingException(unlockCommand.LineNumber, unlockCommand.Line, 
-                                "Invalid gate name");
-                        }
-
-                        unlockNode.Gate = gate;
+                        Gate gate = GetResource<Gate>(unlockCommand, unlockCommand.GateName, resources);
+                        UnlockNode unlockNode = new(gate);
                         previousNode.Next = unlockNode;
                         previousNode = unlockNode;
+                        createdNode = unlockNode;
                         break;
                     case CountdownCommand countdownCommand:
                         CountdownNode countdownNode = new(countdownCommand.Show, countdownCommand.Value);
@@ -131,36 +134,52 @@ namespace Nodes {
                         BgNode bgNode = new(bgCommand.Color, bgCommand.Time);
                         previousNode.Next = bgNode;
                         previousNode = bgNode;
+                        createdNode = bgNode;
                         break;
                     case DelayCommand delayCommand:
                         DelayNode delayNode = new(delayCommand.Time);
                         previousNode.Next = delayNode;
                         previousNode = delayNode;
+                        createdNode = delayNode;
                         break;
                     case ClearCommand:
                         ClearNode clearNode = new();
                         previousNode.Next = clearNode;
                         previousNode = clearNode;
+                        createdNode = clearNode;
                         break;
                     default:
                         continue;
+                }
+
+                if (createdNode != null) {
+                    string localId = createdNode.GetSelfIdentifier();
+                    countByLocalId.TryGetValue(localId, out int count);
+                    string globalId = $"{identifierBase}{localId}{count}";
+                    createdNode.FullIdentifier = globalId;
+                    countByLocalId[localId] = count + 1;
+                    nodesByIdentifier.Add(globalId, createdNode);
                 }
             }
         }
 
         private static Choice ProcessChoice(
             ChoiceCommand command,
-            Dictionary<string, EmptyNode> labelNodes,
-            Dictionary<string, Gate> gates) {
+            Dictionary<string, INode> nodesByIdentifier,
+            Dictionary<string, Resource> resources) {
 
-            if (!labelNodes.TryGetValue(command.TargetLabel, out EmptyNode choiceTarget)) {
+            if (!nodesByIdentifier.TryGetValue(command.TargetLabel, out INode choiceTarget)) {
                 throw new ParsingException(command.LineNumber, command.Line, "Invalid target label");
             }
 
             Choice choice = new(command.Text, choiceTarget, command.AlwaysAllow);
             foreach (string gateName in command.RequiredGates) {
-                if (!gates.TryGetValue(gateName, out Gate gate)) {
+                if (!resources.TryGetValue(gateName, out Resource resource)) {
                     throw new ParsingException(command.LineNumber, command.Line, "Invalid gate name");
+                }
+
+                if (resource is not Gate gate) {
+                    throw new ParsingException(command.LineNumber, command.Line, $"Resource {gateName} is wrong type {resource}");
                 }
 
                 choice.Gates.Add(gate);

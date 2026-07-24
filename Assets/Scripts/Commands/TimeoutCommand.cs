@@ -1,9 +1,9 @@
 ﻿namespace Commands {
     public class TimeoutCommand : Command {
-        public string Target { get; }
+        public string TargetLabel { get; }
         
-        public TimeoutCommand(int lineNumber, string line, string target) : base(lineNumber, line) {
-            Target = target;
+        public TimeoutCommand(int lineNumber, string line, string targetLabel) : base(lineNumber, line) {
+            TargetLabel = targetLabel;
         }
     }
 }

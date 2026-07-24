@@ -1,13 +1,11 @@
 ﻿using UnityEngine;
 
 namespace Nodes {
-    public class Speaker {
-        public string Name { get; }
+    public class Speaker : Resource {
         public Color Color { get; }
         public string Text { get; }
 
-        public Speaker(string name, Color color, string text) {
-            Name = name;
+        public Speaker(string identifier, Color color, string text) : base(identifier) {
             Color = color;
             Text = text;
         }

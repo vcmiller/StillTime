@@ -8,22 +8,18 @@ using UnityEngine;
 namespace Game {
     public class ScriptRunner : MonoBehaviour {
         public TextAsset _script;
-        public NodeRunner _nodeRunner;
+        public GameRunner _gameRunner;
 
         private void OnEnable() {
             List<Command> commands = ScriptParser.ParseScript(_script.text);
-            INode graphRoot = GraphBuilder.BuildGraph(commands, out INode nodeForTimeout);
+            GameGraph graph = GraphBuilder.BuildGraph(commands);
 
-            TraversalState state = new(
-                graphRoot,
-                nodeForTimeout,
-                false,
-                null, 
-                Enumerable.Empty<Gate>(), 
-                Enumerable.Empty<INode>(),
-                Enumerable.Empty<INode>());
+            _gameRunner.LoadGameGraph(graph);
+            _gameRunner.StartNewGame();
+        }
+
+        private void OnDisable() {
             
-            _nodeRunner.RunNode(state);
         }
     }
 }

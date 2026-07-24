@@ -2,6 +2,8 @@
     public interface INode {
         int Cost { get; set; }
         
-        string Identifier { get; set; }
+        string FullIdentifier { get; set; }
+
+        public string GetSelfIdentifier();
     }
 }
