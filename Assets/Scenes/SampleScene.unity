@@ -631,7 +631,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b7ef2f40377b4e7cbeb90c3d1a5fa399, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Game.ScriptRunner
-  _script: {fileID: 4900000, guid: d191205ae38c4b299d56824171a19fc9, type: 3}
+  _script: {fileID: 4900000, guid: f654f7386bc14986825505033820a7a2, type: 3}
   _nodeRunner: {fileID: 648243592}
   _timeBudget: 60
 --- !u!4 &648243594

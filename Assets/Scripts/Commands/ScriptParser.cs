@@ -44,6 +44,8 @@ namespace Commands {
 
                     while (index < lines.Length) {
                         index++;
+                        if (index >= lines.Length) break;
+                        
                         Command labelSubCommand = ParseCommand(lines, ref index);
                         if (labelSubCommand == null) continue;
                         if (labelSubCommand is EndCommand) break;

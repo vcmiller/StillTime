@@ -1,0 +1,491 @@
+﻿goto(Intro)
+
+######################################### Gate Declarations ##############################################
+
+# Story gates
+gate(PartialRealization)
+gate(FullRealization)
+gate(BadFriendExperience)
+gate(MissBFF)
+gate(ParentsNeedTime)
+gate(ComingOutPrep)
+gate(SecretRoad)
+
+# Sign gates
+gate(Sign_LockerRoom)
+gate(Sign_WantSister)
+gate(Sign_Haircut)
+
+# Unlockable names
+gate(UnlockName_Hazel)
+
+######################################### Introduction Scene ##############################################
+
+label(Intro)
+say: <b>STILLTIME</b>
+say: By Val Miller
+goto(RunStart)
+
+label(RunStart)
+say: I've seen it a hundred times in my dreams. How could anyone not?
+say: The world flashes white. My life burns away in an atomic fireball.
+say: I always have to ask myself if I'm dreaming, or if this time it's finally real.
+say: But that's the thing about dreams. As soon as you ask yourself the question, you kind of know the answer.
+say: It's a warm, rainy July evening. I'm in bed, trying to fall asleep.
+say: My phone blasts an alarm. I didn't realize the thing could make that loud of a noise.
+say: With a shriek, Loris jumps from her perch in my windowsill and hides under the bed.
+say: My eyes are too glazed over to read my phone screen, but I hear my parents getting up.
+say: I head to the living room.
+say: The TV is already on. I can't tell the channel in my half-awake state, but it probably doesn't matter.
+say: Every news station is showing the same thing.
+say: The asshole-in-chief is giving a speech from a bunker, ranting about the fire and fury that will rain down on our enemies.
+say: The view changes to a map showing every major city in the US. Each one has a timer next to it, counting down.
+say: I find us, nothing more than a little dot on a screen. With a number next to it. 00:56:31.
+say: My parents don't say anything. I think I see a tear in my dad's eye.
+goto(InitialChoice)
+
+label(InitialChoice)
+branch: Nobody seems to want ot break the silence.
+choice(ParentConversation_Entry): What... the fuck..."
+choice(Bedroom_Entry): "I need to be alone."
+choice(TryToDriveAlone_Entry): "What are you doing? We need to get out of here!"
+end
+
+######################################### Parent Conversation ##############################################
+
+label(ParentConversation_Entry)
+say: Mom: "Oh sweetie... I don't know what to say."
+say: Dad: "It just doesn't feel real."
+say: Mom: "Come here you guys."
+say: She brings us in for a hug. My dad loses his composure. Tears I've never seen fall freely down his face.
+say: Mom: "If this is it, I'm so glad we're here together."
+branch: Dad: "I just... Everett..."
+choice(ParentConversation_ChooseTopic_Warm): "I really love you both."
+choice(ParentConversation_ChooseTopic_Angry): "It's not fair!"
+choice(ParentConversation_ChooseTopic): "..."
+choice(ParentConversation_ComingOut, FullRealization): "I need to tell you both something. This might be kind of a shock."
+end
+
+label(ParentConversation_ChooseTopic_Warm)
+say: Mom: "We love you too sweetie. Until the end of the world."
+say: Dad: "So, so much."
+goto(ParentConversation_ChooseTopic)
+
+label(ParentConversation_ChooseTopic_Angry)
+say: Mom: "I know sweetie. I know."
+say: Dad: "You barely got to grow up. The pandemic stole so much time, and now the world is being taken from you."
+goto(ParentConversation_ChooseTopic)
+
+label(ParentConversation_ChooseTopic)
+say: Mom: "Would you maybe... just talk to us a bit?"
+say: Mom: "It feels like you've been so disconnected lately."
+say: Mom: "I worry about you. Sometimes I feel like I'm losing my son."
+goto(ParentConversation_Childhood_Choice)
+
+label(ParentConversation_Childhood_Choice)
+branch: Mom: "I just keep wondering what was going on in your head."
+choice(InitialChoice): "I'm sorry! I just don't know how to talk about this."
+choice(ParentConversation_Childhood_WellBehaved): "I only ever know how to follow the rules."
+choice(ParentConversation_Childhood_Lonely): "I just felt so lonely."
+choice(ParentConversation_Childhood_FitIn): "I tried so hard to fit in."
+choice(ParentConversation_Alienation, BadFriendExperience): "Even now, I feel like I don't belong."
+choice(ParentConversation_ComingOut, FullRealization): "Actually, I think I know. This might be kind of a shock."
+end
+
+label(ParentConversation_Childhood_WellBehaved)
+say: Dad: "You were such a well-behaved kid. We never had to worry about you getting into trouble."
+say: Mom: "Well, there was the time with the gym teacher."
+say: Mom: "I couldn't believe you almost failed gym in middle school. And just for refusing to use the locker room."
+say: Dad: "I remember all the boys changing together no problem when I was in school."
+say: Oh god please no, I don't want to relive this.
+say: The boys made fun of me. Called me "queer" and some worse terms.
+say: All for <i>not</i> wanting to look at naked male bodies. How does that make sense?
+unlock(SignLockerRoom)
+say: Mom: "Everett? Can you come back to us dear?"
+say: Mom: "You know, that was around the time I started to feel you pulling away from us."
+goto(ParentConversation_Childhood_Choice)
+
+label(ParentConversation_Childhood_Lonely)
+say: Dad: "You made friends pretty well I thought."
+say: Mom: "You and Katie were always so close. I was so sad when you stopped talking to her."
+say: Katie Marshall. I've been trying to forget that name. Thinking about her is just too painful.
+unlock(MissBFF)
+say: Dad: "Wait, I thought they were dating??"
+say: Mom: "I don't think so dear. She always seemed like more of a sister to him."
+say: Mom: "You always did talk about wanting a sister as a kid. Do you remember that?"
+say: "Yes"
+say: Mom: "Do you ever think about that still?"
+say: "I guess"
+say: "Did you ever... consider having another kid."
+say: Dad: "Your mother doesn't like talking about this honey, I'm sorry. I know you wanted a sibling."
+say: Mom: "No, it's... it's ok. If I can't tell him now, then when?"
+say: Mom: "You probably don't remember this. You were barely three. But I was pregnant again."
+say: Mom: "We were going to have another kid. A baby girl. You were so excited to be a brother."
+say: Dad: "You were struggling with language though. You kept saying you were going to be a sister for some reason."
+say: Mom: "It... it just wasn't meant to be, I guess. I felt like..."
+say: She's struggling to keep it together. Dad puts his hand on her shoulder.
+say: Mom: "I felt like I had failed. Failed as a wife and a mother."
+say: Dad: "You know that's not true honey."
+say: Mom: "The doctor said again and again, that these things can happen to anyone. That it wasn't my fault."
+say: Mom: "But I think a part of me never believed that."
+say: Mom: "If not for you, Everett, I just... I don't know what I would do..."
+say: "What was her name?"
+say: Dad: "Please sweetie, this is a really hard topic for your mom to talk about."
+say: Mom: "Stop it, I'm serious. She deserves to know."
+say: Mom: "Her name was hazel. She was going to be the most kind and beautiful daughter ever born."
+say: Hazel. My sister.
+say: Why do I feel such a sense of loss?
+say: It's not like I ever even met her.
+unlock(Name_Hazel)
+unlock(Sign_WantSister)
+goto(ParentConversation_Childhood_Choice)
+
+label(ParentConversation_Childhood_FitIn)
+say: Mom: "You did! You kept talking about wishing you could be like other kids."
+say: Dad: "I was never sure just quite what you meant. I always thought you fit in pretty well."
+say: Dad: "You always wore the same clothes as the other boys."
+say: Mom: "I remember at the hair salon you always got so nervous and never knew what you wanted."
+say: Mom: "You always just said 'just make me look normal' or something."
+say: Mom: "You tried so hard to look just like the other boys. And honestly, you did!"
+say: Mom: "I never really understood why you thought you didn't."
+say: I remember the haircuts. I always thought I looked so ugly. I really did look like every other boy.
+say: And I <i>hated</i> it. But what choice did I have?
+say: I remember looking in the mirror and crying at my short hair and jeans and t-shirt.
+unlock(Sign_Haircut)
+goto(ParentConversation_Childhood_Choice)
+
+label(ParentConversation_Alienation)
+say: "I don't really feel connected to anyone."
+say: Mom: "What about Reed and the rest of the gang?"
+say: "Sometimes it just feels <i>wrong</i> hanging out with them. They can be so crass. And the way they talk about women..."
+say: Dad: "Well look who's a feminist all of a sudden."
+say: Dad: "Listen, son. Boys will say a lot of stupid shit."
+say: Dad: "But those are your bros! I wish I could have had friends like yours as a kid."
+say: Mom: "Much as I hate to say it, I think your dad is right."
+say: Mom: "You might have your squabbles, but they've stuck by you all this time."
+say: Mom: "The world's about ot end. Maybe give them a call?"
+say: "NO!"
+say: Mom: "See this is what I'm talking about! When someone cares about you, you seem to just shut down."
+say: "Maybe... I've just been thinking about some things."
+goto(ParentConversation_Alienation_Choice)
+
+label(ParentConversation_Alienation_Choice)
+branch: Mom: "Please just tell us what's bothering you."
+choice(InitialChoice): "I can't."
+choice(ParentConversation_Alienation_Choice_Haircut, Sign_Haircut): "I've never been happy with how I look."
+choice(ParentConversation_Alienation_Choice_BFF, MissBFF): "I feel so much closer to female friends."
+choice(ParentConversation_Alienation_Choice_LockerRoom, Sign_LockerRoom): "I'm so uncomfortable around men."
+choice(ParentConversation_Alienation_Choice_Sister, Sign_WantSister): "Why do I specifically wish I had a sister?"
+choice(ParentConversation_Realization): "What if... I'm not supposed to be a boy at all?"
+end
+
+label(ParentConversation_Alienation_Choice_Haircut)
+say: Mom: "Everyone is uncomfortable with how they look sometimes."
+say: Mom: "Just be glad you're not a woman!"
+say: She's joking, but I feel a pinching in my gut.
+say: "Yeah, I guess."
+goto(ParentConversation_Alienation_Choice)
+
+label(ParentConversation_Alienation_Choice_BFF)
+say: Dad: "That just means you're a ladies' man! I know it's hard for you, but women like confidence in a man."
+say: He says, drawing on his infinite knowledge of the mind of every woman alive. Mom rolls her eyes almost imperceptibly.
+say: "I guess I don't really know how to separate my feelings of friendship and attraction."
+say: Mom: "You know, Allison said the same thing. Maybe you're a lesbian in spirit."
+say: She giggles to herself. Mom likes to brag about having one lesbian friend.
+say: Yeah not sure how to respond to that one.
+goto(ParentConversation_Alienation_Choice)
+
+label(ParentConversation_Alienation_Choice_LockerRoom)
+say: Mom: "Well it seems perfectly reasonable to me."
+say: Dad: "It's just a matter of getting used to it. I used to be so squeamish near male bodies too."
+say: Dad: "Didn't want to be called gay or anything. That was more of an insult in those days."
+say: Dad: "But it's perfectly normal to be around men. You'll need to figure this out sooner or..."
+say: He stops. I guess he forgot for a second that we're all going to be vaporized within the hour.
+say: My mom was distracted too. It seems like they're happy to be talking to me.
+say: Even if their advice is a bit crap.
+goto(ParentConversation_Alienation_Choice)
+
+label(ParentConversation_Alienation_Choice_Sister)
+say: Dad: "Sounds like you just want someone to boss around!"
+say: Mom: "Spoken like someone who's never had a little sister. I think she would be doing the bossing. Girlbossing!"
+say: I guess my mom learned a new word.
+goto(ParentConversation_Alienation_Choice)
+
+label(ParentConversation_Realization)
+say: A few minutes pass in silence. I didn't really <i>intend</i> to say that. It just kinda slipped out.
+say: Ok, I just need to say I misspoke.
+say: Obviously that's stupid. Nobody is "supposed" to be a girl.
+say: I just need to make up an excuse for why I said that.
+say: Come on brain, just think of something!
+say: Like I know trans people exist but don't they know from a young age?
+say: Why did I just think that? Obviously I'm not trans.
+say: I'm not.
+say: I'm not.
+say: I'm a man.
+say: An ugly man.
+say: A lonely man.
+say: A man who can't make friends.
+say: A man who nobody would want to date.
+say: Why even think about this? It's too late anyway.
+say: This man is going to be a quickly dispersing cloud of atoms soon.
+say: Just say it.
+say: Say I'm a man.
+say: Say it now.
+say: It's getting weird. Just say it.
+say: I'm a man.
+say: Ok I'm going to say it.
+say: I'll say I'm a man and everything will be fine.
+say: Well not the nuclear armageddon part. But the awkward silence will be fine.
+branch: Ok, for real this time.
+choice(ParentConversation_Realization_BackOut): "I'm a man."
+choice(ParentConversation_Realization_BackOut): "I wish I was a real man."
+choice(ParentConversation_Realization_BackOut): "I'm Everett."
+choice(ParentConversation_Realization_BackOut): "Sorry I misspoke."
+choice(ParentConversation_Realization_Accept): <sub>"I think I wish I was a girl."</sub>
+end
+
+label(ParentConversation_Realization_BackOut)
+say: Mom: "Oh. That's great honey."
+say: Mom: "I'm... glad we could talk a bit."
+goto(InitialChoice)
+
+label(ParentConversation_Realization_Accept)
+say: Mom: "What was that sweetie? I didn't hear you."
+say: Mom: "It kind of sounded like you said you wanted to be a girl."
+say: "Yeah. I don't know how to explain it. But I think I do."
+say: Another awkward silence that lasts an eternity.
+say: Mom: "...I'm not really sure what to make of this honey."
+say: Dad is silent. Trapped in his own head.
+say: Mom: "Of all the things you could have said, I did not expect that."
+say: Mom: "Of course we love you no matter what."
+say: Mom: "I just don't know what we can do about that now."
+say: "Yeah. I don't know. I'm sorry."
+say: I should be panicking. I'm about to die and I just realized how meaningless my life as a man has been.
+say: And I had to turn our last moments into an awkward... what? Coming out? Coming out as what?
+say: But all I can think is:
+say: I don't care.
+say: I don't care if I made them upset.
+say: I don't care if my life has been meaningless.
+say: I don't care if the world is ending.
+say: I just want to be a girl.
+say: We continue sitting there in silence.
+say: Mom turns off the TV. No real point in watching it at this point.
+say: I want to be a girl.
+say: Why couldn't I have been a girl?
+say: Why am I like this?
+say: What's wrong with me?
+say: Why do I want to be a girl if I'm not trans?
+say: Well, some things I guess I'll never know.
+say: It's too late to do anything.
+unlock(PartialRealization)
+end
+
+label(ParentConversation_ComingOut)
+branch: Dad: "What it it son? You can tell us anything."
+choice(ParentConversation_ComingOut_Confident, ComingOutPrep, Sign_WantSister): "Mom, Dad, I'm trans."
+choice(ParentConversation_ComingOut_NotConfident): "I think I might be trans."
+
+label(ParentConversation_ComingOut_Confident)
+say: "Yeah. My name is {ChosenName} and my pronouns are she/her."
+say: "And I'm not your son, I'm your daughter."
+say: "I realize this might come as a shock. But I need to be who I am before it's too late."
+say: The usual silence. But it feels different.
+say: Mom and Dad don't look uncomfortable. Their faces show a hint of understanding.
+say: They're both struggling to hold it together.
+say: "I know this might cause you some grief. I think that's normal. But please know I'm still your kid."
+say: Mom: "I just... this is... just so much."
+say: Mom: "But... I don't think... don't think I'm grieving."
+say: Mom: "I lost my daughter. I was so scared for so many years of losing my son."
+say: Mom: "But I didn't. I had a daughter all along. A perfect, wonderful daughter."
+say: Mom: "And I'm so glad I got to meet her before the end."
+say: Now it's my turn to break down crying.
+say: Dad: "Oh sweetie, I'm so happy you're able to be open with us."
+say: Dad: "I wish we had more time to get to know you, but I truly am thankful, like your mom said."
+say: He pulls us both in for a group hug.
+branch: I could stay like this forever. For the rest of my life.
+choice(ParentConversation_ComingOut_Confident_Ending): Stay like this forever.
+choice(ParentConversation_ComingOut_Confident_Choice): Actually, there's something else.
+end
+
+label(ParentConversation_ComingOut_Confident_Ending)
+say: I'm not sure how long it lasts. Time just stands still.
+say: I've been here hugging my parents for hours. Days. Years. A fraction of a second.
+say: It could never be enough time.
+say: But in a weird way, everything feels right.
+say: Of course I should be upset.
+say: People will say that being trans is trying to be someone you aren't.
+say: But I just... don't feel that way.
+say: I'm so... happy?
+say: For the first time in my life, things kinda make sense.
+say: The only thing I tried to be, that I'm not, was a man.
+say: Of course it felt impossible.
+say: And now, anything feels possible.
+say: I know, that thought doesn't make a lot of sense given the circumstances.
+say: But I just have this feeling of pure hope.
+say: Hope that I can be a person who I like.
+say: Hope that I can be a person who I'm proud of.
+say: Hope that my life can be shaped by what I want, not what's expected of me.
+say: Hope that I have a future.
+say: And for a few brief moments, I do.
+unlock(ParentsNeedTime)
+end
+
+label(ParentConversation_ComingOut_Confident_Choice)
+branch: Mom: "It seems like something else is on your mind Ever... I mean {ChosenName}! I'm sorry!"
+choice(Bedroom_Entry): "I need to be alone for a bit."
+choice(ParentConversation_ComingOut_Confident_Driving): "We need to get out of here!"
+choice(ParentConversation_ComingOut_Confident_Ending): "Never mind. It's not important."
+end
+
+label(ParentConversation_ComingOut_Confident_Driving)
+say: Dad: "Of course we've thought about that."
+say: Dad: "The highways are all backed up. Bumper to bumper. Nobody's moving. We'd never make it."
+say: "But we could try! I can't just sit here waiting for the end."
+say: "Especially now. I feel like I have something to live for."
+say: "I need to be a girl. I can't die because I haven't gotten to be a girl yet."
+say: Mom: "I know, sweetie, I know. It's not enough time."
+say: Mom: "I would have loved to get to know you as you are."
+say: Mom: "But if it's a choice between dying on the freeway while sitting in traffic, and spending my last moments in my home with the two people I love most, I know what I'm choosing."
+branch: What now then?
+choice(ParentConversation_ComingOut_Confident_Ending): "Yeah. You're right."
+choice(ParentConversation_ComingOut_Confident_Driving_Alone): "No. I can't. I need to go, even if it's alone."
+choice(ParentConversation_ComingOut_Confident_Driving_Together, ParentsNeedTime, SecretRoad): "Oh my god. I've got it!"
+end
+
+label(ParentConversation_ComingOut_Confident_Driving_Alone)
+say: Dad: "Just where do you think you're going young lady??"
+say: I guess he just couldn't resist. Glad he got to say it once.
+say: Mom: "I..."
+say: Mom: "Sweetie..."
+say: Mom: "{ChosenName}..."
+say: Mom: "Every fiber in my body is telling me to stop you. To do whatever I can to get you to stay here."
+say: Mom: "But, I think you've just taught us that we couldn't hope to know what's right for you better than you do."
+say: Mom: "I want us to be together. More than anything right now. But if you need to do this, I won't try to stop you."
+say: "I love you Mom. I love you Dad."
+say: Mom: "We love you {ChosenName}."
+say: Dad: "More than anything."
+say: Mom: "Forever and always."
+say: My head swims.
+say: Without really thinking about what I'm doing, I get up.
+say: I walk to the door. I grab the keys to the station wagon.
+say: I walk out the door, into the humid night air.
+say: I've always loved the smell of rain in the summer.
+say: I can hear crickets chirping. Dogs barking in the distance. The white noise of raindrops hitting the ground.
+say: I guess the world hasn't figured out it's about to end.
+say: Without really thinking about it, I'm in the car. Driving down city streets towards the highway.
+branch: What in the actual fuck am I doing?
+choice(ParentConversation_ComingOut_Confident_Driving_Alone_GoBack): This is wrong. I have to go back.
+choice(ParentConversation_ComingOut_Confident_Driving_Alone_Highway): No. I have to keep going.
+choice(ParentConversation_ComingOut_Confident_Driving_Alone_SecretRoad, SecretRoad): Wait... the secret road!
+end
+
+label(ParentConversation_ComingOut_Confident_Driving_Alone_Highway):
+say: I have to survive. I have to try.
+say: The hope I'm trying to kindle gradually fades into dread.
+say: Dad was right, surely. The highways will all be at a standstill with the amount of people trying to get out.
+say: No. I have to have hope. I will force myself to have hope.
+say: Then I see the line of cars, and the dread is replaced by despair.
+say: I'm at the top of a small hill, about a mile from the nearest freeway entrance.
+say: Every intersection I can see is blocked with cars. And they're all stationary.
+say: The cacophony of car horns, alarms, screaming baby boomers, and panicking pets puts me over the edge.
+say: I think I can hear gunfire. So glad half my country fought for us to be able to murder each other before we get a chance to all die together.
+say: Even if an intercontinental ballistic missile wasn't hurtling towards us at hypersonic speed, this would feel like the apocalypse.
+say: I won't escape on the freeway. I'm not even going to get <i>onto</i> the freeway.
+say: I'm going to die and there's not a fucking thing I can do.
+say: Oh god.
+say: Oh fuck.
+say: Is this the end?
+say: This can't be it.
+say: I can't do this.
+say: I have to be ok.
+say: I'm not ok.
+say: I want my mom.
+say: I want Katie.
+say: I want my sister.
+say: I'm all alone.
+say: <b>INTERLUDE:</b> Hey there. So, this is the darkest ending, by far, of my little text adventure.
+say: <b>INTERLUDE:</b> I want you to know, whoever you are, that it's going to be ok. Our world is not ending.
+say: <b>INTERLUDE:</b> We need to survive, and to take care of one another.
+say: <b>INTERLUDE:</b> If you choose to keep playing, you may find that there is hope even in the darkest circumstances.
+say: <b>INTERLUDE:</b> There is always still time.
+end
+
+label(ParentConversation_ComingOut_Confident_Driving_Alone_SecretRoad):
+say: That's it. The secret road. By Reed's house.
+say: Where did I even hear about that? It almost feels like a dream.
+say: But I've been there. I'm sure of it.
+say: I floor the gas pedal. My body is pumped full of adrenaline.
+say: I'm not running on empty hope anymore. Now I have a plan.
+say: I'm going to survive this.
+say: My mind goes to my parents. Holding each other in the living room.
+say: Maybe Loris is there too, enjoying some scratches.
+say: Not alone. Together until the end. But not whole.
+say: Their daughter is running away and never coming back.
+say: I banish the thought from my mind. They made their choice and I made mine.
+say: I'm going to survive this.
+end
+
+label(ParentConversation_ComingOut_Confident_Driving_Alone_GoBack)
+say: Oh my god. I've wasted so much time. I need to get back.
+say: What have I done? I've been so selfish.
+say: Please just let there still be time. I just need to see them again.
+say: I drive as fast as the old car can manage. I doubt any cops are out issuing speeding tickets right now.
+say: I'm painfully aware of every second passing.
+say: Terrified the end will come before I make it back.
+say: I slam the car into the garden wall as I try to pull into the driveway.
+say: Any other time, Dad would be <i>pissed</i>. Well, maybe I'll take this little oopsy to my metaphorical grave.
+say: I run into the house, practically collapsing through the door.
+say: Mom and Dad are still there, right where I left them.
+say: They look up. I see a glimmer of relief on Mom's face.
+say: Maybe a hint of disappointment too, that I didn't escape against all odds.
+say: Nothing needs to be said. I know they understand. 
+say: I know they forgive me.
+goto(ParentConversation_ComingOut_Confident_Ending)
+
+label(ParentConversation_ComingOut_NotConfident)
+say: There's a long pause. My specialty.
+say: Dad: "As in transgender? Are you sure?"
+say: No Dad I'm transatlantic, I identify as a fucking airplane.
+say: At least he didn't make a "Trans-parent" joke.
+say: Mom: "I just... this is all so sudden Everett."
+say: Mom: "We have so little time left. I just don't want to lose my son."
+say: Dad: "What does it matter? If he wants to be trans for the last moments of his life I don't have a problem with it."
+say: Mom: "But why? I don't see how this can cause us anything but pain."
+say: Mom: "If I had more time to process it, I don't know, maybe I'd be ok."
+say: Does anyone actually care how I feel?
+say: Mom: "I'm sorry. I just can't lose my son right now. And you will always be my son."
+say: Mom: "I need us to be whole, to be together, to be content with each other and who we are right now."
+say: Because of course I should be upset.
+say: Of course I should be hating myself because everyone knows trans people hate themselves. Ourselves.
+say: Because being trans is trying to be someone you aren't.
+say: But I just... don't feel that way.
+say: I'm so... happy?
+say: For the first time in my life, things kinda make sense.
+say: The only thing I tried to be, that I'm not, was a man.
+say: Of course it felt impossible.
+say: And now, anything feels possible.
+say: I know, that thought doesn't make a lot of sense given the circumstances.
+say: But I just have this feeling of pure hope.
+say: Hope that I can be a person who I like.
+say: Hope that I can be a person who I'm proud of.
+say: Hope that my life can be shaped by what I want, not what's expected of me.
+say: Hope that I have a future.
+say: And for a few brief moments, I do.
+unlock(ParentsNeedTime)
+end
+
+######################################### Try to Drive Alone ##############################################
+
+label(TryToDriveAlone_Entry)
+say: Dad: "Of course we've thought about that."
+say: Dad: "The highways are all backed up. Bumper to bumper. Nobody's moving. We'd never make it."
+say: "But we could try! I can't just sit here waiting for the end."
+say: Mom: "I know this is hard for you to hear."
+say: Mom: "This may be the hardest thing possible for a mother to tell her son."
+say: Mom: "I know you don't want this to be the end."
+say: Mom: "But if it's a choice between dying on the freeway while sitting in traffic, and spending my last moments in my home with the two people I love most, I know what I'm choosing."
+branch: What now then?
+choice(InitialChoice): "Yeah. You're right."
+choice(ParentConversation_ComingOut_Confident_Driving_Alone): "No. I can't. I need to go, even if it's alone."
+choice(ParentConversation_ComingOut_Confident_Driving_Together, ParentsNeedTime, SecretRoad): "Oh my god. I've got it!"
+end
