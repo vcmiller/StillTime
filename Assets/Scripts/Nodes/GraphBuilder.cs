@@ -98,6 +98,12 @@ namespace Nodes {
                                 "Invalid target label");
                         }
 
+                        if (gotoCommand.ResetRunState) {
+                            ResetRunNode resetNode = new();
+                            previousNode.Next = resetNode;
+                            previousNode = resetNode;
+                        }
+
                         previousNode.Next = targetNode;
                         return;
                     case SayCommand sayCommand:
@@ -131,7 +137,7 @@ namespace Nodes {
                         previousNode.Next = delayNode;
                         previousNode = delayNode;
                         break;
-                    case ClearCommand clearCommand:
+                    case ClearCommand:
                         ClearNode clearNode = new();
                         previousNode.Next = clearNode;
                         previousNode = clearNode;
@@ -146,8 +152,12 @@ namespace Nodes {
             ChoiceCommand command,
             Dictionary<string, EmptyNode> labelNodes,
             Dictionary<string, Gate> gates) {
-            
-            Choice choice = new() { Text = command.Text };
+
+            if (!labelNodes.TryGetValue(command.TargetLabel, out EmptyNode choiceTarget)) {
+                throw new ParsingException(command.LineNumber, command.Line, "Invalid target label");
+            }
+
+            Choice choice = new(command.Text, choiceTarget, command.AlwaysAllow);
             foreach (string gateName in command.RequiredGates) {
                 if (!gates.TryGetValue(gateName, out Gate gate)) {
                     throw new ParsingException(command.LineNumber, command.Line, "Invalid gate name");
@@ -156,11 +166,6 @@ namespace Nodes {
                 choice.Gates.Add(gate);
             }
 
-            if (!labelNodes.TryGetValue(command.TargetLabel, out EmptyNode choiceTarget)) {
-                throw new ParsingException(command.LineNumber, command.Line, "Invalid target label");
-            }
-
-            choice.Next = choiceTarget;
             return choice;
         }
     }

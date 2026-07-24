@@ -21,8 +21,7 @@ namespace Game {
                 null, 
                 Enumerable.Empty<Gate>(), 
                 Enumerable.Empty<INode>(),
-                Enumerable.Empty<INode>(),
-                false);
+                Enumerable.Empty<INode>());
             
             _nodeRunner.RunNode(state);
         }

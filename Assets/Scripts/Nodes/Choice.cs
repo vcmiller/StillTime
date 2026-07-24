@@ -2,10 +2,18 @@
 
 namespace Nodes {
     public class Choice {
-        public string Text { get; set; }
+        public string Text { get; }
         
-        public INode Next { get; set; }
+        public INode Next { get; }
+        
+        public bool AlwaysAllow { get; }
     
         public List<Gate> Gates { get; } = new();
+
+        public Choice(string text, INode next, bool alwaysAllow) {
+            Text = text;
+            Next = next;
+            AlwaysAllow = alwaysAllow;
+        }
     }
 }

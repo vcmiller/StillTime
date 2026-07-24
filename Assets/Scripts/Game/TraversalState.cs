@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Nodes;
 using UnityEngine;
 
@@ -15,8 +16,8 @@ namespace Game {
         public bool ShowCountdown { get; }
 
         public int? CountdownValue { get; }
-
-        public bool HasReachedUnexploredNode { get; }
+        
+        public bool WasSelfNodeUnexplored { get; }
 
         public TraversalState(
             INode node,
@@ -25,8 +26,7 @@ namespace Game {
             int? countdownValue,
             IEnumerable<Gate> unlockedGates,
             IEnumerable<INode> visitedNodesCurrentRun,
-            IEnumerable<INode> visitedNodesOverall,
-            bool hasReachedUnexploredNode) {
+            IEnumerable<INode> visitedNodesOverall) {
             CurrentNode = node;
             NodeForTimeout = nodeForTimeout;
             ShowCountdown = showCountdown;
@@ -34,9 +34,9 @@ namespace Game {
             _unlockedGates = new HashSet<Gate>(unlockedGates);
             _visitedNodesCurrentRun = new HashSet<INode>(visitedNodesCurrentRun);
             _visitedNodesOverall = new HashSet<INode>(visitedNodesOverall);
-            HasReachedUnexploredNode = hasReachedUnexploredNode;
 
-            HasReachedUnexploredNode |= _visitedNodesCurrentRun.Add(node);
+            _visitedNodesCurrentRun.Add(node);
+            WasSelfNodeUnexplored = _visitedNodesOverall.Add(node);
 
             if (node is UnlockNode unlockNode) {
                 _unlockedGates.Add(unlockNode.Gate);
@@ -60,7 +60,7 @@ namespace Game {
         }
 
         public bool IsChoiceAvailable(Choice choice) {
-            if (_visitedNodesCurrentRun.Contains(choice.Next)) return false;
+            if (!choice.AlwaysAllow && _visitedNodesCurrentRun.Contains(choice.Next)) return false;
             if (!choice.Gates.TrueForAll(_unlockedGates.Contains)) return false;
             return true;
         }
@@ -69,13 +69,7 @@ namespace Game {
             int? countdownValue = CountdownValue;
 
             if (ShowCountdown && countdownValue.HasValue) {
-                int cost = CurrentNode.Cost;
-                while (next is EmptyNode { Next: not null } emptyNode) {
-                    cost += next.Cost;
-                    next = emptyNode.Next;
-                }
-
-                countdownValue = Mathf.Max(0, countdownValue.Value - cost);
+                countdownValue = Mathf.Max(0, countdownValue.Value - CurrentNode.Cost);
             }
 
             bool showCountdown = ShowCountdown;
@@ -91,15 +85,22 @@ namespace Game {
                 nodeForTimeout = null;
             }
 
+            IEnumerable<INode> visitedNodesCurrentRun = _visitedNodesCurrentRun;
+            
+            if (next is ResetRunNode) {
+                showCountdown = false;
+                countdownValue = null;
+                visitedNodesCurrentRun = Enumerable.Empty<INode>();
+            }
+
             TraversalState nextState = new(
                 next,
                 nodeForTimeout,
                 showCountdown,
                 countdownValue,
                 _unlockedGates,
-                _visitedNodesCurrentRun,
-                _visitedNodesOverall,
-                HasReachedUnexploredNode);
+                visitedNodesCurrentRun,
+                _visitedNodesOverall);
 
             return nextState;
         }

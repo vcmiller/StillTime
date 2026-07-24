@@ -35,7 +35,11 @@ namespace Game {
                             branchNode.Speaker,
                             branchNode.Choices
                                       .Where(state.IsChoiceAvailable)
-                                      .Select(c => (c.Text, new Action(() => Advance(state, c.Next))))
+                                      .Select(c => {
+                                          TraversalState nextState = state.Advance(c.Next);
+                                          bool hasNewContent = ExploreBranchForNewContent(nextState, 0, 10000);
+                                          return (c.Text, new Action(() => Advance(state, c.Next)), hasNewContent);
+                                      })
                                       .ToList());
                         break;
                     case DelayNode delayNode:
@@ -79,6 +83,24 @@ namespace Game {
             } else {
                 RunNode(state.Advance(next));
             }
+        }
+
+        private bool ExploreBranchForNewContent(TraversalState state, int depth, int maxDepth) {
+            if (state.WasSelfNodeUnexplored) return true;
+            
+            if (depth == maxDepth) {
+                Debug.LogError("Search reached max depth. This should not happen.");
+                return true;
+            }
+            
+            foreach (INode possibleNext in state.GetAvailableNodes()) {
+                if (possibleNext == null) continue;
+                
+                TraversalState nextState = state.Advance(possibleNext);
+                if (ExploreBranchForNewContent(nextState, depth + 1, maxDepth)) return true;
+            }
+
+            return false;
         }
     }
 }

@@ -46,14 +46,14 @@ say(Author): I also want to be clear that, while many aspects of the story are d
 say(Author): If you are a person who I know personally, please don't construe any interactions herein as a commentary on you as a person.
 say: <b>STILLTIME</b>
 say: By Val Miller
-goto(RunStart)
+goto(FirstRun)
 
-label(RunStart)
+label(FirstRun)
 say: I've seen it a hundred times in my dreams. How could anyone not?
 say: The world flashes white. My life burns away in an atomic fireball.
 say: I always have to ask myself if I'm dreaming, or if this time it's finally real.
 say: But that's the thing about dreams. As soon as you ask yourself the question, you kind of know the answer.
-say: It's a warm, rainy July evening. I'm in bed, trying to fall asleep.
+say: It's a warm, rainy July evening. I'm in bed, passing in and out of sleep.
 say: My phone blasts an alarm. I didn't realize the thing could make that loud of a noise.
 say: With a shriek, Loris jumps from her perch in my windowsill and hides under the bed.
 say: My eyes are too glazed over to read my phone screen, but I hear my parents getting up.
@@ -67,10 +67,21 @@ countdown(true, 3391)
 say: My parents don't say anything. I think I see a tear in my dad's eye.
 goto(InitialChoice)
 
+label(LaterRun)
+say: It's a warm, rainy July evening. I'm in bed, passing in and out of sleep.
+say: My brain is fully of something it hasn't decided is a dream or a... memory?
+say: My phone blasts an alarm. Wait. I've heard this before. Right?
+say: I head to the living room. See the TV. How do I know what's happening? Did I just dream this?
+say: On the TV, there's a map of major US cities, all showing little timers. Next to us is a number: 00:56:31.
+countdown(true, 3391)
+say: My parents don't say anything. I think I see a tear in my dad's eye.
+say: There's something important I need to remember. Or a lot of things.
+goto(InitialChoice)
+
 label(InitialChoice)
-branch: Nobody seems to want ot break the silence.
-choice(ParentConversation_Entry): Mom... Dad...
-choice(Bedroom_Entry): I need to be alone.
+branch: Nobody seems to want to break the silence.
+choice_always(ParentConversation_Entry): Mom... Dad...
+choice_always(Bedroom_Entry): I need to be alone.
 choice(TryToDriveAlone_Entry): What are you doing? We need to get out of here!
 end
 
@@ -108,7 +119,7 @@ goto(ParentConversation_Childhood_Choice)
 
 label(ParentConversation_Childhood_Choice)
 branch(Mom): I just keep wondering what was going on in your head.
-choice(InitialChoice): I'm sorry! I just don't know how to talk about this.
+choice_always(InitialChoice): I'm sorry! I just don't know how to talk about this.
 choice(ParentConversation_Childhood_WellBehaved): I only ever know how to follow the rules.
 choice(ParentConversation_Childhood_Lonely): I just felt so lonely.
 choice(ParentConversation_Childhood_FitIn): I tried so hard to fit in.
@@ -195,7 +206,7 @@ goto(ParentConversation_Alienation_Choice)
 
 label(ParentConversation_Alienation_Choice)
 branch(Mom): Please just tell us what's bothering you.
-choice(InitialChoice): I can't.
+choice_always(InitialChoice): I can't.
 choice(ParentConversation_Alienation_Choice_Haircut, Sign_Haircut): I've never been happy with how I look.
 choice(ParentConversation_Alienation_Choice_BFF, MissBFF): I feel so much closer to female friends.
 choice(ParentConversation_Alienation_Choice_LockerRoom, Sign_LockerRoom): I'm so uncomfortable around men.
@@ -302,7 +313,7 @@ say: Why do I want to be a girl if I'm not trans?
 say: Well, some things I guess I'll never know.
 say: It's too late to do anything.
 unlock(PartialRealization)
-end
+goto(TimeoutEnding)
 
 label(ParentConversation_ComingOut)
 branch(Dad): What it it son? You can tell us anything.
@@ -354,7 +365,7 @@ say: Hope that my life can be shaped by what I want, not what's expected of me.
 say: Hope that I have a future.
 say: And for a few brief moments, I do.
 unlock(ParentsNeedTime)
-end
+goto(TimeoutEnding)
 
 label(ParentConversation_ComingOut_Confident_Choice)
 branch(Mom): It seems like something else is on your mind Ever... I mean {ChosenName}! I'm sorry!
@@ -439,12 +450,14 @@ say: I want my mom.
 say: I want Katie.
 say: I want my sister.
 say: I'm all alone.
+bg(000000, 2)
+delay(2)
 say: <b>INTERLUDE:</b> Hey there. So, this is the darkest ending, by far, of my little text adventure.
 say: <b>INTERLUDE:</b> I want you to know, whoever you are, that it's going to be ok. Our world is not ending.
 say: <b>INTERLUDE:</b> We need to survive, and to take care of one another.
 say: <b>INTERLUDE:</b> If you choose to keep playing, you may find that there is hope even in the darkest circumstances.
 say: <b>INTERLUDE:</b> There is always still time.
-end
+goto_reset(LaterRun)
 
 label(ParentConversation_ComingOut_Confident_Driving_Alone_SecretRoad)
 say: That's it. The secret road. By Reed's house.
@@ -461,7 +474,10 @@ say: Not alone. Together until the end. But not whole.
 say: Their daughter is running away and never coming back.
 say: I banish the thought from my mind. They made their choice and I made mine.
 say: I'm going to survive this.
-end
+clear
+bg(000000, 2)
+delay(2)
+goto_reset(LaterRun)
 
 label(ParentConversation_ComingOut_Confident_Driving_Alone_GoBack)
 say: Oh my god. I've wasted so much time. I need to get back.
@@ -482,7 +498,7 @@ goto(ParentConversation_ComingOut_Confident_Ending)
 
 label(ParentConversation_ComingOut_Confident_Driving_Together)
 say: WIP
-end
+goto_reset(LaterRun)
 
 label(ParentConversation_ComingOut_NotConfident)
 say: There's a long pause. My specialty.
@@ -515,13 +531,13 @@ say: Hope that my life can be shaped by what I want, not what's expected of me.
 say: Hope that I have a future.
 say: And for a few brief moments, I do.
 unlock(ParentsNeedTime)
-end
+goto(TimeoutEnding)
 
 ######################################### Bedroom ##############################################
 
 label(Bedroom_Entry)
 say: WIP
-end
+goto(InitialChoice)
 
 ######################################### Try to Drive Alone ##############################################
 
@@ -534,7 +550,7 @@ say(Mom): This may be the hardest thing possible for a mother to tell her son.
 say(Mom): I know you don't want this to be the end.
 say(Mom): But if it's a choice between dying on the freeway while sitting in traffic, and spending my last moments in my home with the two people I love most, I know what I'm choosing.
 branch: What now then?
-choice(InitialChoice): Yeah. You're right.
+choice_always(InitialChoice): Yeah. You're right.
 choice(TryToDriveAlone_TryToLeave): No. I can't. I need to go, even if it's alone.
 end
 
@@ -570,4 +586,4 @@ countdown(false)
 delay(1)
 bg(000000, 3)
 delay(3)
-end
+goto_reset(LaterRun)

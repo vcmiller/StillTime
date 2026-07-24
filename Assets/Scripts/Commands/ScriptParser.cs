@@ -87,6 +87,7 @@ namespace Commands {
                     ValidateCommand(line, index, cmd, args, text, 0, 1, true);
                     string saySpeaker = args?.Length > 0 ? args[0] : null;
                     return new SayCommand(index, line, saySpeaker, text);
+                case "choice_always":
                 case "choice":
                     ValidateCommand(line, index, cmd, args, text, 1, 100, true);
 
@@ -95,15 +96,17 @@ namespace Commands {
                         requiredGates.Add(args[i]);
                     }
 
-                    ChoiceCommand choiceCommand = new(index, line, text, args[0], requiredGates);
+                    bool alwaysAllow = cmd == "choice_always";
+                    ChoiceCommand choiceCommand = new(index, line, text, args[0], alwaysAllow, requiredGates);
 
                     return choiceCommand;
                 case "end":
                     ValidateCommand(line, index, cmd, args, text, 0, 0, false);
                     return new EndCommand(index, line);
+                case "goto_reset":
                 case "goto":
                     ValidateCommand(line, index, cmd, args, text, 1, 1, false);
-                    return new GotoCommand(index, line, args[0]);
+                    return new GotoCommand(index, line, args[0], cmd == "goto_reset");
                 case "timeout":
                     ValidateCommand(line, index, cmd, args, text, 1, 1, false);
                     return new TimeoutCommand(index, line, args[0]);

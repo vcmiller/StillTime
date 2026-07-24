@@ -72,14 +72,14 @@ namespace Game {
             _mainButtonAction = next;
         }
 
-        public void SetChoices(string mainText, Speaker speaker, List<(string text, Action action)> choices) {
+        public void SetChoices(string mainText, Speaker speaker, List<(string text, Action action, bool hasNew)> choices) {
             Clear();
 
             _mainText.text = AddSpeakerToText(mainText, speaker);
             _showWordTimer.StartInterval();
-            foreach ((string text, Action action) in choices) {
+            foreach ((string text, Action action, bool hasNew) in choices) {
                 ChoiceView choiceView = Instantiate(_choiceViewPrefab, _choiceViewParent, false);
-                choiceView.Configure(text, action);
+                choiceView.Configure(text, action, hasNew);
                 choiceView.transform.localScale = Vector3.zero;
                 _currentChoices.Add(choiceView);
             }

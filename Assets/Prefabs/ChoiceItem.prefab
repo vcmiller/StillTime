@@ -137,6 +137,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Game.ChoiceView
   _button: {fileID: 3602939857040030197}
   _label: {fileID: 1437624178712369796}
+  _noNewColor: {r: 0.23529412, g: 0.23529412, b: 0.23529412, a: 1}
 --- !u!114 &7516218200663459347
 MonoBehaviour:
   m_ObjectHideFlags: 0
