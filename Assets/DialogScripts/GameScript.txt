@@ -3,7 +3,6 @@
 ######################################### Speakers ##############################################
 
 speaker(Self, 00ccff): Me
-speaker(SelfTrans, ff85e0): Me
 speaker(Mom, 8f00d1): Mom
 speaker(Dad, 007504): Dad
 speaker(Author, c99e00): <b>AUTHOR'S NOTE</b>
@@ -100,7 +99,7 @@ label(ParentConversation_Entry)
 say(Mom): Oh sweetie... I don't know what to say.
 say(Dad): It just doesn't feel real.
 say(Mom): Come here you guys.
-say: She brings us in for a hug. My dad loses his composure. Tears I've never seen before fall freely down his face.
+say: She brings us in for a hug. My dad falls apart.
 cost(60)
 say(Mom): If this is it, I'm so glad we're here together.
 branch(Dad): I just... Everett...
@@ -131,7 +130,7 @@ label(ParentConversation_Childhood_Choice)
 branch(Mom): I just keep wondering what was going on in your head.
 choice_always(InitialChoice): I'm sorry! I just don't know how to talk about this.
 choice(ParentConversation_Childhood_WellBehaved): I only ever know how to follow the rules.
-choice(ParentConversation_Childhood_Lonely): I just felt so lonely.
+choice(ParentConversation_Childhood_Lonely): I just feel so lonely.
 choice(ParentConversation_Childhood_FitIn): I tried so hard to fit in.
 choice(ParentConversation_Alienation, Gate_BadFriendExperience): Even now, I feel like I don't belong.
 choice(ParentConversation_ComingOut, Gate_FullRealization): Actually, I think I know. This might be kind of a shock.
@@ -155,7 +154,7 @@ say(Dad): You made friends pretty well I thought.
 say(Mom): You and Katie were always so close. I was so sad when you stopped talking to her.
 say: Katie Marshall. I've been trying to forget that name. Thinking about her is just too painful.
 set(Gate_MissBFF, true)
-say(Dad): Wait, I thought they were dating??
+say(Dad): Wait, I thought they were dating?
 say(Mom): I don't think so dear. She always seemed like more of a sister to him.
 say(Mom): You always did talk about wanting a sister as a kid. Do you remember that?
 say(Self): Yes
@@ -174,7 +173,7 @@ say(Dad): You know that's not true honey.
 say(Mom): The doctor said again and again, that these things can happen to anyone. That it wasn't my fault.
 say(Mom): But I think a part of me never believed that.
 say(Mom): If not for you, Everett, I just... I don't know what I would do...
-say(Self): What was her name?
+say(Self): What... what was her name?
 say(Dad): Please sweetie, this is a really hard topic for your mom to talk about.
 say(Mom): Stop it, I'm serious. She deserves to know.
 say(Mom): Her name was hazel. She was going to be the most kind and beautiful daughter ever born.
@@ -204,12 +203,14 @@ say(Self): I don't really feel connected to anyone.
 say(Mom): What about Reed and the rest of the gang?
 say(Self): Sometimes it just feels <i>wrong</i> hanging out with them. They can be so crass. And the way they talk about women...
 say(Dad): Well look who's a feminist all of a sudden.
+say: This earns him a soft jab from Mom's foot.
 say(Dad): Listen, son. Boys will say a lot of stupid shit.
 say(Dad): But those are your bros! I wish I could have had friends like yours as a kid.
 say(Mom): Much as I hate to say it, I think your dad is right.
 say(Mom): You might have your squabbles, but they've stuck by you all this time.
 say(Mom): The world's about ot end. Maybe give them a call?
 say(Self): NO!
+say: I don't know where that came from.
 say(Mom): See this is what I'm talking about! When someone cares about you, you seem to just shut down.
 say(Self): Maybe... I've just been thinking about some things.
 goto(ParentConversation_Alienation_Choice)
