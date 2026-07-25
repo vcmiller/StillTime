@@ -28,22 +28,25 @@ var(bool, Gate_SignHaircut, global)
 # Unlockable names
 var(bool, Gate_Name_Hazel, global)
 
+# Conversation states
+var(int, Num_Alienation_Choice, run)
+
 ######################################### Introduction Scene ##############################################
 
 label(Intro)
 bg(0D2411)
 timeout(TimeoutEnding)
-say(Author): Hello! Welcome to my little text adventure, created for the GMTK Game Jam 2026.
-say(Author): Before we get started, I want you to know this game deals with some heavy topics, including:
-say(Author): Death and grief
-say(Author): Miscarriage
-say(Author): Bigotry
-say(Author): Panic attacks
-say(Author): Alcohol use
-say(Author): This is not something I'm used to doing in games, and I can't promise I've handled everything well.
-say(Author): Whether or not you choose to proceed, know that I appreciate you <3.
-say(Author): I also want to be clear that, while many aspects of the story are drawn from my own experiences, the characters are not meant to depict people I know in any way.
-say(Author): If you are a person who I know personally, please don't construe any interactions herein as a commentary on you as a person.
+say: Hello! Welcome to my little text adventure, created for the GMTK Game Jam 2026.
+say: Before we get started, I want you to know this game deals with some heavy topics, including:
+say: Death and grief
+say: Miscarriage
+say: Bigotry
+say: Panic attacks
+say: Alcohol use
+say: This is not something I'm used to doing in games, and I can't promise I've handled everything well.
+say: Whether or not you choose to proceed, know that I appreciate you <3.
+say: I also want to be clear that, while many aspects of the story are drawn from my own experiences, the characters are not meant to depict people I know in any way.
+say: If you are a person who I know personally, please don't construe any interactions herein as a commentary on you as a person.
 say: <b>STILLTIME</b>
 say: By Val Miller
 goto(FirstRun)
@@ -214,7 +217,7 @@ choice(ParentConversation_Alienation_Choice_Haircut, Gate_SignHaircut): I've nev
 choice(ParentConversation_Alienation_Choice_BFF, Gate_MissBFF): I feel so much closer to female friends.
 choice(ParentConversation_Alienation_Choice_LockerRoom, Gate_SignLockerRoom): I'm so uncomfortable around men.
 choice(ParentConversation_Alienation_Choice_Sister, Gate_SignWantSister): Why do I specifically wish I had a sister?
-choice(ParentConversation_Realization): What if... I'm not supposed to be a boy at all?
+choice(ParentConversation_Realization, Num_Alienation_Choice >= 4): What if... I'm not supposed to be a boy at all?
 end
 
 label(ParentConversation_Alienation_Choice_Haircut)
@@ -222,6 +225,7 @@ say(Mom): Everyone is uncomfortable with how they look sometimes.
 say(Mom): Just be glad you're not a woman!
 say: She's joking, but I feel a pinching in my gut.
 say(Self): Yeah, I guess.
+incr(Num_Alienation_Choice, 1)
 goto(ParentConversation_Alienation_Choice)
 
 label(ParentConversation_Alienation_Choice_BFF)
@@ -231,6 +235,7 @@ say(Self): I guess I don't really know how to separate my feelings of friendship
 say(Mom): You know, Allison said the same thing. Maybe you're a lesbian in spirit.
 say: She giggles to herself. Mom likes to brag about having one lesbian friend.
 say: Yeah not sure how to respond to that one.
+incr(Num_Alienation_Choice, 1)
 goto(ParentConversation_Alienation_Choice)
 
 label(ParentConversation_Alienation_Choice_LockerRoom)
@@ -241,12 +246,14 @@ say(Dad): But it's perfectly normal to be around men. You'll need to figure this
 say: He stops. I guess he forgot for a second that we're all going to be vaporized within the hour.
 say: My mom was distracted too. It seems like they're happy to be talking to me.
 say: Even if their advice is a bit crap.
+incr(Num_Alienation_Choice, 1)
 goto(ParentConversation_Alienation_Choice)
 
 label(ParentConversation_Alienation_Choice_Sister)
 say(Dad): Sounds like you just want someone to boss around!
 say(Mom): Spoken like someone who's never had a little sister. I think she would be doing the bossing. Girlbossing!
 say: I guess my mom learned a new word.
+incr(Num_Alienation_Choice, 1)
 goto(ParentConversation_Alienation_Choice)
 
 label(ParentConversation_Realization)
