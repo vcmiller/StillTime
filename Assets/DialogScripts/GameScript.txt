@@ -14,7 +14,7 @@ speaker(Interlude, 824077): <b>INTERLUDE</b>
 var(bool, Gate_PartialRealization, global)
 var(bool, Gate_FullRealization, global)
 var(bool, Gate_BadFriendExperience, global)
-var(bool, Gate_MissBFF, global)
+var(bool, Gate_MissBestFriend, global)
 var(bool, Gate_ParentsNeedTime, global)
 var(bool, Gate_ComingOutPrep, global)
 var(bool, Gate_SecretRoad, global)
@@ -28,8 +28,9 @@ var(bool, Gate_SignAstronaut, global)
 var(bool, Gate_SignCat, global)
 
 # Unlockable names
-var(bool, Gate_Name_Hazel, global)
-var(bool, Gate_Name_Emily, global)
+var(bool, Unlock_Name_Hazel, global)
+var(bool, Unlock_Name_Emily, global)
+var(bool, Unlock_Name_Azalea, global)
 
 # Conversation states
 var(int, Num_Alienation_Choice, run)
@@ -153,20 +154,20 @@ label(ParentConversation_Childhood_Lonely)
 say(Dad): You made friends pretty well I thought.
 say(Mom): You and Katie were always so close. I was so sad when you stopped talking to her.
 say: Katie Marshall. I've been trying to forget that name. Thinking about her is just too painful.
-set(Gate_MissBFF, true)
+set(Gate_MissBestFriend, true)
 say(Dad): Wait, I thought they were dating?
 say(Mom): I don't think so dear. She always seemed like more of a sister to him.
 say(Mom): You always did talk about wanting a sister as a kid. Do you remember that?
 say(Self): Yes
 say(Mom): Do you ever think about that still?
-say(Self): I guess
+say(Self): I don't know. Maybe.
 say(Self): Did you ever... consider having another kid.
 say(Dad): Your mother doesn't like talking about this honey, I'm sorry. I know you wanted a sibling.
 say(Mom): No, it's... it's ok. If I can't tell him now, then when?
 say(Mom): You probably don't remember this. You were barely three. But I was pregnant again.
 say(Mom): We were going to have another kid. A baby girl. You were so excited to be a brother.
 say(Dad): You were struggling with language though. You kept saying you were going to be a sister for some reason.
-say(Mom): It... it just wasn't meant to be, I guess. I felt like...
+say(Mom): It... it just wasn't meant to be. I felt like...
 say: She's struggling to keep it together. Dad puts his hand on her shoulder.
 say(Mom): I felt like I had failed. Failed as a wife and a mother.
 say(Dad): You know that's not true honey.
@@ -180,7 +181,7 @@ say(Mom): Her name was hazel. She was going to be the most kind and beautiful da
 say: Hazel. My sister.
 say: Why do I feel such a sense of loss?
 say: It's not like I ever even met her.
-set(Gate_Name_Hazel, true)
+set(Unlock_Name_Hazel, true)
 set(Gate_SignWantSister, true)
 goto(ParentConversation_Childhood_Choice)
 
@@ -219,7 +220,7 @@ label(ParentConversation_Alienation_Choice)
 branch(Mom): Please just tell us what's bothering you.
 choice_always(InitialChoice): I can't.
 choice(ParentConversation_Alienation_Choice_Haircut, Gate_SignHaircut): I've never been happy with how I look.
-choice(ParentConversation_Alienation_Choice_BFF, Gate_MissBFF): I feel so much closer to female friends.
+choice(ParentConversation_Alienation_Choice_BestFriend, Gate_MissBestFriend): I feel so much closer to female friends.
 choice(ParentConversation_Alienation_Choice_LockerRoom, Gate_SignLockerRoom): I'm so uncomfortable around men.
 choice(ParentConversation_Alienation_Choice_Sister, Gate_SignWantSister): Why do I specifically wish I had a sister?
 choice(ParentConversation_Realization, Num_Alienation_Choice >= 4): What if... I'm not supposed to be a boy at all?
@@ -229,11 +230,11 @@ label(ParentConversation_Alienation_Choice_Haircut)
 say(Mom): Everyone is uncomfortable with how they look sometimes.
 say(Mom): Just be glad you're not a woman!
 say: She's joking, but I feel a pinching in my gut.
-say(Self): Yeah, I guess.
+say(Self): Yeah.
 incr(Num_Alienation_Choice, 1)
 goto(ParentConversation_Alienation_Choice)
 
-label(ParentConversation_Alienation_Choice_BFF)
+label(ParentConversation_Alienation_Choice_BestFriend)
 say(Dad): That just means you're a ladies' man! I know it's hard for you, but women like confidence in a man.
 say: He says, drawing on his infinite knowledge of the mind of every woman alive. Mom rolls her eyes almost imperceptibly.
 say(Self): I guess I don't really know how to separate my feelings of friendship and attraction.
@@ -248,7 +249,7 @@ say(Mom): Well it seems perfectly reasonable to me.
 say(Dad): It's just a matter of getting used to it. I used to be so squeamish near male bodies too.
 say(Dad): Didn't want to be called gay or anything. That was more of an insult in those days.
 say(Dad): But it's perfectly normal to be around men. You'll need to figure this out sooner or...
-say: He stops. I guess he forgot for a second that we're all going to be vaporized within the hour.
+say: He forgot for a second that we're all going to be vaporized within the hour.
 say: My mom was distracted too. It seems like they're happy to be talking to me.
 say: Even if their advice is a bit crap.
 incr(Num_Alienation_Choice, 1)
@@ -257,7 +258,7 @@ goto(ParentConversation_Alienation_Choice)
 label(ParentConversation_Alienation_Choice_Sister)
 say(Dad): Sounds like you just want someone to boss around!
 say(Mom): Spoken like someone who's never had a little sister. I think she would be doing the bossing. Girlbossing!
-say: I guess my mom learned a new word.
+say: Look who learned a new word.
 incr(Num_Alienation_Choice, 1)
 goto(ParentConversation_Alienation_Choice)
 
@@ -325,7 +326,7 @@ say: Why couldn't I have been a girl?
 say: Why am I like this?
 say: What's wrong with me?
 say: Why do I want to be a girl if I'm not trans?
-say: Well, some things I guess I'll never know.
+say: Well, some things I'll never know.
 say: It's too late to do anything.
 set(Gate_PartialRealization, true)
 goto(TimeoutEnding)
@@ -406,7 +407,7 @@ end
 
 label(ParentConversation_ComingOut_Confident_Driving_Alone)
 say(Dad): Just where do you think you're going young lady??
-say: I guess he just couldn't resist. Glad he got to say it once.
+say: He just couldn't resist. Glad he got to make an affirming dad joke once.
 say(Mom): I...
 say(Mom): Sweetie...
 say(Mom): {ChosenName}...
@@ -425,7 +426,7 @@ say: I walk out the door, into the humid night air.
 cost(30)
 say: I've always loved the smell of rain in the summer.
 say: I can hear crickets chirping. Dogs barking in the distance. The white noise of raindrops hitting the ground.
-say: I guess the world hasn't figured out it's about to end.
+say: The world hasn't yet figured out it's about to end.
 cost(60)
 say: Without really thinking about it, I'm in the car. Driving down city streets towards the highway.
 cost(180)
@@ -569,7 +570,7 @@ branch: I stand in the middle of the room.
 choice(Bedroom_PetTheCat): Pet the cat
 #choice: Pick up my phone
 choice(Bedroom_Photos): Take a look at the photos
-#choice: Turn on the laptop
+choice(Bedroom_Computer): Open the laptop
 choice_always(InitialChoice): Head back to the living room
 end
 
@@ -629,7 +630,7 @@ goto(Bedroom_InitialChoice)
 
 label(Bedroom_Photos)
 say: I'm not sure quite what inspires me. I randomly reach for a photo album from the stack.
-say: I'll never understand quite how my mom organized these. I guess that's why she was going to redo it.
+say: I'll never understand quite how my mom organized these. I suppose that's why she was going to redo it.
 say: I open to a random page. It seems to just be a bunch of random photos of me.
 goto(Bedroom_Photos_Choice)
 
@@ -637,7 +638,7 @@ label(Bedroom_Photos_Choice)
 branch: I glance over all the photos on the page.
 choice(Bedroom_Photos_Astronaut): My astronaut costume
 choice(Bedroom_Photos_Cat): Our old cat Emilio
-choice(Bedroom_Photos_BFF): Me and Katie at the beach
+choice(Bedroom_Photos_BestFriend): Me and Katie at the beach
 choice_always(Bedroom_InitialChoice): That's enough for me.
 end
 
@@ -661,7 +662,7 @@ goto(Bedroom_Photos_Choice)
 label(Bedroom_Photos_Cat)
 say: Emilio. My parents found her on the roadside years before I was born.
 say: They had her for months thinking she was a boy. Hence the name.
-say: I guess it's not always easy to tell the sex a kitten, especially when they're afraid of people.
+say: It's not always easy to tell the sex a kitten, especially when they're afraid of people.
 say: Just like everything else, Emilio was a constant in my life as a kid.
 say: I was sure that everything would always be exactly the way it was.
 say: Some things force you out of that delusion.
@@ -678,10 +679,10 @@ say: Why I couldn't learn to contain my emotions.
 say: Why I couldn't be like the other boys.
 say: Why I couldn't be like the other boys who made fun of me for crying in class.
 set(Gate_SignCat, true)
-set(Gate_Name_Emily, true)
+set(Unlock_Name_Emily, true)
 goto(Bedroom_Photos_Choice)
 
-label(Bedroom_Photos_BFF)
+label(Bedroom_Photos_BestFriend)
 say: Katie Marshall. My best friend.
 say: I've known her since middle school. She stood up for me when the boys made fun of me.
 say: Even got sent home for a week for punching a kid.
@@ -707,20 +708,107 @@ say: The pandemic sent us home and, well, people like her were able to make it w
 say: People like me were not.
 say: Trying to hold onto the past would just hold her back.
 say: So I didn't
-say: Still, though. I guess there's not much left to lose if I call her now...
-set(Gate_MissBFF, true)
+say: Still, though. There's not much left to lose if I call her now...
+set(Gate_MissBestFriend, true)
 goto(Bedroom_Photos_Choice)
+
+label(Bedroom_Computer)
+say: I left a game running when I went to bed.
+say: Legends of the Sword Age. Even I could have come up with a better title than that marketing team. But a fun MMO nonetheless.
+say: Looks like I was booted to the main menu for being AFK. Gotta save on precious server costs.
+say: I suppose US_EAST_1 won't be faring any better than me in a few minutes.
+branch: Should I really be playing a video game right now?
+choice_always(Bedroom_InitialChoice): No, I don't have time to waste.
+choice(Bedroom_Computer_VideoGame_CharacterSelect): Why the hell not?
+end
+
+label(Bedroom_Computer_VideoGame_CharacterSelect)
+say: These are my last moments. I can choose how to spend them, damn it!
+say: On the character select screen I see the list of characters I've made.
+branch: CHOOSE SAVE FILE
+choice(Bedroom_Computer_VideoGame_Azalea): Azalea - elf assassin - level 25
+choice(Bedroom_Computer_VideoGame_Chungus): Chungus - dwarf barbarian - level 8
+choice(Bedroom_Computer_VideoGame_Everest): Everest - human warrior - level 172
+end
+
+label(Bedroom_Computer_VideoGame_Azalea)
+say: Azalea. My most recent save.
+say: Beautiful. Badass. Deadly.
+say: Not sure what inspired me to put effort into a character.
+say: All through my time playing this game, I've kept wanting to pick a female character.
+say: Not sure why. But it always felt shameful somehow. I'm a boy, so I'm supposed to play a male character.
+say: I guess one day, I just said 'fuck it' and went for it. Spent hours just customizing the avatar.
+say: I was pretty bored with the game at that point, but for some reason she got me back into it.
+say: A part of me even enjoyed the attention I got. Players offering me coins or help in battles.
+say: All because I made a pretty character in a game full of men.
+say: A few times I did get some 'unsavory' pictures in the game's DMs.
+say: That was not so nice. But the devs seem to have cracked down on it more lately.
+set(Unlock_Name_Azalea, true)
+goto(Bedroom_Computer_VideoGame_Converge)
+
+label(Bedroom_Computer_VideoGame_Chungus)
+say: Chungus. The joke character. I really just made the ugliest character I could possibly manage.
+say: Born from face sliders dragged to extremes, maxed out strength and zero intelligence.
+say: Chungus would charge into battle shirtless, screaming about sitting on his enemies and crushing them to death.
+say: I also covered his face in the most grotesque makeup job I could manage.
+say: Bright lipstick, mascara, eyeshadow, everything the game allowed.
+say: On a character this ugly, those things could only make him more so.
+say: Honestly, pretty problematic now that I think about it. I feel a little pang of regret.
+say: I hope nobody saw him as a caricature making fun of people different from me.
+say: Well, no time to do anything about that now.
+goto(Bedroom_Computer_VideoGame_Converge)
+
+label(Bedroom_Computer_VideoGame_Everest)
+say: My first character. Default male human warrior. Name just a letter off of mine.
+say: Could I be any less creative? I played on this file for years!
+say: Running around as "default male" never really bothered me; nobody perceived me as putting effort into how my character looks.which suited me fine.
+say: Well, back to the tried-and-true classic.
+goto(Bedroom_Computer_VideoGame_Converge)
+
+label(Bedroom_Computer_VideoGame_Converge)
+say: The game word loads in. I'm in the main city that serves as the game's hub.
+say: The streets seem feel weirdly deserted. All the usual NPCs of course. But no players.
+say: I check the map. And there's a huge clump of players close by, in the park at the center of the city.
+say: More players than I've ever seen in one spot before.
+say: Guess I should see what the fuss is about.
+say: I turn a corner and the chunk containing the park loads in.
+say: The fans on my five-year-old laptop crank into overdrive and the game starts lagging hard.
+say: The devs most definitely did not plan for this many players to be in one chunk.
+say: As I approach, I hear music. That's weird. It's not the typical generic medieval tavern stuff that always plays in this area.
+say: It's some EDM song I've never heard. Definitely a bit out of place, but it's not really coming from the game at all.
+say: It's coming from one player's voice chat, filtered by what's obviously a shitty laptop mic.
+say: And everyone is just standing in a mob around them. Doing dance emotes.
+say: I think I stumped into an end-of-the-world dance party.
+say: For a lot of people in this game, it's their only connection to the outside world.
+say: The only place they feel like a real person. I've felt that way at times.
+say: All these people have come together to be with the only community they have before the end.
+countdown(true, 322)
+say: Oh, shit, I lost track of time. Time just flows differently when you're playing a game.
+countdown(true, 301)
+say: I keep expecting everyone to start counting down in unison. But the players here are all over North America.
+say: Some of them have more time left. Others less. Some might even be safe for now.
+countdown(true, 235)
+say: A few players freeze up, then vanish into thin air. Connection timed out.
+say: My mind can barely process what that means.
+countdown(true, 175)
+say: The game freezes. I see a spinny wheel of death, signaling the end of the world.
+say: I get kicked back to the menu with a connection error. Server must have crashed.
+say: Or, no. Not crashed. Turned into a quickly dissipating cloud of atoms, along with the rest of the data center.
+say: Most of the internet was probably just knocked out in a single instant.
+say: No more social media. No more dating apps. No more LLMs.
+say: Heh. One good thing to come out of this.
+goto(TimeoutEnding)
 
 ######################################### Try to Drive Alone ##############################################
 
 label(TryToDriveAlone_Entry)
 say(Dad): Of course we've thought about that.
-say(Dad): The highways are all backed up. Bumper to bumper. Nobody's moving. We'd never make it.
+say(Dad): The highways are all backed up. Bumper to bumper. Nobody's moving. We'd never make it anywhere.
 say(Self): But we could try! I can't just sit here waiting for the end.
 say(Mom): I know this is hard for you to hear.
 say(Mom): This may be the hardest thing possible for a mother to tell her son.
 say(Mom): I know you don't want this to be the end.
-say(Mom): But if it's a choice between dying on the freeway while sitting in traffic, and spending my last moments in my home with the two people I love most, I know what I'm choosing.
+say(Mom): But if it's a choice between spending my last moments on the freeway sitting in traffic, or in my home with the two people I love most, I know what I'm choosing.
 branch: What now then?
 choice_always(InitialChoice): Yeah. You're right.
 choice(TryToDriveAlone_TryToLeave): No. I can't. I need to go, even if it's alone.
