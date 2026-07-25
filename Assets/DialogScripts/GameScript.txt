@@ -7,6 +7,10 @@ speaker(Mom, 8f00d1): Mom
 speaker(Dad, 007504): Dad
 speaker(Author, c99e00): <b>AUTHOR'S NOTE</b>
 speaker(Interlude, 824077): <b>INTERLUDE</b>
+speaker(ForumUser1, fcba03): WaywardPlatypus_081
+speaker(ForumUser2, c22382): immortal_snail
+speaker(ForumUser3, 23c278): WanderingPanda_986
+speaker(ForumUser4, fff700): [MOD] CatGirlLover67
 
 ######################################### Gate Declarations ##############################################
 
@@ -290,7 +294,7 @@ say: Well not the nuclear armageddon part. But the awkward silence will be fine.
 branch: Ok, for real this time.
 choice(ParentConversation_Realization_BackOut): I'm a man.
 choice(ParentConversation_Realization_BackOut): I wish I was a real man.
-choice(ParentConversation_Realization_BackOut): I'm Everett.
+choice(ParentConversation_Realization_BackOut): I'm Everett Barnes.
 choice(ParentConversation_Realization_BackOut): Sorry I misspoke.
 choice(ParentConversation_Realization_Accept): <sub>I think I wish I was a girl.</sub>
 end
@@ -313,11 +317,10 @@ say(Mom): I just don't know what we can do about that now.
 say(Self): Yeah. I don't know. I'm sorry.
 say: I should be panicking. I'm about to die and I just realized how meaningless my life as a man has been.
 say: And I had to turn our last moments into an awkward... what? Coming out? Coming out as what?
-say: But all I can think is:
-say: I don't care.
-say: I don't care if I made them upset.
-say: I don't care if my life has been meaningless.
-say: I don't care if the world is ending.
+say: But I'm not thinking about the end.
+say: I'm not thinking about whether I made them upset.
+say: I'm not thinking about my life feeling meaningless.
+say: I'm not thinking about the world is ending.
 say: I just want to be a girl.
 say: We continue sitting there in silence.
 say: Mom turns off the TV. No real point in watching it at this point.
@@ -568,7 +571,7 @@ goto(Bedroom_InitialChoice)
 label(Bedroom_InitialChoice)
 branch: I stand in the middle of the room.
 choice(Bedroom_PetTheCat): Pet the cat
-#choice: Pick up my phone
+choice(Bedroom_Phone): Pick up my phone
 choice(Bedroom_Photos): Take a look at the photos
 choice(Bedroom_Computer): Open the laptop
 choice_always(InitialChoice): Head back to the living room
@@ -627,6 +630,84 @@ say: Neither of us wants the petting to end. As I pull my hand away, she nips at
 say: To stop me from leaving for the last time.
 say: But I have less than an hour left. I need to make the most of it.
 goto(Bedroom_InitialChoice)
+
+label(Bedroom_Phone)
+say: The emergency alerts have stopped. My phone feels strangely normal. Mundane.
+say: An object that occupies so much of my life just feels out of place in such a surreal moment.
+say: I do have a missed call, from Reed.
+say: Not sure why, but I don't really feel like I want to talk to my friends right now.
+say: I've always felt a bit like I'm pretending to be someone when I'm around them. I just don't want that right now.
+say: Still, he's been a pretty good friend to me even if he and the rest of them like to give me shit.
+branch: What am I even doing on my phone?
+choice(Bedroom_Phone_CallReed): Call Reed back
+choice(Bedroom_Phone_CallKatie, Gate_MissBestFriend): Call Katie
+choice(Bedroom_Phone_OpenSocial): Open social media
+end
+
+label(Bedroom_Phone_OpenSocial)
+say: I glance over my feed at possible take on the current situation, presented passionately by some anonymous user.
+say: We deserve it for electing Him.
+say: We deserve it for murdering people for their identities.
+say: We deserve it for not murdering people for their identities.
+say: The defense systems will save us.
+say: This is the moment we've been waiting for. We will rise from the ash and build a better world.
+say: This is the only possible outcome of nuclear proliferation.
+say: This is the prophesied end, and we should rejoice.
+say: This whole thing is a hoax to herd us like cattle into shelters.
+say: And about any other thought you can imagine. Probably quite a few you can't.
+say: I notice one post in a forum I'm not familiar with.
+say(ForumUser1): Anybody else just have their egg cracked by the world ending??
+say: Not sure what that means - I can't imagine cooking is at the top of anyone's priority list right now.
+say: Intrigued, I click the post.
+say(ForumUser2): OMG SAMEEEE!!!!
+say(ForumUser3): Yes me too! Nothing like imminent destruction to make you think about things.
+say(ForumUser4): This brought a smile to my face. Even in the darkest of times, we find each other.
+say(ForumUser4): Do you have a name or pronouns you'd like to be referred to by?
+say(ForumUser2): Sadie. Not sure about pronouns. She/they maybe? IDK WHAT THE FUCK IS HAPPENINGGGGG
+say(ForumUser4): Welcome Sadie. I'm so glad to have you with us. Look how cute she is! Let's show them some love everyone!
+say(ForumUser3): My name is Jade. Kind of don't want to change it? I think I do want to go by he/him though.
+say(ForumUser4): Welcome Jade. I want you to know that you are loved. Everyone say hi to him!
+say(ForumUser1): I'm still kind of in shock. I just want to be a girl before I die. I don't have a name.
+say(ForumUser4): I understand, anonymous girl. I just want you to know that you are a girl, and you always have been.
+say(ForumUser2): CRYING SO HARD RIGHT NOW OMG
+say: I scroll through the whole thread. I guess it's people figure out their gender identity or something?
+say: Why do I feel this weird urge to reply? To join them? They just seem so happy.
+say: Even at the end of everything these people are finding a way to be themselves. I wish I could have that.
+say: But that doesn't make any sense. I'm already the person I am.
+say: Everett Barnes: normal-ass dude. Not special in any way anyone cares about.
+branch: This is messing with my head. I need to do something else.
+choice(Bedroom_Phone_OpenVideos): Check my video feed
+choice(Bedroom_InitialChoice): Stop doomscrolling
+end
+
+label(Bedroom_Phone_OpenVideos)
+countdown(false)
+say: Time to switch apps. I just need something comforting to watch.
+say: There's a video of a dog chasing his tail. Round and round he goes.
+say: This goes on and on. He's barking, growling, getting really into the chase.
+say: Just keep going bud. You'll catch it some day.
+say: There's another installment in a Sword Age series I've been following. Don't really feel like watching that right now.
+say: There's a video from two days ago titled "Why You Should be Afraid of Nuclear War". That person must be feeling pretty smug.
+say: Oh! A new episode of DevGrrrrl's series about the game she's working on.
+say: I thought for a while that I'd like to be a girl dev.
+say: Game dev! Stupid brain. Anyway, that didn't really work out.
+say: But I still enjoy her videos. Her three-hour AI rant video was what finally convinced me to stop using it so much.
+say: In this video, she's talking about building procedural worlds.
+say: She flies a free camera through what seems to be an endless forest. As far as I can tell, it seems to just go on and on and on.
+say: She stops to comment on a tree that's floating a few feet in the air.
+say: If she has one fault it's that she's overly critical of her work. In this endless, beautiful, serene world, she's focusing on one tiny bug.
+say: Then she flies the camera out. The forest, it turns out, is not endless.
+say: This is an entire living world, with oceans, forests, mountains, deserts.
+say: A whole world born from the mind of one person.
+say: Funny that the world we live in is probably ending because of one person too. One keystroke. Ctrl+A, Del.
+say: I realize the video has stopped buffering. The little red dot catches up with the grey line and time stops.
+countdown(true, 175)
+say: Oh fuck. Fuck! My last hour alive and I spent it doomscrolling.
+say: The stopped video can probably only mean one thing. I might be the last person to ever watch it.
+say: Yeah. Nothing is working. The page won't refresh and nothing else will load either.
+say: Trillions of dollars of internet infrastructure have just ceased to exist.
+say: And now, it's my turn to cease to exist.
+goto(TimeoutEnding)
 
 label(Bedroom_Photos)
 say: I'm not sure quite what inspires me. I randomly reach for a photo album from the stack.
@@ -723,6 +804,7 @@ choice(Bedroom_Computer_VideoGame_CharacterSelect): Why the hell not?
 end
 
 label(Bedroom_Computer_VideoGame_CharacterSelect)
+countdown(false)
 say: These are my last moments. I can choose how to spend them, damn it!
 say: On the character select screen I see the list of characters I've made.
 branch: CHOOSE SAVE FILE
