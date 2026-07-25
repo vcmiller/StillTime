@@ -6,14 +6,14 @@ namespace Nodes {
         
         public INode Next { get; }
         
-        public bool AlwaysAllow { get; }
+        public bool BypassVisitedCheck { get; }
     
-        public List<Variable> Gates { get; } = new();
+        public List<ICondition> Gates { get; } = new();
 
-        public Choice(string text, INode next, bool alwaysAllow) {
+        public Choice(string text, INode next, bool bypassVisitedCheck) {
             Text = text;
             Next = next;
-            AlwaysAllow = alwaysAllow;
+            BypassVisitedCheck = bypassVisitedCheck;
         }
     }
 }

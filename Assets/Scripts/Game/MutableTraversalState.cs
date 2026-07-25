@@ -25,5 +25,18 @@ namespace Game {
             Dictionary<Variable, object> dict = variable.Scope == VarScope.Global ? GlobalVariables : RunVariables;
             dict[variable] = value;
         }
+
+        public T GetVariableValue<T>(Variable variable) {
+            if (typeof(T) != variable.DefaultValue.GetType()) {
+                throw new InvalidOperationException($"Trying to get variable {variable.Identifier} value with invalid type {typeof(T)}");
+            }
+            return GetVariableValue(variable) is T t ? t : default;
+        }
+
+        public object GetVariableValue(Variable variable) {
+            return RunVariables.GetValueOrDefault(variable) ??
+                   GlobalVariables.GetValueOrDefault(variable) ??
+                   variable.DefaultValue;
+        }
     }
 }

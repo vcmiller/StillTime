@@ -116,6 +116,12 @@ namespace Commands {
                 case "set":
                     ValidateCommand(line, index, cmd, args, text, 2, 2, false);
                     return new SetVarCommand(index, line, args[0], args[1]);
+                case "incr":
+                    ValidateCommand(line, index, cmd, args, text, 2, 2, false);
+                    int incrValue = int.TryParse(args[1], out int t)
+                        ? t
+                        : throw new ParsingException(index, line, $"Invalid int value {args[1]}");
+                    return new IncrVarCommand(index, line, args[0], incrValue);
                 case "cost":
                     ValidateCommand(line, index, cmd, args, text, 1, 1, false);
                     if (!int.TryParse(args[0], out int cost)) {

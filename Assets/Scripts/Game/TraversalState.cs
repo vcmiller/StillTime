@@ -81,8 +81,8 @@ namespace Game {
         }
 
         public bool IsChoiceAvailable(Choice choice) {
-            if (!choice.AlwaysAllow && VisitedNodesCurrentRun.Contains(choice.Next)) return false;
-            if (!choice.Gates.TrueForAll(GetVariableValue<bool>)) return false;
+            if (!choice.BypassVisitedCheck && VisitedNodesCurrentRun.Contains(choice.Next)) return false;
+            if (!choice.Gates.TrueForAll(g => g.CheckCondition(this))) return false;
             return true;
         }
 

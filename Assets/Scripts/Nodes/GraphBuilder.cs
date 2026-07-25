@@ -1,9 +1,20 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Commands;
 using Game;
 
 namespace Nodes {
     public static class GraphBuilder {
+        private static readonly List<(string, ComparisonOperator)> ComparisonOps = new() {
+            ("==", ComparisonOperator.Equal),
+            ("!=", ComparisonOperator.NotEqual),
+            ("<=", ComparisonOperator.LessOrEqual),
+            (">=", ComparisonOperator.GreaterOrEqual),
+            (">", ComparisonOperator.Greater),
+            ("<", ComparisonOperator.Less),
+        };
+
         public static GameGraph BuildGraph(List<Command> commands) {
             Dictionary<string, Resource> resources = new();
             Dictionary<string, INode> nodesByIdentifier = new();
@@ -72,13 +83,12 @@ namespace Nodes {
             List<Command> commands,
             Dictionary<string, INode> nodesByIdentifier,
             Dictionary<string, Resource> resources) {
-
             Dictionary<string, int> countByLocalId = new();
-            
+
             foreach (Command command in commands) {
                 if (previousNode == null) break;
                 INode createdNode = null;
-                
+
                 Speaker speaker = command is TextCommand tc ? GetSpeaker(tc, resources) : null;
                 switch (command) {
                     case BranchBlockCommand branchBlockCommand:
@@ -128,10 +138,24 @@ namespace Nodes {
                             throw new ParsingException(setVarCommand.LineNumber, setVarCommand.Line,
                                 $"Invalid value {setVarCommand.Value} for var type {variable.Type}");
                         }
+
                         SetVariableNode setVariableNode = new(variable, varValue);
                         previousNode.Next = setVariableNode;
                         previousNode = setVariableNode;
                         createdNode = setVariableNode;
+                        break;
+                    case IncrVarCommand incrVarCommand:
+                        Variable incrVariable =
+                            GetResource<Variable>(incrVarCommand, incrVarCommand.VarName, resources);
+                        if (incrVariable.Type != VarType.Int) {
+                            throw new ParsingException(incrVarCommand.LineNumber, incrVarCommand.Line,
+                                "Increment is only valid for int variable");
+                        }
+
+                        IncrementVariableNode incrementVariableNode = new(incrVariable, incrVarCommand.Value);
+                        previousNode.Next = incrementVariableNode;
+                        previousNode = incrementVariableNode;
+                        createdNode = incrementVariableNode;
                         break;
                     case CountdownCommand countdownCommand:
                         CountdownNode countdownNode = new(countdownCommand.Show, countdownCommand.Value);
@@ -176,25 +200,53 @@ namespace Nodes {
             ChoiceCommand command,
             Dictionary<string, INode> nodesByIdentifier,
             Dictionary<string, Resource> resources) {
-
             if (!nodesByIdentifier.TryGetValue(command.TargetLabel, out INode choiceTarget)) {
                 throw new ParsingException(command.LineNumber, command.Line, "Invalid target label");
             }
 
             Choice choice = new(command.Text, choiceTarget, command.AlwaysAllow);
-            foreach (string gateName in command.RequiredGates) {
-                if (!resources.TryGetValue(gateName, out Resource resource)) {
-                    throw new ParsingException(command.LineNumber, command.Line, "Invalid gate name");
-                }
-
-                if (resource is not Variable gate) {
-                    throw new ParsingException(command.LineNumber, command.Line, $"Resource {gateName} is wrong type {resource}");
-                }
-
-                choice.Gates.Add(gate);
+            foreach (string gate in command.RequiredGates) {
+                ICondition gateCond = ProcessCondition(command, gate, resources);
+                choice.Gates.Add(gateCond);
             }
 
             return choice;
+        }
+
+        private static ICondition ProcessCondition(Command command, string condition,
+                                                   Dictionary<string, Resource> resources) {
+            if (condition.All(c => c == '_' || char.IsLetterOrDigit(c))) {
+                Variable variable = GetResource<Variable>(command, condition, resources);
+                if (variable.Type != VarType.Bool) {
+                    throw new ParsingException(command.LineNumber, command.Line,
+                        $"Cannot use variable of type {variable.Type} as a condition by itself");
+                }
+
+                return new BoolCondition(variable);
+            }
+
+            foreach ((string str, ComparisonOperator op) in ComparisonOps) {
+                int index = condition.IndexOf(str, StringComparison.Ordinal);
+                if (index < 0) continue;
+
+                string lhs = condition.AsSpan(0, index).Trim().ToString();
+                string rhs = condition.AsSpan(index + str.Length).Trim().ToString();
+
+                Variable variable = GetResource<Variable>(command, lhs, resources);
+                if (variable.Type != VarType.Int) {
+                    throw new ParsingException(command.LineNumber, command.Line,
+                        $"Cannot use variable of type {variable.Type} as an int operand");
+                }
+
+                if (!int.TryParse(rhs, out int rhsInt)) {
+                    throw new ParsingException(command.LineNumber, command.Line,
+                        $"Failed to parse value {rhs} as int.");
+                }
+
+                return new IntCondition(variable, op, rhsInt);
+            }
+
+            throw new ParsingException(command.LineNumber, command.Line, $"Failed to parse condition {condition}");
         }
     }
 }

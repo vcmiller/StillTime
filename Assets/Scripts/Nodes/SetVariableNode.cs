@@ -16,6 +16,7 @@ namespace Nodes {
             }
             
             Variable = variable;
+            Value = value;
         }
 
         public override void ApplyToState(ref MutableTraversalState state) {
