@@ -8,7 +8,7 @@ namespace Nodes {
             Dictionary<string, Resource> resources = new();
             Dictionary<string, INode> nodesByIdentifier = new();
 
-            // Build gates and labels first.
+            // Build resources and labels first.
             foreach (Command command in commands) {
                 if (command is VarCommand varCommand) {
                     Variable variable = new(varCommand.Name, varCommand.Type, varCommand.Scope);
@@ -122,12 +122,16 @@ namespace Nodes {
                         previousNode = sayNode;
                         createdNode = sayNode;
                         break;
-                    case UnlockCommand unlockCommand:
-                        Variable variable = GetResource<Variable>(unlockCommand, unlockCommand.GateName, resources);
-                        UnlockNode unlockNode = new(variable);
-                        previousNode.Next = unlockNode;
-                        previousNode = unlockNode;
-                        createdNode = unlockNode;
+                    case SetVarCommand setVarCommand:
+                        Variable variable = GetResource<Variable>(setVarCommand, setVarCommand.VarName, resources);
+                        if (!variable.TryParseValue(setVarCommand.Value, out object varValue)) {
+                            throw new ParsingException(setVarCommand.LineNumber, setVarCommand.Line,
+                                $"Invalid value {setVarCommand.Value} for var type {variable.Type}");
+                        }
+                        SetVariableNode setVariableNode = new(variable, varValue);
+                        previousNode.Next = setVariableNode;
+                        previousNode = setVariableNode;
+                        createdNode = setVariableNode;
                         break;
                     case CountdownCommand countdownCommand:
                         CountdownNode countdownNode = new(countdownCommand.Show, countdownCommand.Value);

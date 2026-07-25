@@ -113,9 +113,9 @@ namespace Commands {
                 case "var":
                     ValidateCommand(line, index, cmd, args, text, 3, 3, false);
                     return new VarCommand(index, line, args[0], args[1], args[2]);
-                case "unlock":
-                    ValidateCommand(line, index, cmd, args, text, 1, 1, false);
-                    return new UnlockCommand(index, line, args[0]);
+                case "set":
+                    ValidateCommand(line, index, cmd, args, text, 2, 2, false);
+                    return new SetVarCommand(index, line, args[0], args[1]);
                 case "cost":
                     ValidateCommand(line, index, cmd, args, text, 1, 1, false);
                     if (!int.TryParse(args[0], out int cost)) {

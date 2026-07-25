@@ -138,7 +138,7 @@ say(Dad): I remember all the boys changing together no problem when I was in sch
 say: Oh god please no, I don't want to relive this.
 say: The boys made fun of me. Called me 'queer'. And some worse terms.
 say: All for <i>not</i> wanting to look at naked male bodies. How does that make sense?
-unlock(Gate_SignLockerRoom)
+set(Gate_SignLockerRoom, true)
 say(Mom): Everett? Can you come back to us dear?
 say(Mom): You know, that was around the time I started to feel you pulling away from us.
 goto(ParentConversation_Childhood_Choice)
@@ -147,7 +147,7 @@ label(ParentConversation_Childhood_Lonely)
 say(Dad): You made friends pretty well I thought.
 say(Mom): You and Katie were always so close. I was so sad when you stopped talking to her.
 say: Katie Marshall. I've been trying to forget that name. Thinking about her is just too painful.
-unlock(Gate_MissBFF)
+set(Gate_MissBFF, true)
 say(Dad): Wait, I thought they were dating??
 say(Mom): I don't think so dear. She always seemed like more of a sister to him.
 say(Mom): You always did talk about wanting a sister as a kid. Do you remember that?
@@ -174,8 +174,8 @@ say(Mom): Her name was hazel. She was going to be the most kind and beautiful da
 say: Hazel. My sister.
 say: Why do I feel such a sense of loss?
 say: It's not like I ever even met her.
-unlock(Gate_Name_Hazel)
-unlock(Gate_SignWantSister)
+set(Gate_Name_Hazel, true)
+set(Gate_SignWantSister, true)
 goto(ParentConversation_Childhood_Choice)
 
 label(ParentConversation_Childhood_FitIn)
@@ -189,7 +189,7 @@ say(Mom): I never really understood why you thought you didn't.
 say: I remember the haircuts. I always thought I looked so ugly. I really did look like every other boy.
 say: And I <i>hated</i> it. But what choice did I have?
 say: I remember looking in the mirror and crying at my short hair and jeans and t-shirt.
-unlock(Gate_SignHaircut)
+set(Gate_SignHaircut, true)
 goto(ParentConversation_Childhood_Choice)
 
 label(ParentConversation_Alienation)
@@ -315,7 +315,7 @@ say: What's wrong with me?
 say: Why do I want to be a girl if I'm not trans?
 say: Well, some things I guess I'll never know.
 say: It's too late to do anything.
-unlock(Gate_PartialRealization)
+set(Gate_PartialRealization, true)
 goto(TimeoutEnding)
 
 label(ParentConversation_ComingOut)
@@ -367,7 +367,7 @@ say: Hope that I can be a person who I'm proud of.
 say: Hope that my life can be shaped by what I want, not what's expected of me.
 say: Hope that I have a future.
 say: And for a few brief moments, I do.
-unlock(Gate_ParentsNeedTime)
+set(Gate_ParentsNeedTime, true)
 goto(TimeoutEnding)
 
 label(ParentConversation_ComingOut_Confident_Choice)
@@ -533,7 +533,7 @@ say: Hope that I can be a person who I'm proud of.
 say: Hope that my life can be shaped by what I want, not what's expected of me.
 say: Hope that I have a future.
 say: And for a few brief moments, I do.
-unlock(Gate_ParentsNeedTime)
+set(Gate_ParentsNeedTime, true)
 goto(TimeoutEnding)
 
 ######################################### Bedroom ##############################################
