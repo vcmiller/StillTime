@@ -1,5 +1,5 @@
 ﻿namespace Commands {
-    public class TextCommand : Command {
+    public abstract class TextCommand : Command {
         public string Speaker { get; }
         public string Text { get; }
 

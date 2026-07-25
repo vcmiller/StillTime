@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using Nodes;
+using UnityEngine;
 
 namespace Commands {
     public class SpeakerCommand : Command {
@@ -8,10 +10,15 @@ namespace Commands {
 
         public SpeakerCommand(int lineNumber, string line, string name, Color color, string text) :
             base(lineNumber, line) {
-
             Name = name;
             Color = color;
             Text = text;
+        }
+
+        public override void CreateResources(Dictionary<string, Resource> resources,
+                                             Dictionary<string, INode> nodeDictionary) {
+            Speaker speaker = new(Name, Color, Text);
+            resources.Add(Name, speaker);
         }
     }
 }

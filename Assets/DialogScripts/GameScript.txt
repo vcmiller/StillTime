@@ -19,14 +19,18 @@ var(bool, Gate_MissBFF, global)
 var(bool, Gate_ParentsNeedTime, global)
 var(bool, Gate_ComingOutPrep, global)
 var(bool, Gate_SecretRoad, global)
+var(bool, Gate_GirlDream, global)
 
 # Sign gates
 var(bool, Gate_SignLockerRoom, global)
 var(bool, Gate_SignWantSister, global)
 var(bool, Gate_SignHaircut, global)
+var(bool, Gate_SignAstronaut, global)
+var(bool, Gate_SignCat, global)
 
 # Unlockable names
 var(bool, Gate_Name_Hazel, global)
+var(bool, Gate_Name_Emily, global)
 
 # Conversation states
 var(int, Num_Alienation_Choice, run)
@@ -74,7 +78,7 @@ label(LaterRun)
 bg(0D2411)
 timeout(TimeoutEnding)
 say: It's a warm, rainy July evening. I'm in bed, passing in and out of sleep.
-say: My brain is fully of something it hasn't decided is a dream or a... memory?
+say: My brain is processing something it hasn't decided is a dream or a... memory?
 say: My phone blasts an alarm. Wait. I've heard this before. Right?
 say: I head to the living room. See the TV. How do I know what's happening? Did I just dream this?
 say: On the TV, there's a map of major US cities, all showing little timers. Next to us is a number: 00:56:31.
@@ -114,7 +118,7 @@ goto(ParentConversation_ChooseTopic)
 
 label(ParentConversation_ChooseTopic_Angry)
 say(Mom): I know sweetie. I know.
-say(Dad): You barely got to grow up. The pandemic stole so much time, and now the world is being taken from you.
+say(Dad): You barely got to grow up. The pandemic stole your college years, and now the world is being taken from you.
 goto(ParentConversation_ChooseTopic)
 
 label(ParentConversation_ChooseTopic)
@@ -546,8 +550,165 @@ goto(TimeoutEnding)
 ######################################### Bedroom ##############################################
 
 label(Bedroom_Entry)
-say: WIP
-goto(InitialChoice)
+say: I absentmindedly walk up the stairs to my childhood bedroom.
+say: It's really remarkable how little the room has changed.
+say: It looks just about like it did before I went off to college.
+say: I take a look around. My laptop sits on the kid desk in sleep mode.
+say: Toys from my childhood sit prominently on the shelves.
+say: Along with stacks of photo albums. I think Mom was planning on organizing those.
+say: Guess that won't be happening now.
+say: Slow Loris sleeps peacefully on the bed.
+say: My phone sits on the bed next to her. Some new bite marks on the glass suggest she was still pissed about the loud noise.
+say: I'm not really sure why I came in here, or what I was planning to do.
+say: Guess I just needed to process on my own.
+goto(Bedroom_InitialChoice)
+
+label(Bedroom_InitialChoice)
+branch: I stand in the middle of the room.
+choice(Bedroom_PetTheCat): Pet the cat
+#choice: Pick up my phone
+choice(Bedroom_Photos): Take a look at the photos
+#choice: Turn on the laptop
+choice_always(InitialChoice): Head back to the living room
+end
+
+label(Bedroom_PetTheCat)
+say: Slow Loris. The fat old tabby cat's been around well over a decade.
+say: Her government name is Lorry Barnes. Like a truck. I don't really get it either.
+say: But once I watched that nature doc as a kid and started calling her that, the name just stuck.
+say: She doesn't generally like men - won't go in my parents' bedroom at all because it smells like my dad.
+say: But she's always been fond of me, since the day she showed up at our door.
+say: I sit down on the bed next to her. She perks her ears up and opens her eyes ever so slightly.
+say: I move in to scratch her head, just behind the ears. Her eyes close again and she leans into my hand.
+say: All 20 pounds of her starts revving up like a race car. She's kneading the bed like she's on that one baking show.
+say: This is a happy animal who hasn't got a fucking clue what's going on in the world outside.
+branch: Honestly, I could stay here forever.
+choice(Bedroom_PetTheCat_Sleep): Keep petting the cat
+choice(Bedroom_PetTheCat_Leave): Pull myself away
+end
+
+label(Bedroom_PetTheCat_Sleep)
+say: I Keep petting her for I don't know how long.
+say: The purring calms me down and without really realizing it, I lie down on the bed.
+say: My last conscious thought as I fade into sleep: this is not such a bad way to go.
+bg(000000, 2)
+delay(2)
+goto(Bedroom_PetTheCat_Sleep_PartialRealization, Gate_PartialRealization)
+goto_reset(LaterRun)
+
+label(Bedroom_PetTheCat_Sleep_PartialRealization)
+say: I'm running without moving. No matter how much I try to move my legs, I can't manage more than a crawl.
+say: I don't know what I'm running from, but I know that I absolutely must get away.
+say: I see a figure ahead, standing on a hill. I can barely see her in the fog.
+say: But I know the she's a she. Just as I know my pursuer is a he.
+say: I fight. I need to get to her before he gets to me.
+say: I force my legs to move.
+say: One after the other.
+say: Up the hill.
+say: I can almost make out her face.
+say: Just a few more meters.
+say: He's gaining on me. He's almost caught up.
+say: I see her face. She is me.
+say: I see his face. He is me.
+say: I look back and forth. How can I be both of these people?
+say: I'm so close. She can save me.
+say: I reach out. She catches my hand and pulls me the rest of the way up.
+say: But as she touches me, I am her.
+say: I am pulling me up. The me that I was running from.
+say: I see the same fear in his eyes.
+say: But I'm not him. I'm not afraid. I'm her. The her that saved me. The me that saved him.
+set(Gate_GirlDream, true)
+goto_reset(LaterRun)
+
+label(Bedroom_PetTheCat_Leave)
+say: Neither of us wants the petting to end. As I pull my hand away, she nips at me, wanting to stop me from leaving.
+say: To stop me from leaving for the last time.
+say: But I have less than an hour left. I need to make the most of it.
+goto(Bedroom_InitialChoice)
+
+label(Bedroom_Photos)
+say: I'm not sure quite what inspires me. I randomly reach for a photo album from the stack.
+say: I'll never understand quite how my mom organized these. I guess that's why she was going to redo it.
+say: I open to a random page. It seems to just be a bunch of random photos of me.
+goto(Bedroom_Photos_Choice)
+
+label(Bedroom_Photos_Choice)
+branch: I glance over all the photos on the page.
+choice(Bedroom_Photos_Astronaut): My astronaut costume
+choice(Bedroom_Photos_Cat): Our old cat Emilio
+choice(Bedroom_Photos_BFF): Me and Katie at the beach
+choice_always(Bedroom_InitialChoice): That's enough for me.
+end
+
+label(Bedroom_Photos_Astronaut)
+say: I wanted to be an astronaut so bad as a kid.
+say: To see the stars. Explore the universe. Meet little green guys.
+say: You can imagine my disappointment when that didn't work out.
+say: Honestly, it wasn't even the realities of space travel that broke me.
+say: Sure, we may never make it to the stars. The distance may be just too vast.
+say: But that never stopped me from fantasizing.
+say: What got me was so much more mundane. Thinking about it now, it's kind of weird it hit me so hard.
+say: I think it was a documentary we watched in school.
+say: Every single astronaut was in such peak physical form.
+say: Seeing them train. Seeing their bodies. The men with their muscles and their macho attitudes.
+say: I knew, beyond a doubt, that that was not me. Couldn't be me.
+say: I could not be that. I could not <i>want</i> to be that.
+say: So that was it. No more astronaut dreams.
+set(Gate_SignAstronaut, true)
+goto(Bedroom_Photos_Choice)
+
+label(Bedroom_Photos_Cat)
+say: Emilio. My parents found her on the roadside years before I was born.
+say: They had her for months thinking she was a boy. Hence the name.
+say: I guess it's not always easy to tell the sex a kitten, especially when they're afraid of people.
+say: Just like everything else, Emilio was a constant in my life as a kid.
+say: I was sure that everything would always be exactly the way it was.
+say: Some things force you out of that delusion.
+say: When Emilio died, I think my parents were surprised how much it affected me.
+say: She was never exactly affectionate. She was born on the streets, and stayed aloof until the end.
+say: Honestly, she really didn't even like me that much.
+say: But she was always <i>there</i>. A part of my life. And then, all of a sudden, she wasn't.
+say: I think that's when I began to understand the concept of loss.
+say: That no matter how much you care about something, however much you want to hold on, time will take it from you.
+say: I was a mess for weeks after that. Nothing my parents could say would cheer me up.
+say: I was in first grade then, and I kept just randomly crying in class.
+say: Nobody could understand what was wrong with me.
+say: Why I couldn't learn to contain my emotions.
+say: Why I couldn't be like the other boys.
+say: Why I couldn't be like the other boys who made fun of me for crying in class.
+set(Gate_SignCat, true)
+set(Gate_Name_Emily, true)
+goto(Bedroom_Photos_Choice)
+
+label(Bedroom_Photos_BFF)
+say: Katie Marshall. My best friend.
+say: I've known her since middle school. She stood up for me when the boys made fun of me.
+say: Even got sent home for a week for punching a kid.
+say: I just felt safe around her - like I didn't have to be on high-alert when she was around.
+say: I think I was hopelessly in love with her right from the start.
+say: She was kind. Smart. Brave. Beautiful.
+say: Things I know I could never be. But around her, I felt close to that.
+say: But my true feelings I always kept to myself.
+say: She just...
+say: Couldn't know.
+say: It just wouldn't be right.
+say: Even thinking about her in a non-platonic way enough to send me into a spiral of shame and despair.
+say: So we just stayed friends.
+say: She always seemed so comfortable around me. The way girls seemed around each other.
+say: It made me so happy to just be somebody she trusted and cared for.
+say: Of course, my secret infatuation wasn't sustainable.
+say: When she would tell me about the boys and girls she went on dates with, my heart would sink.
+say: I was going to lose her. There was no avoiding it. My best friend would leave me and I would be alone again.
+say: When it came down to it, though, nothing really dramatic happened between us.
+say: More of a heat-death-of-the-universe sort of situation.
+say: She went off to college out of state, and I stayed closer to home.
+say: The pandemic sent us home and, well, people like her were able to make it work.
+say: People like me were not.
+say: Trying to hold onto the past would just hold her back.
+say: So I didn't
+say: Still, though. I guess there's not much left to lose if I call her now...
+set(Gate_MissBFF, true)
+goto(Bedroom_Photos_Choice)
 
 ######################################### Try to Drive Alone ##############################################
 

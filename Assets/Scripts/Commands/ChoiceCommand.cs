@@ -3,7 +3,7 @@
 namespace Commands {
     public class ChoiceCommand : TextCommand {
         public string TargetLabel { get; }
-        public IReadOnlyList<string> RequiredGates { get; }
+        public IReadOnlyList<string> Conditions { get; }
         public bool AlwaysAllow { get; }
 
         public ChoiceCommand(
@@ -12,11 +12,11 @@ namespace Commands {
             string text,
             string targetLabel,
             bool alwaysAllow,
-            IReadOnlyList<string> requiredGates) :
+            IReadOnlyList<string> conditions) :
             base(lineNumber, line, null, text) {
 
             TargetLabel = targetLabel;
-            RequiredGates = requiredGates;
+            Conditions = conditions;
             AlwaysAllow = alwaysAllow;
         }
     }

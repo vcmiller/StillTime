@@ -8,7 +8,7 @@ namespace Nodes {
         
         public bool BypassVisitedCheck { get; }
     
-        public List<ICondition> Gates { get; } = new();
+        public List<ICondition> Conditions { get; } = new();
 
         public Choice(string text, INode next, bool bypassVisitedCheck) {
             Text = text;

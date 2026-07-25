@@ -1,4 +1,7 @@
-﻿namespace Commands {
+﻿using System.Collections.Generic;
+using Nodes;
+
+namespace Commands {
     public class VarCommand : Command {
         public VarType Type { get; set; }
         public string Name { get; }
@@ -19,13 +22,22 @@
                 _ => throw new ParsingException(lineNumber, line, $"Invalid var scope {scope}"),
             };
         }
+
+        public override void CreateResources(Dictionary<string, Resource> resources,
+                                             Dictionary<string, INode> nodeDictionary) {
+            Variable variable = new(Name, Type, Scope);
+            resources.Add(Name, variable);
+        }
     }
 
     public enum VarType {
-        Int, Bool, String,
+        Int,
+        Bool,
+        String,
     }
 
     public enum VarScope {
-        Run, Global,
+        Run,
+        Global,
     }
 }
