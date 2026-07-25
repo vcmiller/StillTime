@@ -4,7 +4,7 @@ using System.Linq;
 using UnityEngine;
 
 namespace Commands {
-    public static class ScriptParser {
+    public static class CommandParser {
         public static List<Command> ParseScript(string scriptContent) {
             string[] lines = scriptContent.Split('\n');
             List<Command> commands = new();
@@ -51,7 +51,7 @@ namespace Commands {
                         if (labelSubCommand == null) continue;
                         if (labelSubCommand is EndCommand) break;
 
-                        if (labelSubCommand is ChoiceCommand or LabelBlockCommand or GateCommand or TimeoutCommand) {
+                        if (labelSubCommand is ChoiceCommand or LabelBlockCommand or GateCommand) {
                             throw new ParsingException(indexOfSubCommand, lines[indexOfSubCommand], "Invalid command inside label");
                         }
 
@@ -108,8 +108,8 @@ namespace Commands {
                     ValidateCommand(line, index, cmd, args, text, 1, 1, false);
                     return new GotoCommand(index, line, args[0], cmd == "goto_reset");
                 case "timeout":
-                    ValidateCommand(line, index, cmd, args, text, 1, 1, false);
-                    return new TimeoutCommand(index, line, args[0]);
+                    ValidateCommand(line, index, cmd, args, text, 0, 1, false);
+                    return new TimeoutCommand(index, line, args?.Length > 0 ? args[0] : null);
                 case "gate":
                     ValidateCommand(line, index, cmd, args, text, 1, 1, false);
                     return new GateCommand(index, line, args[0]);

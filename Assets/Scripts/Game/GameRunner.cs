@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using Cysharp.Threading.Tasks;
+using Infohazard.Core;
 using Nodes;
 using UnityEngine;
 
@@ -12,6 +13,21 @@ namespace Game {
         private GameGraph _gameGraph;
         private TraversalState _currentState;
         private CancellationTokenSource _cancellationTokenSource;
+        private const string SkipAnimationsKey = "StillTime.SkipAnimations";
+        private bool _skipAnimations;
+
+        public bool SkipAnimations {
+            get => _skipAnimations;
+            set {
+                if (_skipAnimations == value) return;
+                _skipAnimations = value;
+                PlayerPrefs.SetInt(SkipAnimationsKey, value ? 1 : 0);
+            }
+        }
+
+        private void OnEnable() {
+            _skipAnimations = PlayerPrefs.GetInt(SkipAnimationsKey) != 0;
+        }
 
         public void LoadGameGraph(GameGraph gameGraph) {
             _gameGraph = gameGraph;
@@ -26,19 +42,10 @@ namespace Game {
                 throw new InvalidOperationException("Game is already running.");
             }
 
-            TraversalState newState = new(
-                _gameGraph.RootNode,
-                null,
-                false,
-                null,
-                Enumerable.Empty<Gate>(),
-                Enumerable.Empty<INode>(),
-                Enumerable.Empty<INode>(),
-                true,
-                Color.black);
-
+            TraversalState state = _gameGraph.BuildInitialState();
             _cancellationTokenSource = new CancellationTokenSource();
-            RunNode(newState, _cancellationTokenSource.Token);
+            _gameView.SetBgColor(state.BgColor, 0);
+            RunNode(state, _cancellationTokenSource.Token);
         }
 
         public void LoadGame(SerializedTraversalState data) {
@@ -52,6 +59,7 @@ namespace Game {
 
             TraversalState state = _gameGraph.DeserializeState(data);
             _cancellationTokenSource = new CancellationTokenSource();
+            _gameView.SetBgColor(state.BgColor, 0);
             RunNode(state, _cancellationTokenSource.Token);
         }
 
@@ -77,6 +85,7 @@ namespace Game {
             _cancellationTokenSource?.Cancel();
             _cancellationTokenSource?.Dispose();
             _cancellationTokenSource = null;
+            _gameView.SetBgColor(Color.black, 0);
         }
 
         private void RunNode(TraversalState state, CancellationToken cancellationToken) {
@@ -85,7 +94,7 @@ namespace Game {
             while (!cancellationToken.IsCancellationRequested) {
                 if (!seenNodes.Add(_currentState.CurrentNode)) {
                     throw new Exception(
-                        $"Encountered a node {_currentState.CurrentNode} twice in the same synchronous call to RunNode. " +
+                        $"Encountered a node {_currentState.CurrentNode.FullIdentifier} twice in the same synchronous call to RunNode. " +
                         "This could easily result in an infinite loop.");
                 }
 
@@ -98,7 +107,8 @@ namespace Game {
                         _gameView.SetSingleText(
                             singleTextNode.Text,
                             singleTextNode.Speaker,
-                            () => Advance(_currentState, singleTextNode.Next, cancellationToken));
+                            () => Advance(_currentState, singleTextNode.Next, cancellationToken),
+                            SkipAnimations);
                         break;
                     case BranchNode branchNode:
                         _gameView.SetChoices(
@@ -107,21 +117,24 @@ namespace Game {
                             branchNode.Choices
                                       .Where(_currentState.IsChoiceAvailable)
                                       .Select(c => {
-                                          TraversalState nextState = _currentState.Advance(c.Next);
-                                          bool hasNewContent = ExploreBranchForNewContent(nextState, 0, 10000);
-                                          return (c.Text, new Action(() => Advance(_currentState, c.Next, cancellationToken)),
+                                          Stack<TraversalState> stack = new();
+                                          stack.Push(_currentState.Advance(c.Next));
+                                          bool hasNewContent = ExploreBranchForNewContent(stack, 10000);
+                                          return (c.Text,
+                                              new Action(() => Advance(_currentState, c.Next, cancellationToken)),
                                               hasNewContent);
                                       })
-                                      .ToList());
+                                      .ToList(),
+                            SkipAnimations);
                         break;
-                    case DelayNode delayNode:
+                    case DelayNode delayNode when !SkipAnimations:
                         UniTask.Delay(TimeSpan.FromSeconds(delayNode.Time), cancellationToken: cancellationToken)
                                .ContinueWith(() => Advance(_currentState, delayNode.Next, cancellationToken));
                         break;
                     case ISingleNextNode singleNextNode:
                         switch (singleNextNode) {
                             case BgNode bgNode:
-                                _gameView.SetBgColor(bgNode.Color, bgNode.Time);
+                                _gameView.SetBgColor(bgNode.Color, SkipAnimations ? 0 : bgNode.Time);
                                 break;
                             case ClearNode:
                                 _gameView.Clear(true);
@@ -130,6 +143,7 @@ namespace Game {
 
                         if (singleNextNode.Next != null) {
                             _currentState = _currentState.Advance(singleNextNode.Next);
+                            Debug.Log($"Going to next state {_currentState.CurrentNode.FullIdentifier}");
                             continue;
                         } else {
                             _gameView.Clear(true);
@@ -151,7 +165,7 @@ namespace Game {
 
         private void Advance(TraversalState state, INode next, CancellationToken cancellationToken) {
             if (cancellationToken.IsCancellationRequested) return;
-            
+
             if (next == null) {
                 _gameView.Clear(true);
             } else {
@@ -159,19 +173,36 @@ namespace Game {
             }
         }
 
-        private bool ExploreBranchForNewContent(TraversalState state, int depth, int maxDepth) {
+        private static bool ExploreBranchForNewContent(Stack<TraversalState> stack, int maxDepth) {
+            if (!stack.TryPeek(out TraversalState state)) return false;
+
             if (state.WasSelfNodeUnexplored) return true;
 
-            if (depth == maxDepth) {
+            if (stack.Count >= maxDepth) {
                 Debug.LogError("Search reached max depth. This should not happen.");
                 return true;
             }
 
             foreach (INode possibleNext in state.GetAvailableNodes()) {
-                if (possibleNext == null) continue;
+                if (possibleNext is null or ResetRunNode) continue;
+
+                TraversalState previousState = stack.LastOrDefault(s => s.CurrentNode == possibleNext);
+                if (previousState != null && previousState.UnlockedGates.Count >= state.UnlockedGates.Count) {
+                    continue;
+                }
 
                 TraversalState nextState = state.Advance(possibleNext);
-                if (ExploreBranchForNewContent(nextState, depth + 1, maxDepth)) return true;
+
+                stack.Push(nextState);
+
+                try {
+                    if (ExploreBranchForNewContent(stack, maxDepth)) return true;
+                } finally {
+                    TraversalState poppedState = stack.Pop();
+                    if (poppedState != nextState) {
+                        throw new Exception("Error in stack operation");
+                    }
+                }
             }
 
             return false;

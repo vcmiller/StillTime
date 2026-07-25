@@ -87,6 +87,11 @@ namespace Game {
         }
 
         private bool TryGetNode(string name, out INode node) {
+            if (name == null) {
+                node = null;
+                return false;
+            }
+            
             return NodesByIdentifier.TryGetValue(name, out node);
         }
     }

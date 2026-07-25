@@ -46,25 +46,16 @@ namespace Game {
             BgColor = bgColor;
         }
 
-        private TraversalState(
-            INode node,
-            INode nodeForTimeout,
-            bool showCountdown,
-            int? countdownValue,
-            ReadOnlySet<Gate> unlockedGates,
-            ReadOnlySet<INode> visitedNodesCurrentRun,
-            ReadOnlySet<INode> visitedNodesOverall,
-            bool wasSelfNodeUnexplored,
-            Color bgColor) {
-            CurrentNode = node;
-            NodeForTimeout = nodeForTimeout;
-            ShowCountdown = showCountdown;
-            CountdownValue = countdownValue;
-            UnlockedGates = unlockedGates;
-            VisitedNodesCurrentRun = visitedNodesCurrentRun;
-            VisitedNodesOverall = visitedNodesOverall;
-            WasSelfNodeUnexplored = wasSelfNodeUnexplored;
-            BgColor = bgColor;
+        private TraversalState(MutableTraversalState mutableState) {
+            CurrentNode = mutableState.CurrentNode;
+            NodeForTimeout = mutableState.NodeForTimeout;
+            ShowCountdown = mutableState.ShowCountdown;
+            CountdownValue = mutableState.CountdownValue;
+            UnlockedGates = new ReadOnlySet<Gate>(mutableState.UnlockedGates);
+            VisitedNodesCurrentRun = new ReadOnlySet<INode>(mutableState.VisitedNodesCurrentRun);
+            VisitedNodesOverall = new ReadOnlySet<INode>(mutableState.VisitedNodesOverall);
+            WasSelfNodeUnexplored = mutableState.WasSelfNodeUnexplored;
+            BgColor = mutableState.BgColor;
         }
 
         public IEnumerable<INode> GetAvailableNodes() {
@@ -89,61 +80,37 @@ namespace Game {
             return true;
         }
 
+        private MutableTraversalState ToMutable() {
+            return new MutableTraversalState {
+                UnlockedGates = new HashSet<Gate>(UnlockedGates),
+                VisitedNodesCurrentRun = new HashSet<INode>(VisitedNodesCurrentRun),
+                VisitedNodesOverall = new HashSet<INode>(VisitedNodesOverall),
+                CurrentNode = CurrentNode,
+                NodeForTimeout = NodeForTimeout,
+                ShowCountdown = ShowCountdown,
+                CountdownValue = CountdownValue,
+                WasSelfNodeUnexplored = WasSelfNodeUnexplored,
+                BgColor = BgColor,
+            };
+        }
+
         public TraversalState Advance(INode next) {
-            int? countdownValue = CountdownValue;
-            bool showCountdown = ShowCountdown;
-            HashSet<Gate> unlockedSet = new(UnlockedGates);
-            HashSet<INode> visitedSetCurrentRun = new(VisitedNodesCurrentRun);
-            HashSet<INode> visitedSetOverall = new(VisitedNodesOverall);
-            Color bgColor = BgColor;
+            MutableTraversalState mutableState = ToMutable();
 
-            visitedSetCurrentRun.Add(next);
+            mutableState.VisitedNodesCurrentRun.Add(next);
+            mutableState.WasSelfNodeUnexplored = mutableState.VisitedNodesOverall.Add(next);
 
-            if (showCountdown && countdownValue.HasValue) {
-                countdownValue = Mathf.Max(0, countdownValue.Value - CurrentNode.Cost);
+            if (mutableState is { ShowCountdown: true, CountdownValue: not null }) {
+                mutableState.CountdownValue = Mathf.Max(0, mutableState.CountdownValue.Value - CurrentNode.Cost);
             }
 
-            INode nodeForTimeout = NodeForTimeout;
-            if (countdownValue == 0 && showCountdown && nodeForTimeout != null) {
-                next = nodeForTimeout;
-                nodeForTimeout = null;
-            }
-
-            switch (next) {
-                case CountdownNode countdownNode:
-                    showCountdown = countdownNode.Show;
-                    countdownValue = countdownNode.Value ?? countdownValue;
-                    break;
-                case ResetRunNode:
-                    showCountdown = false;
-                    countdownValue = null;
-                    visitedSetCurrentRun.Clear();
-                    nodeForTimeout = null;
-                    break;
-                case TimeoutNode timeoutNode:
-                    nodeForTimeout = timeoutNode.TimeoutTarget;
-                    break;
-                case BgNode bgNode:
-                    bgColor = bgNode.Color;
-                    break;
-                case UnlockNode unlockNode:
-                    unlockedSet.Add(unlockNode.Gate);
-                    break;
+            if (mutableState is { ShowCountdown: true, CountdownValue: 0, NodeForTimeout: not null }) {
+                next = mutableState.NodeForTimeout;
+                mutableState.NodeForTimeout = null;
             }
             
-            bool wasSelfNodeUnexplored = visitedSetOverall.Add(next);
-            
-            TraversalState nextState = new(
-                next,
-                nodeForTimeout,
-                showCountdown,
-                countdownValue,
-                new ReadOnlySet<Gate>(unlockedSet),
-                new ReadOnlySet<INode>(visitedSetCurrentRun),
-                new ReadOnlySet<INode>(visitedSetOverall),
-                wasSelfNodeUnexplored,
-                bgColor);
-
+            next.ApplyToState(ref mutableState);
+            TraversalState nextState = new(mutableState);
             return nextState;
         }
     }

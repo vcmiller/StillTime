@@ -11,5 +11,19 @@ namespace Game {
         public int? CountdownValue { get; set; }
         public bool WasSelfNodeUnexplored { get; set; }
         public string BgColor { get; set; }
+
+        public SerializedTraversalState Clone() {
+            return new SerializedTraversalState {
+                UnlockedGates = new List<string>(UnlockedGates),
+                VisitedNodesCurrentRun = new List<string>(VisitedNodesCurrentRun),
+                VisitedNodesOverall = new List<string>(VisitedNodesOverall),
+                CurrentNode = CurrentNode,
+                NodeForTimeout = NodeForTimeout,
+                ShowCountdown = ShowCountdown,
+                CountdownValue = CountdownValue,
+                WasSelfNodeUnexplored = WasSelfNodeUnexplored,
+                BgColor = BgColor,
+            };
+        }
     }
 }

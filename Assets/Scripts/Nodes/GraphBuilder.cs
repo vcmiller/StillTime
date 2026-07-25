@@ -95,6 +95,7 @@ namespace Nodes {
 
                         if (gotoCommand.ResetRunState) {
                             ResetRunNode resetNode = new();
+                            createdNode = resetNode;
                             previousNode.Next = resetNode;
                             previousNode = resetNode;
                         }
@@ -106,7 +107,9 @@ namespace Nodes {
                         previousNode.Cost += costCommand.Cost;
                         break;
                     case TimeoutCommand timeoutCommand:
-                        INode timeoutTarget = GetNode(timeoutCommand, timeoutCommand.TargetLabel, nodesByIdentifier);
+                        INode timeoutTarget = timeoutCommand.TargetLabel != null
+                            ? GetNode(timeoutCommand, timeoutCommand.TargetLabel, nodesByIdentifier)
+                            : null;
                         TimeoutNode timeoutNode = new(timeoutTarget);
                         previousNode.Next = timeoutNode;
                         previousNode = timeoutNode;
@@ -129,6 +132,7 @@ namespace Nodes {
                         CountdownNode countdownNode = new(countdownCommand.Show, countdownCommand.Value);
                         previousNode.Next = countdownNode;
                         previousNode = countdownNode;
+                        createdNode = countdownNode;
                         break;
                     case BgCommand bgCommand:
                         BgNode bgNode = new(bgCommand.Color, bgCommand.Time);

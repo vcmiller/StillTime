@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 namespace Utility {
     public class ReadOnlySet<T> : IReadOnlyCollection<T> {
@@ -38,7 +39,14 @@ namespace Utility {
         public List<TOther> ToList<TOther>(Func<T, TOther> converter) {
             List<TOther> result = new();
             foreach (T item in _internalHashSet) {
-                result.Add(converter(item));
+                TOther current = converter(item);
+
+                if (current is null) {
+                    Debug.LogError($"Encountered item with null conversion value: {item}");
+                    continue;
+                }
+                
+                result.Add(current);
             }
 
             return result;

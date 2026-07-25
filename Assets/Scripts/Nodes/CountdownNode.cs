@@ -1,4 +1,6 @@
-﻿namespace Nodes {
+﻿using Game;
+
+namespace Nodes {
     public class CountdownNode : Node, ISingleNextNode {
         public INode Next { get; set; }
         
@@ -9,6 +11,12 @@
         public CountdownNode(bool show, int? value) {
             Show = show;
             Value = value;
+        }
+
+        public override void ApplyToState(ref MutableTraversalState state) {
+            base.ApplyToState(ref state);
+            state.ShowCountdown = Show;
+            state.CountdownValue = Value ?? state.CountdownValue;
         }
     }
 }

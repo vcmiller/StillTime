@@ -27,6 +27,7 @@ namespace Game {
         private Action _mainButtonAction;
         private int _visibleButtonCount;
         private readonly List<ChoiceView> _currentChoices = new();
+        private TMP_TextInfo _textInfo;
 
         private void OnEnable() {
             _mainButton.onClick.RemoveListener(HandleButton);
@@ -35,23 +36,32 @@ namespace Game {
             _showWordTimer.Initialize();
             _showButtonTimer.Initialize();
             
-            _countdownObject.SetActive(false);
+            HideCountdown();
         }
 
         private void OnDisable() {
             _mainButton.onClick.RemoveListener(HandleButton);
         }
 
-        private void HandleButton() {
-            if (_mainText.maxVisibleWords < _mainText.textInfo.wordCount + 1 ||
-                _visibleButtonCount < _currentChoices.Count) {
-                _mainText.maxVisibleWords = _mainText.textInfo.wordCount + 1;
-                for (int i = 0; i < _currentChoices.Count; i++) {
-                    _currentChoices[i].transform.localScale = Vector3.one;
-                }
+        private void SetText(string text) {
+            _mainText.text = text;
+            _textInfo = _mainText.GetTextInfo(text);
+        }
 
-                _visibleButtonCount = _currentChoices.Count;
-                _mainButton.gameObject.SetActive(_currentChoices.Count == 0);
+        private void SkipAnimation() {
+            _mainText.maxVisibleWords = _textInfo?.wordCount ?? 0 + 1;
+            for (int i = 0; i < _currentChoices.Count; i++) {
+                _currentChoices[i].transform.localScale = Vector3.one;
+            }
+
+            _visibleButtonCount = _currentChoices.Count;
+            _mainButton.gameObject.SetActive(_currentChoices.Count == 0);
+        }
+
+        private void HandleButton() {
+            if (_mainText.maxVisibleWords < _textInfo?.wordCount + 1 ||
+                _visibleButtonCount < _currentChoices.Count) {
+                SkipAnimation();
             } else {
                 _mainButtonAction?.Invoke();
             }
@@ -64,24 +74,34 @@ namespace Game {
             return $"<color=#{color}>{speaker.Text}</color>\n{text}";
         }
 
-        public void SetSingleText(string text, Speaker speaker, Action next) {
+        public void SetSingleText(string text, Speaker speaker, Action next, bool skipAnimation) {
             Clear();
 
-            _mainText.text = AddSpeakerToText(text, speaker);
-            _showWordTimer.StartInterval();
+            SetText(AddSpeakerToText(text, speaker));
             _mainButtonAction = next;
+
+            if (skipAnimation) {
+                SkipAnimation();
+            } else {
+                _showWordTimer.StartInterval();
+            }
         }
 
-        public void SetChoices(string mainText, Speaker speaker, List<(string text, Action action, bool hasNew)> choices) {
+        public void SetChoices(string mainText, Speaker speaker, List<(string text, Action action, bool hasNew)> choices, bool skipAnimation) {
             Clear();
 
-            _mainText.text = AddSpeakerToText(mainText, speaker);
-            _showWordTimer.StartInterval();
+            SetText(AddSpeakerToText(mainText, speaker));
             foreach ((string text, Action action, bool hasNew) in choices) {
                 ChoiceView choiceView = Instantiate(_choiceViewPrefab, _choiceViewParent, false);
                 choiceView.Configure(text, action, hasNew);
                 choiceView.transform.localScale = Vector3.zero;
                 _currentChoices.Add(choiceView);
+            }
+
+            if (skipAnimation) {
+                SkipAnimation();
+            } else {
+                _showWordTimer.StartInterval();
             }
         }
 
@@ -105,14 +125,16 @@ namespace Game {
 
         private void Update() {
             if (_mainText.isActiveAndEnabled &&
-                _mainText.text.Length > 0 && 
-                _mainText.maxVisibleWords < _mainText.textInfo.wordCount + 1 &&
+                _mainText.text.Length > 0 &&
+                _textInfo != null &&
+                _mainText.maxVisibleWords < _textInfo.wordCount + 1 &&
                 _showWordTimer.TryConsume()) {
                 _mainText.maxVisibleWords++;
                 _showButtonTimer.StartInterval();
             }
 
-            if (_mainText.maxVisibleWords >= _mainText.textInfo.wordCount + 1 &&
+            if (_textInfo != null &&
+                _mainText.maxVisibleWords >= _textInfo.wordCount + 1 &&
                 _currentChoices.Count > 0 &&
                 _visibleButtonCount < _currentChoices.Count) {
 
@@ -134,7 +156,7 @@ namespace Game {
         public void Clear(bool hidePanel = false) {
             _choiceViewParent.DestroyChildren();
             _mainButtonAction = null;
-            _mainText.text = string.Empty;
+            SetText(string.Empty);
             _mainText.maxVisibleWords = 0;
             _mainButton.gameObject.SetActive(!hidePanel);
             _visibleButtonCount = 0;

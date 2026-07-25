@@ -30,9 +30,8 @@ gate(Name_Hazel)
 
 ######################################### Introduction Scene ##############################################
 
-timeout(TimeoutEnding)
-
 label(Intro)
+timeout(TimeoutEnding)
 say(Author): Hello! Welcome to my little text adventure, created for the GMTK Game Jam 2026.
 say(Author): Before we get started, I want you to know this game deals with some heavy topics, including:
 say(Author): Death and grief
@@ -68,6 +67,7 @@ say: My parents don't say anything. I think I see a tear in my dad's eye.
 goto(InitialChoice)
 
 label(LaterRun)
+timeout(TimeoutEnding)
 say: It's a warm, rainy July evening. I'm in bed, passing in and out of sleep.
 say: My brain is fully of something it hasn't decided is a dream or a... memory?
 say: My phone blasts an alarm. Wait. I've heard this before. Right?
@@ -99,6 +99,7 @@ choice(ParentConversation_ChooseTopic_Warm): I really love you both.
 choice(ParentConversation_ChooseTopic_Angry): It's not fair!
 choice(ParentConversation_ChooseTopic): ...
 choice(ParentConversation_ComingOut, FullRealization): I need to tell you both something. This might be kind of a shock.
+choice_always(InitialChoice): I don't feel like talking right now.
 end
 
 label(ParentConversation_ChooseTopic_Warm)
@@ -578,6 +579,7 @@ goto(InitialChoice)
 ######################################### Timeout Ending ##############################################
 
 label(TimeoutEnding)
+timeout
 countdown(true, 0)
 say: Time's up.
 clear
