@@ -12,25 +12,26 @@ speaker(Interlude, 824077): <b>INTERLUDE</b>
 ######################################### Gate Declarations ##############################################
 
 # Story gates
-gate(PartialRealization)
-gate(FullRealization)
-gate(BadFriendExperience)
-gate(MissBFF)
-gate(ParentsNeedTime)
-gate(ComingOutPrep)
-gate(SecretRoad)
+var(bool, Gate_PartialRealization, global)
+var(bool, Gate_FullRealization, global)
+var(bool, Gate_BadFriendExperience, global)
+var(bool, Gate_MissBFF, global)
+var(bool, Gate_ParentsNeedTime, global)
+var(bool, Gate_ComingOutPrep, global)
+var(bool, Gate_SecretRoad, global)
 
 # Sign gates
-gate(Sign_LockerRoom)
-gate(Sign_WantSister)
-gate(Sign_Haircut)
+var(bool, Gate_SignLockerRoom, global)
+var(bool, Gate_SignWantSister, global)
+var(bool, Gate_SignHaircut, global)
 
 # Unlockable names
-gate(Name_Hazel)
+var(bool, Gate_Name_Hazel, global)
 
 ######################################### Introduction Scene ##############################################
 
 label(Intro)
+bg(0D2411)
 timeout(TimeoutEnding)
 say(Author): Hello! Welcome to my little text adventure, created for the GMTK Game Jam 2026.
 say(Author): Before we get started, I want you to know this game deals with some heavy topics, including:
@@ -67,6 +68,7 @@ say: My parents don't say anything. I think I see a tear in my dad's eye.
 goto(InitialChoice)
 
 label(LaterRun)
+bg(0D2411)
 timeout(TimeoutEnding)
 say: It's a warm, rainy July evening. I'm in bed, passing in and out of sleep.
 say: My brain is fully of something it hasn't decided is a dream or a... memory?
@@ -98,7 +100,7 @@ branch(Dad): I just... Everett...
 choice(ParentConversation_ChooseTopic_Warm): I really love you both.
 choice(ParentConversation_ChooseTopic_Angry): It's not fair!
 choice(ParentConversation_ChooseTopic): ...
-choice(ParentConversation_ComingOut, FullRealization): I need to tell you both something. This might be kind of a shock.
+choice(ParentConversation_ComingOut, Gate_FullRealization): I need to tell you both something. This might be kind of a shock.
 choice_always(InitialChoice): I don't feel like talking right now.
 end
 
@@ -124,8 +126,8 @@ choice_always(InitialChoice): I'm sorry! I just don't know how to talk about thi
 choice(ParentConversation_Childhood_WellBehaved): I only ever know how to follow the rules.
 choice(ParentConversation_Childhood_Lonely): I just felt so lonely.
 choice(ParentConversation_Childhood_FitIn): I tried so hard to fit in.
-choice(ParentConversation_Alienation, BadFriendExperience): Even now, I feel like I don't belong.
-choice(ParentConversation_ComingOut, FullRealization): Actually, I think I know. This might be kind of a shock.
+choice(ParentConversation_Alienation, Gate_BadFriendExperience): Even now, I feel like I don't belong.
+choice(ParentConversation_ComingOut, Gate_FullRealization): Actually, I think I know. This might be kind of a shock.
 end
 
 label(ParentConversation_Childhood_WellBehaved)
@@ -136,7 +138,7 @@ say(Dad): I remember all the boys changing together no problem when I was in sch
 say: Oh god please no, I don't want to relive this.
 say: The boys made fun of me. Called me 'queer'. And some worse terms.
 say: All for <i>not</i> wanting to look at naked male bodies. How does that make sense?
-unlock(Sign_LockerRoom)
+unlock(Gate_SignLockerRoom)
 say(Mom): Everett? Can you come back to us dear?
 say(Mom): You know, that was around the time I started to feel you pulling away from us.
 goto(ParentConversation_Childhood_Choice)
@@ -145,7 +147,7 @@ label(ParentConversation_Childhood_Lonely)
 say(Dad): You made friends pretty well I thought.
 say(Mom): You and Katie were always so close. I was so sad when you stopped talking to her.
 say: Katie Marshall. I've been trying to forget that name. Thinking about her is just too painful.
-unlock(MissBFF)
+unlock(Gate_MissBFF)
 say(Dad): Wait, I thought they were dating??
 say(Mom): I don't think so dear. She always seemed like more of a sister to him.
 say(Mom): You always did talk about wanting a sister as a kid. Do you remember that?
@@ -172,8 +174,8 @@ say(Mom): Her name was hazel. She was going to be the most kind and beautiful da
 say: Hazel. My sister.
 say: Why do I feel such a sense of loss?
 say: It's not like I ever even met her.
-unlock(Name_Hazel)
-unlock(Sign_WantSister)
+unlock(Gate_Name_Hazel)
+unlock(Gate_SignWantSister)
 goto(ParentConversation_Childhood_Choice)
 
 label(ParentConversation_Childhood_FitIn)
@@ -187,7 +189,7 @@ say(Mom): I never really understood why you thought you didn't.
 say: I remember the haircuts. I always thought I looked so ugly. I really did look like every other boy.
 say: And I <i>hated</i> it. But what choice did I have?
 say: I remember looking in the mirror and crying at my short hair and jeans and t-shirt.
-unlock(Sign_Haircut)
+unlock(Gate_SignHaircut)
 goto(ParentConversation_Childhood_Choice)
 
 label(ParentConversation_Alienation)
@@ -208,10 +210,10 @@ goto(ParentConversation_Alienation_Choice)
 label(ParentConversation_Alienation_Choice)
 branch(Mom): Please just tell us what's bothering you.
 choice_always(InitialChoice): I can't.
-choice(ParentConversation_Alienation_Choice_Haircut, Sign_Haircut): I've never been happy with how I look.
-choice(ParentConversation_Alienation_Choice_BFF, MissBFF): I feel so much closer to female friends.
-choice(ParentConversation_Alienation_Choice_LockerRoom, Sign_LockerRoom): I'm so uncomfortable around men.
-choice(ParentConversation_Alienation_Choice_Sister, Sign_WantSister): Why do I specifically wish I had a sister?
+choice(ParentConversation_Alienation_Choice_Haircut, Gate_SignHaircut): I've never been happy with how I look.
+choice(ParentConversation_Alienation_Choice_BFF, Gate_MissBFF): I feel so much closer to female friends.
+choice(ParentConversation_Alienation_Choice_LockerRoom, Gate_SignLockerRoom): I'm so uncomfortable around men.
+choice(ParentConversation_Alienation_Choice_Sister, Gate_SignWantSister): Why do I specifically wish I had a sister?
 choice(ParentConversation_Realization): What if... I'm not supposed to be a boy at all?
 end
 
@@ -313,12 +315,12 @@ say: What's wrong with me?
 say: Why do I want to be a girl if I'm not trans?
 say: Well, some things I guess I'll never know.
 say: It's too late to do anything.
-unlock(PartialRealization)
+unlock(Gate_PartialRealization)
 goto(TimeoutEnding)
 
 label(ParentConversation_ComingOut)
 branch(Dad): What it it son? You can tell us anything.
-choice(ParentConversation_ComingOut_Confident, ComingOutPrep, Sign_WantSister): Mom, Dad, I'm trans.
+choice(ParentConversation_ComingOut_Confident, Gate_ComingOutPrep, Gate_SignWantSister): Mom, Dad, I'm trans.
 choice(ParentConversation_ComingOut_NotConfident): I think I might be trans.
 end
 
@@ -365,7 +367,7 @@ say: Hope that I can be a person who I'm proud of.
 say: Hope that my life can be shaped by what I want, not what's expected of me.
 say: Hope that I have a future.
 say: And for a few brief moments, I do.
-unlock(ParentsNeedTime)
+unlock(Gate_ParentsNeedTime)
 goto(TimeoutEnding)
 
 label(ParentConversation_ComingOut_Confident_Choice)
@@ -387,7 +389,7 @@ say(Mom): But if it's a choice between dying on the freeway while sitting in tra
 branch: What now then?
 choice(ParentConversation_ComingOut_Confident_Ending): Yeah. You're right.
 choice(ParentConversation_ComingOut_Confident_Driving_Alone): No. I can't. I need to go, even if it's alone.
-choice(ParentConversation_ComingOut_Confident_Driving_Together, ParentsNeedTime, SecretRoad): Oh my god. I've got it!
+choice(ParentConversation_ComingOut_Confident_Driving_Together, Gate_ParentsNeedTime, Gate_SecretRoad): Oh my god. I've got it!
 end
 
 label(ParentConversation_ComingOut_Confident_Driving_Alone)
@@ -418,7 +420,7 @@ cost(180)
 branch: What in the actual fuck am I doing?
 choice(ParentConversation_ComingOut_Confident_Driving_Alone_GoBack): This is wrong. I have to go back.
 choice(ParentConversation_ComingOut_Confident_Driving_Alone_Highway): No. I have to keep going.
-choice(ParentConversation_ComingOut_Confident_Driving_Alone_SecretRoad, SecretRoad): Wait... the secret road!
+choice(ParentConversation_ComingOut_Confident_Driving_Alone_SecretRoad, Gate_SecretRoad): Wait... the secret road!
 end
 
 label(ParentConversation_ComingOut_Confident_Driving_Alone_Highway)
@@ -531,7 +533,7 @@ say: Hope that I can be a person who I'm proud of.
 say: Hope that my life can be shaped by what I want, not what's expected of me.
 say: Hope that I have a future.
 say: And for a few brief moments, I do.
-unlock(ParentsNeedTime)
+unlock(Gate_ParentsNeedTime)
 goto(TimeoutEnding)
 
 ######################################### Bedroom ##############################################

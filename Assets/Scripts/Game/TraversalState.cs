@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Mono.Collections.Generic;
 using Nodes;
@@ -7,7 +8,9 @@ using Utility;
 
 namespace Game {
     public class TraversalState {
-        public ReadOnlySet<Gate> UnlockedGates { get; }
+        public IReadOnlyDictionary<Variable, object> RunVariables { get; }
+        
+        public IReadOnlyDictionary<Variable, object> GlobalVariables { get; }
         
         public ReadOnlySet<INode> VisitedNodesCurrentRun { get; }
         
@@ -30,7 +33,8 @@ namespace Game {
             INode nodeForTimeout,
             bool showCountdown,
             int? countdownValue,
-            IEnumerable<Gate> unlockedGates,
+            IReadOnlyDictionary<Variable, object> runVariables,
+            IReadOnlyDictionary<Variable, object> globalVariables,
             IEnumerable<INode> visitedNodesCurrentRun,
             IEnumerable<INode> visitedNodesOverall,
             bool wasSelfNodeUnexplored,
@@ -39,7 +43,8 @@ namespace Game {
             NodeForTimeout = nodeForTimeout;
             ShowCountdown = showCountdown;
             CountdownValue = countdownValue;
-            UnlockedGates = new ReadOnlySet<Gate>(unlockedGates);
+            RunVariables = new Dictionary<Variable, object>(runVariables);
+            GlobalVariables = new Dictionary<Variable, object>(globalVariables);
             VisitedNodesCurrentRun = new ReadOnlySet<INode>(visitedNodesCurrentRun);
             VisitedNodesOverall = new ReadOnlySet<INode>(visitedNodesOverall);
             WasSelfNodeUnexplored = wasSelfNodeUnexplored;
@@ -51,7 +56,8 @@ namespace Game {
             NodeForTimeout = mutableState.NodeForTimeout;
             ShowCountdown = mutableState.ShowCountdown;
             CountdownValue = mutableState.CountdownValue;
-            UnlockedGates = new ReadOnlySet<Gate>(mutableState.UnlockedGates);
+            RunVariables = mutableState.RunVariables;
+            GlobalVariables = mutableState.GlobalVariables;
             VisitedNodesCurrentRun = new ReadOnlySet<INode>(mutableState.VisitedNodesCurrentRun);
             VisitedNodesOverall = new ReadOnlySet<INode>(mutableState.VisitedNodesOverall);
             WasSelfNodeUnexplored = mutableState.WasSelfNodeUnexplored;
@@ -76,13 +82,27 @@ namespace Game {
 
         public bool IsChoiceAvailable(Choice choice) {
             if (!choice.AlwaysAllow && VisitedNodesCurrentRun.Contains(choice.Next)) return false;
-            if (!choice.Gates.TrueForAll(UnlockedGates.Contains)) return false;
+            if (!choice.Gates.TrueForAll(GetVariableValue<bool>)) return false;
             return true;
+        }
+
+        public T GetVariableValue<T>(Variable variable) {
+            if (typeof(T) != variable.DefaultValue.GetType()) {
+                throw new InvalidOperationException($"Trying to get variable {variable.Identifier} value with invalid type {typeof(T)}");
+            }
+            return GetVariableValue(variable) is T t ? t : default;
+        }
+
+        public object GetVariableValue(Variable variable) {
+            return RunVariables.GetValueOrDefault(variable) ??
+                   GlobalVariables.GetValueOrDefault(variable) ??
+                   variable.DefaultValue;
         }
 
         private MutableTraversalState ToMutable() {
             return new MutableTraversalState {
-                UnlockedGates = new HashSet<Gate>(UnlockedGates),
+                RunVariables = new Dictionary<Variable, object>(RunVariables),
+                GlobalVariables = new Dictionary<Variable, object>(GlobalVariables),
                 VisitedNodesCurrentRun = new HashSet<INode>(VisitedNodesCurrentRun),
                 VisitedNodesOverall = new HashSet<INode>(VisitedNodesOverall),
                 CurrentNode = CurrentNode,
@@ -97,9 +117,6 @@ namespace Game {
         public TraversalState Advance(INode next) {
             MutableTraversalState mutableState = ToMutable();
 
-            mutableState.VisitedNodesCurrentRun.Add(next);
-            mutableState.WasSelfNodeUnexplored = mutableState.VisitedNodesOverall.Add(next);
-
             if (mutableState is { ShowCountdown: true, CountdownValue: not null }) {
                 mutableState.CountdownValue = Mathf.Max(0, mutableState.CountdownValue.Value - CurrentNode.Cost);
             }
@@ -108,8 +125,12 @@ namespace Game {
                 next = mutableState.NodeForTimeout;
                 mutableState.NodeForTimeout = null;
             }
+
+            mutableState.CurrentNode = next;
+            mutableState.VisitedNodesCurrentRun.Add(next);
+            mutableState.WasSelfNodeUnexplored = mutableState.VisitedNodesOverall.Add(next);
             
-            next.ApplyToState(ref mutableState);
+            mutableState.CurrentNode.ApplyToState(ref mutableState);
             TraversalState nextState = new(mutableState);
             return nextState;
         }

@@ -143,7 +143,7 @@ namespace Game {
 
                         if (singleNextNode.Next != null) {
                             _currentState = _currentState.Advance(singleNextNode.Next);
-                            Debug.Log($"Going to next state {_currentState.CurrentNode.FullIdentifier}");
+                            Debug.Log($"Going to next state '{_currentState.CurrentNode.FullIdentifier}'");
                             continue;
                         } else {
                             _gameView.Clear(true);
@@ -187,7 +187,9 @@ namespace Game {
                 if (possibleNext is null or ResetRunNode) continue;
 
                 TraversalState previousState = stack.LastOrDefault(s => s.CurrentNode == possibleNext);
-                if (previousState != null && previousState.UnlockedGates.Count >= state.UnlockedGates.Count) {
+                if (previousState != null && 
+                    previousState.GlobalVariables.SequenceEqual(state.GlobalVariables) &&
+                    previousState.RunVariables.SequenceEqual(state.RunVariables)) {
                     continue;
                 }
 

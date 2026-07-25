@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
+using Newtonsoft.Json.Linq;
 
 namespace Game {
     public class SerializedTraversalState {
-        public List<string> UnlockedGates { get; set; }
+        public Dictionary<string, JValue> RunVariables { get; set; }
+        public Dictionary<string, JValue> GlobalVariables { get; set; }
         public List<string> VisitedNodesCurrentRun { get; set; }
         public List<string> VisitedNodesOverall { get; set; }
         public string CurrentNode { get; set; }
@@ -14,7 +16,8 @@ namespace Game {
 
         public SerializedTraversalState Clone() {
             return new SerializedTraversalState {
-                UnlockedGates = new List<string>(UnlockedGates),
+                RunVariables = new Dictionary<string, JValue>(RunVariables),
+                GlobalVariables = new Dictionary<string, JValue>(GlobalVariables),
                 VisitedNodesCurrentRun = new List<string>(VisitedNodesCurrentRun),
                 VisitedNodesOverall = new List<string>(VisitedNodesOverall),
                 CurrentNode = CurrentNode,

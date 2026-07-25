@@ -51,7 +51,7 @@ namespace Commands {
                         if (labelSubCommand == null) continue;
                         if (labelSubCommand is EndCommand) break;
 
-                        if (labelSubCommand is ChoiceCommand or LabelBlockCommand or GateCommand) {
+                        if (labelSubCommand is ChoiceCommand or LabelBlockCommand or VarCommand) {
                             throw new ParsingException(indexOfSubCommand, lines[indexOfSubCommand], "Invalid command inside label");
                         }
 
@@ -110,9 +110,9 @@ namespace Commands {
                 case "timeout":
                     ValidateCommand(line, index, cmd, args, text, 0, 1, false);
                     return new TimeoutCommand(index, line, args?.Length > 0 ? args[0] : null);
-                case "gate":
-                    ValidateCommand(line, index, cmd, args, text, 1, 1, false);
-                    return new GateCommand(index, line, args[0]);
+                case "var":
+                    ValidateCommand(line, index, cmd, args, text, 3, 3, false);
+                    return new VarCommand(index, line, args[0], args[1], args[2]);
                 case "unlock":
                     ValidateCommand(line, index, cmd, args, text, 1, 1, false);
                     return new UnlockCommand(index, line, args[0]);

@@ -10,9 +10,9 @@ namespace Nodes {
 
             // Build gates and labels first.
             foreach (Command command in commands) {
-                if (command is GateCommand gateCommand) {
-                    Gate gate = new(gateCommand.GateName);
-                    resources.TryAdd(gate.Identifier, gate);
+                if (command is VarCommand varCommand) {
+                    Variable variable = new(varCommand.Name, varCommand.Type, varCommand.Scope);
+                    resources.TryAdd(variable.Identifier, variable);
                 }
 
                 if (command is SpeakerCommand speakerCommand) {
@@ -34,7 +34,8 @@ namespace Nodes {
                 ProcessLinearNodes($"{labelId}:", labelNode, labelBlockCommand.Commands, nodesByIdentifier, resources);
             }
 
-            EmptyNode rootNode = new();
+            EmptyNode rootNode = new() { FullIdentifier = "#ROOT" };
+            nodesByIdentifier[rootNode.FullIdentifier] = rootNode;
             ProcessLinearNodes(string.Empty, rootNode, commands, nodesByIdentifier, resources);
             return new GameGraph(rootNode, nodesByIdentifier, resources);
         }
@@ -122,8 +123,8 @@ namespace Nodes {
                         createdNode = sayNode;
                         break;
                     case UnlockCommand unlockCommand:
-                        Gate gate = GetResource<Gate>(unlockCommand, unlockCommand.GateName, resources);
-                        UnlockNode unlockNode = new(gate);
+                        Variable variable = GetResource<Variable>(unlockCommand, unlockCommand.GateName, resources);
+                        UnlockNode unlockNode = new(variable);
                         previousNode.Next = unlockNode;
                         previousNode = unlockNode;
                         createdNode = unlockNode;
@@ -182,7 +183,7 @@ namespace Nodes {
                     throw new ParsingException(command.LineNumber, command.Line, "Invalid gate name");
                 }
 
-                if (resource is not Gate gate) {
+                if (resource is not Variable gate) {
                     throw new ParsingException(command.LineNumber, command.Line, $"Resource {gateName} is wrong type {resource}");
                 }
 

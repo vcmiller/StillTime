@@ -1,18 +1,21 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
+using Commands;
 using Infohazard.Core;
+using Newtonsoft.Json.Linq;
 using Nodes;
 using UnityEngine;
 
 namespace Game {
     public class GameGraph {
         public INode RootNode { get; }
-        
+
         public IReadOnlyDictionary<string, INode> NodesByIdentifier { get; }
-        
+
         public IReadOnlyDictionary<string, Resource> ResourcesByIdentifier { get; }
-        
+
         public GameGraph(
             INode rootNode,
             IReadOnlyDictionary<string, INode> nodesByIdentifier,
@@ -28,7 +31,8 @@ namespace Game {
                 null,
                 false,
                 null,
-                Enumerable.Empty<Gate>(),
+                new Dictionary<Variable, object>(),
+                new Dictionary<Variable, object>(),
                 Enumerable.Empty<INode>(),
                 Enumerable.Empty<INode>(),
                 false,
@@ -37,7 +41,8 @@ namespace Game {
 
         public SerializedTraversalState SerializeState(TraversalState state) {
             return new SerializedTraversalState {
-                UnlockedGates = state.UnlockedGates.ToList(g => g.Identifier),
+                RunVariables = state.RunVariables.ToDictionary(v => v.Key.Identifier, v => new JValue(v.Value)),
+                GlobalVariables = state.GlobalVariables.ToDictionary(v => v.Key.Identifier, v => new JValue(v.Value)),
                 VisitedNodesCurrentRun = state.VisitedNodesCurrentRun.ToList(g => g.FullIdentifier),
                 VisitedNodesOverall = state.VisitedNodesOverall.ToList(g => g.FullIdentifier),
                 CurrentNode = state.CurrentNode?.FullIdentifier,
@@ -51,13 +56,13 @@ namespace Game {
 
         public TraversalState DeserializeState(SerializedTraversalState serializedState) {
             if (!TryGetNode(serializedState.CurrentNode, out INode currentNode)) {
-                throw new SerializationException($"Cannot find current node {serializedState.CurrentNode}");
+                throw new SerializationException($"Cannot find current node '{serializedState.CurrentNode}'");
             }
 
             INode nodeForTimeout = null;
             if (!string.IsNullOrWhiteSpace(serializedState.NodeForTimeout)) {
                 if (!TryGetNode(serializedState.NodeForTimeout, out nodeForTimeout)) {
-                    throw new SerializationException($"Cannot find timeout node {serializedState.NodeForTimeout}");
+                    throw new SerializationException($"Cannot find timeout node '{serializedState.NodeForTimeout}'");
                 }
             }
 
@@ -66,7 +71,8 @@ namespace Game {
                 nodeForTimeout,
                 serializedState.ShowCountdown,
                 serializedState.CountdownValue,
-                serializedState.UnlockedGates.SelectWhere<string, Gate>(TryGetGate),
+                ConvertVariables(serializedState.RunVariables),
+                ConvertVariables(serializedState.GlobalVariables),
                 serializedState.VisitedNodesCurrentRun.SelectWhere<string, INode>(TryGetNode),
                 serializedState.VisitedNodesOverall.SelectWhere<string, INode>(TryGetNode),
                 serializedState.WasSelfNodeUnexplored,
@@ -75,13 +81,34 @@ namespace Game {
                     : Color.black);
         }
 
-        private bool TryGetGate(string name, out Gate gate) {
+        private Dictionary<Variable, object> ConvertVariables(Dictionary<string, JValue> values) {
+            Dictionary<Variable, object> result = new();
+
+            if (values == null) return result;
+
+            foreach ((string key, JValue jValue) in values) {
+                if (!TryGetVariable(key, out Variable variable)) continue;
+
+                object value = variable.Type switch {
+                    VarType.Int => jValue.ToObject<int>(),
+                    VarType.Bool => jValue.ToObject<bool>(),
+                    VarType.String => jValue.ToObject<string>(),
+                    _ => throw new Exception("Invalid variable type."),
+                };
+
+                result[variable] = value;
+            }
+
+            return result;
+        }
+
+        private bool TryGetVariable(string name, out Variable variable) {
             if (ResourcesByIdentifier.TryGetValue(name, out Resource resource) &&
-                resource is Gate temp) {
-                gate = temp;
+                resource is Variable temp) {
+                variable = temp;
                 return true;
             } else {
-                gate = null;
+                variable = null;
                 return false;
             }
         }
@@ -91,7 +118,7 @@ namespace Game {
                 node = null;
                 return false;
             }
-            
+
             return NodesByIdentifier.TryGetValue(name, out node);
         }
     }

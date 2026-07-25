@@ -8,7 +8,7 @@ namespace Nodes {
         
         public bool AlwaysAllow { get; }
     
-        public List<Gate> Gates { get; } = new();
+        public List<Variable> Gates { get; } = new();
 
         public Choice(string text, INode next, bool alwaysAllow) {
             Text = text;
