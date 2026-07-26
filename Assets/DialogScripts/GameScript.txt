@@ -2,9 +2,13 @@
 
 ######################################### Speakers ##############################################
 
-speaker(Self, 00ccff): Me
+speaker(Self, fde6ff): Me
 speaker(Mom, 8f00d1): Mom
 speaker(Dad, 007504): Dad
+speaker(Reed, ff7b00): Reed
+speaker(Hoyt, 799100): Hoyt
+speaker(Vaughn, 008717): Vaughn
+speaker(Katie, ff006f): Katie
 speaker(Author, c99e00): <b>AUTHOR'S NOTE</b>
 speaker(Interlude, 824077): <b>INTERLUDE</b>
 speaker(ForumUser1, fcba03): WaywardPlatypus_081
@@ -522,7 +526,7 @@ goto_reset(LaterRun)
 label(ParentConversation_ComingOut_NotConfident)
 say: There's a long pause. My specialty.
 cost(300)
-say(Dad): As in transgender? Are you sure?
+say(Dad): As in transgender? Are... you sure?
 say: No Dad I'm transatlantic, I identify as a fucking airplane.
 say: At least he didn't make a 'Trans-parent' joke.
 say(Mom): I just... this is all so sudden Everett.
@@ -643,6 +647,29 @@ choice(Bedroom_Phone_CallReed): Call Reed back
 choice(Bedroom_Phone_CallKatie, Gate_MissBestFriend): Call Katie
 choice(Bedroom_Phone_OpenSocial): Open social media
 end
+
+label(Bedroom_Phone_CallReed)
+say: I hesitate. Do I really want to talk to him right now?
+say: I tap "call back".
+say(Reed): BRO. Where were you? Get your ass over here!
+say(Self): Um. What?
+say(Reed): We're burning time! We're getting BLASTED before we get blasted.
+say: Getting drunk with the boys. How else would I spend my last moments.
+say: That's what any man would want to do. So I guess it's what I want to do.
+say: Because I'm a man.
+say(Self): I, um, don't have a car, remember. Don't think my parents would want me to borrow theirs.
+say: And I couldn't bear to see their faces as they saw me leave.
+say(Reed): All good man, I'm on my way. You're not bailing on us!
+say: So it's decided. I don't feel like I decided on this, but here we are.
+cost(631)
+say: Around 10 minutes later he calls me back. He's a block away.
+say: I can't let my parents know I'm abandoning them. I lock my bedroom door and climb out the window.
+say: Just like a teenage girl in a high school romance movie.
+say: Why does that make me feel better about it?
+say: I tell myself this will hurt them less. They'll think I'm still there with them, silent but close by.
+say: The rain has picked up. It runs down my hair and my back. Washing away the sin.
+say: Even walking a block away, I get pretty wet. By the time I climb into Reed's giant monstrosity of an SUV, I'm soaked.
+goto(FriendHangout_Drive)
 
 label(Bedroom_Phone_OpenSocial)
 say: I glance over my feed at possible take on the current situation, presented passionately by some anonymous user.
@@ -916,6 +943,163 @@ say(Author): The author does not know how to operate a stick shift.
 say: But I can't. I can't steal my parents' car. I can't leave them alone like this.
 say: And with that I'm back in the house. I guess I'm not making some daring escape to a young-adult dystopian novel.
 goto(InitialChoice)
+
+######################################### Hangout With Friends ##############################################
+
+label(FriendHangout_Drive)
+say: All of them are there. Reed driving, Hoyt riding shotgun, Vaughn in the back with me.
+say(Reed): Vaughn, get this man a DRINK!
+say(Vaughn): Aye aye, captain!
+say: Before I can react, Vaughn is reaching into the cooler behind us and pulling out a can of cheap beer.
+say: And it's in my hands, and it's open, and I'm drinking it. Because that's what a man does with his bros.
+say: Do people really think this tastes good?
+say: Judging by the number of empty cans on the car floor, I guess they must.
+say: With a bit of a shock, I realize Reed is holding an open can in one hand and the wheel in the other.
+say: He's definitely reckless but I haven't seen him drink and drive before.
+say(Reed): Don't worry bro! What are they gonna do, suspend my license?
+say: He must have seen the look on my face.
+say(Reed): If this baby gets in a crash, it's the other person who's fucked.
+say: It's true. This three-ton hunk of metal could probably drive right over my parents' old station wagon.
+say: Does he really believe that though? I kind of think the other guys bring out a worse side of him.
+say: They probably bring out a worse side of me too. Or a side of me that's barely a person.
+say: I wonder if they really wanted to be here. If they might not rather hug their parents and cry.
+say(Hoyt): Everett man, you're even quieter than usual? What, did your cat die again or something?
+say(Reed): Come on Hoyt, let's just chill. There's a lot going on.
+say(Reed): But this crew is sticking together until the end!
+say(Vaughn): I've got your cure right here, matey! Drink up!
+say: Wow, that is genuinely the worse pirate accent I think I'e ever heard.
+say: As I struggle to drink my one, another beer is thrust into my empty hand.
+say(Vaughn): Ye best be finishing that before we reach land, lest ye be forced to walk the plank!
+say(Hoyt): God you're such a dumbass Vaughn. Just don't get all 'It's not gay if it's at sea' on us.
+say(Vaughn): You insult me woman! A man's bond with his crew is sacred.
+say(Vaughn): Come along lads, sing with me! Ohhhhhh what will we do with a drunken sailor?
+say(Reed): What will we do with a drunken sailor?
+say: They continue, eager to share their extensive knowledge of sea shanties.
+say: Hoyt eventually joins in too, and even I get into it a little bit.
+say: As far as drunk car-rides with your friends go, this isn't so bad.
+say: By the time we're pulling into the long driveway to Reed's house, we've gotten through <i>Drunken Sailor</i>,\
+<i>Spanish Ladies</i>, <i>Rolling Down to Old Maui</i>, and ended on <i>Leaver her, Johnny</i>.
+say: If we were girls, we'd be sharing our feelings and crying together.
+say: I suppose this is just the male version of that. The version we're allowed.
+say: I've only had three cans, but it's starting to get to me. The others seem to have had <i>much</i>more.
+say: We all stumble through the double front door into the foyer.
+say: A blast of cold air greets us as we make our way through the house and onto the back deck.
+say: Not sure where his parents are. Off on some trip probably.
+say: Being up on a hill, you can see a lot of the city from here.
+say(Reed): Ok, boys, here we are! Front-row seats to witness the end!
+say: I'm not really up to speed on my nuclear weapons, but I know they've gotten orders of magnitude more powerful than the first ones.
+say: Somehow, I don't think being tucked away a few miles from from the center of town will give us much time to witness anything.
+say: Still though. It's nice Reed wanted to bring the crew together, one last time.
+say: I just don't know how they're acting so normal.
+say: As we sit down on the patio chairs under the porch roof, Reed breaks out the strong stuff.
+say: Yeah, turns out the beer was just an appetizer. There seems to be no end to Reed's booze supply.
+say: Vaughn immediately goes for the pirate rum. He's nothing if not committed to the bit.
+say: Seems like he just wants to pass out before the countdown hits zero. Easier that way maybe.
+say(Vaughn): Whaaat are... whaat arrrrrre we doing heeeere?
+say(Hoyt): Watching you make an ass of yourself Vaughn. Never knew you couldn't hold your liquor.
+say: Seems to me he's holding quite a bit of liquor.
+say(Vaughn): Uuuurrrr a fuuu... a fuuucking whole ass... ass hole Hoyyyyt.
+say(Vaughn): But youuuu know I glove... I urrrrp love you guys riiiiiight?
+say(Hoyt): Aaaand here comes the gay shit.
+say: Not sure what Hoyt's problem is either. He can be kind of a dick sometimes, sure.
+say: But tonight he can't even open his mouth without insulting someone.
+say: Should I say something? Do guys stick up for their friends?
+say: Whatever, who gives a shit what a guy would do.
+say(Self): Come on now Hoyt. What's your problem? You've done nothing but give us shit all night.
+say(Hoyt): Oh don't you start. You've barely said shit and now all you can do is stand up for your drunk girlfriend.
+say: Girlfriend? He was just calling Vaughn gay a second ago. Are we lesbian lovers now?
+say: More likely, he just can't keep his homophobia and misogyny straight.
+say: And fuck you brain for making that pun.
+say: Come to think of it, if any of my friends are making shitty comments, it's usually started by him.
+say: But I think, all of a sudden, I see through him.
+say: He comes from a family where you hae to make those comments. Or else they'll be made at you.
+say: Nuclear deterrence. We won't fire at you as long as you can fire back. And just look at how well that worked out for us.
+say: I wonder how Hoyt would really feel about these things if he didn't have to have his hand on the button at all times.
+say(Vaughn): Youuuu urp guyssss... wha.. whyyy are we waiting here. waiting here to die. Should... shouldn't we just get in the car and driiiive away?
+say(Self): I thought about that. The highways out of town are all backed up.
+say(Vaughn): Nnnooo. No not the high urrrp way. The seeeeecret road.
+say: The others look at him skeptically.
+say: Secret road... why is that so familiar? Oh... shit...
+say(Self): Wait! The secret road from when we were kids?
+say: It's coming back. This would have been what, third grade? Before we knew Hoyt.
+say: Just me, Reed, and Vaughn exploring the forest near Reed's family home. This same home.
+say: One day we tried following the dirt road away from town instead of back towards it. As far as we knew, nothing was really back there.
+say: Sure enough, nothing was really back there. But we never found the end of the road.
+say: The weird thing, was it didn't appear on most maps. Not sure how it got missed, but we couldn't really figure out where it went without going down there ourselves.
+say: And we never did. The secret road became this mythical passage to another land.
+say: Actually going down there and seeing for ourselves would just have ruined it for us.
+say: Eventually, the secret road just faded from our minds as a thing that we thought about.
+say: I pull out my phone and open the map app. The dirt road is reported to end just a few thousand feet past where we are.
+say(Reed): Oh. My god, yeah of course I remember. I randomly thought about it one day and decided to drive down there.
+say(Reed): It goes on for miles! An old logging road I guess.
+say(Reed): Pretty bumpy and overgrown at points but it will take you right through the hills and away from the city.
+say(Hoyt): Man what are you on about?
+say(Reed): A road, that nobody knows about, reading right out of town, that's not on any maps.
+say(Reed): Everybody, grab anything you can from the kitchen. Water bottles, protein bars, anything that'll keep.
+say(Reed): Oh, and Everett, you grab Vaughn. Get him in the car.
+say(Reed): We're getting out of here. Guys, we're going to make it. We're gonna survive.
+say: Okay, so Vaughn's processing this by getting shitfaced and turning his brain off.
+say: Hoyt's leaning hard into his offense-as-defense mindset.
+say: Reed, it seems, has found some comfort in taking whatever control of the situation he can manage. That makes sense too, given who he is. 
+say: What about me? How am I coping with this? Psychoanalyzing my friends? That's new for me I guess.
+say: Hoyt looks skeptical of the plan, but Reed is hard to say no to. Vaughn is pretty much fully passed out at this point.
+say: As for me? I don't know, really.
+say: Am I overcome with guilt about leaving my parents and everyone else behind?
+say: Yeah, probably. But the adrenaline is keeping that in check for now. I guess I'll have plenty of time to feel the guilt later.
+say: Do I feel elated by the prospect of, just maybe, actually making it out of this alive?
+say: I guess so.
+say: Then why am I feeling such a sense of dread? The thermonuclear warhead currently barreling towards us?
+say: Well yeah, but something about this dread is new.
+say: I'm carrying Vaughn to the car, just like Reed asked. I guess he's the de-facto leader of our little band.
+say: This has always been how it is with him. He's a leader, I'm a follower.
+say: Sometimes it doesn't even feel like I'm making any decisions when I'm around him. That I'm just a passive observer of my own life.
+say: And I guess that's my whole life from now on. If we even make it out of here.
+say(Vaughn): Mmmmph urrp mmm
+say: Yep, he sure is out of it. I get him strapped in and turn back towards the house.
+say: Now that I think about it, the alcohol is definitely affecting me.
+say: My mind is going to places it usually doesn't. Down the secret road, to find out what horrors and wonders lie beyond.
+say: This is a new sense of dread I'm feeling, separate from run-of-the-mill apocalypse dread.
+say: I think I gained a bit more understanding of my friends tonight. But for some reason, I can't quite process the thought of spending years with them, trying to survive.
+say: There's something I'm missing. I keep thinking if I take one more turn down the winding road, it will be right there in front of me and everything will make sense.
+say: Oh, guess I've been zoning out. At some point without really realizing it, I must have gotten in the car.
+say: We are now riding in a very real car down a very real winding road that's not in my head.
+say: But I just can't drop this train of thought. I can't explain it. What is this feeling?
+say: Let's look at the facts. In a few minutes, the city I grew up in will be engulfed in an atomic fireball.
+say: If we manage to get far enough away, the four of us will become disaster survivors.
+say: Not the last men on earth, but inheritors of a burning world. Literally burning, this time.
+say: I may very well spend the rest of my life with these three guys.
+say: Huh, that's something. Isn't surviving an apocalypse with your friends every young person's dream?
+say: It's not like I don't like them. It's good they included me! They didn't have to come back for me after I missed Reed's call.
+say: Clearly, I'll always be part of the crew. One of the boys.
+say: I almost visibly gag at the last though. One of the boys.
+say: One of the boys. Why does that feel so wrong?
+say: I am
+say: One of
+say: The boys.
+say: But I don't want to be.
+say: Wait what? Where did that thought come from?
+say: Of course I want to be one of the boys. I am. Of course I am. A boy is what I am. Pretty sure that's not something get to choose.
+say: But the thought is there, and now that I've thought it, it's not going away.
+say: Why wouldn't I want to be one of he boys?
+say: Because I'm not. Because I never have been.
+say: Hmm? Not sure I follow.
+say: Yes I do.
+say: I don't want to be a boy.
+say: What does that even mean exactly?
+say: I know what it means.
+say: Say it.
+say: Say it!
+say: I want to be a girl.
+say: What?
+say: I want to be a girl.
+say: Say it again.
+say: I want to be a girl.
+say: I want to be a girl.
+say(Self): I want to be a girl.
+say: Wait.
+say: Did I just say that out loud?
+say: This is going to be a long car ride.
+goto(TimeoutEnding)
 
 ######################################### Timeout Ending ##############################################
 
