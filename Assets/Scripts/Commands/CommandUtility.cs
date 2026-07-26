@@ -21,7 +21,7 @@ namespace Commands {
 
         public static T GetResource<T>(Command command, string name, IReadOnlyDictionary<string, Resource> resources) {
             if (!resources.TryGetValue(name, out Resource resource)) {
-                throw new ParsingException(command.LineNumber, command.Line, "Invalid speaker name");
+                throw new ParsingException(command.LineNumber, command.Line, $"Invalid resource name {name}");
             }
 
             if (resource is not T typed) {
@@ -42,6 +42,10 @@ namespace Commands {
 
         public static ICondition ProcessCondition(Command command, string condition,
                                                   IReadOnlyDictionary<string, Resource> resources) {
+
+            bool invert = condition.StartsWith('!');
+            if (invert) condition = condition[1..];
+            
             if (condition.All(c => c == '_' || char.IsLetterOrDigit(c))) {
                 Variable variable = GetResource<Variable>(command, condition, resources);
                 if (variable.Type != VarType.Bool) {
@@ -49,7 +53,7 @@ namespace Commands {
                         $"Cannot use variable of type {variable.Type} as a condition by itself");
                 }
 
-                return new BoolCondition(variable);
+                return new BoolCondition(variable, !invert);
             }
 
             foreach ((string str, ComparisonOperator op) in ComparisonOps) {
@@ -70,7 +74,7 @@ namespace Commands {
                         $"Failed to parse value {rhs} as int.");
                 }
 
-                return new IntCondition(variable, op, rhsInt);
+                return new IntCondition(variable, op, rhsInt, invert);
             }
 
             throw new ParsingException(command.LineNumber, command.Line, $"Failed to parse condition {condition}");

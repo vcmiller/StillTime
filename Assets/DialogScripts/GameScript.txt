@@ -42,6 +42,14 @@ var(bool, Unlock_Name_Azalea, global)
 
 # Conversation states
 var(int, Num_Alienation_Choice, run)
+var(bool, Katie_Rekindled, run)
+var(bool, Katie_CameOut, run)
+
+# Chosen name. Set by a branch with unlockable options.
+var(string, ChosenName, global)
+
+# Default value. Theoretically this should never be used.
+set(ChosenName, Everett)
 
 ######################################### Introduction Scene ##############################################
 
@@ -520,8 +528,52 @@ say: I know they forgive me.
 goto(ParentConversation_ComingOut_Confident_Ending)
 
 label(ParentConversation_ComingOut_Confident_Driving_Together)
-say: WIP
-goto_reset(LaterRun)
+say(Mom): What's that sweetie?
+say(Self): I know how we can survive this.
+say(Self): There's an old logging road away from town, out by Reed's house.
+say(Self): Not on a lot of maps, and not a lot of people know about it.
+say(Self): Don't you see? It won't be backed up! If we hurry, we should be able to get far enough away.
+say: They look skeptical. Might need some more convincing I guess. That's fine. We are going to survive this. As a family.
+say(Mom): I... I just don't know. It seems like such a slim chance.
+say(Dad): What would we even do? Like if we make it out? We're not exactly rugged outdoor adventurers.
+say(Mom): I almost feel like that cliche is true. That the survivors of this will envy the dead.
+say(Self): Burning up together might feel like staying together. Like the only way not to lose each other.
+say(Self): But we would. We would be losing each other.
+say(Self): I know. I know it's scary. It might be more comforting to just accept our fate.
+say(Self): I just can't do that now. I've been through too much to give up.
+say(Self): I thought just getting to exist as {ChosenName} for a few moments would be enough.
+say(Self): And sure. If that's the only option, it's so much better than nothing. Than her never getting to exist.
+say(Self): But I've gotten a taste for it now. She's gotten a taste for it. And she's not going to sit here and let the world dictate the terms of her existence.
+say(Self): Think about this: if this is the end, you'll never get to know your daughter. Never get to see the kind of person she is.
+say(Self): I feel like I've spent my whole life on autopilot. Not really wanting to make decisions. Maybe the promise of annihilation is what it took to wake me up.
+say: Mom and Dad just sit there, listening intently. I think they might be stunned by my sudden desire to take action in my life.
+say(Mom): You know? If anything was going to convince me that {ChosenName} was someone I need to get to know, that was it.
+say(Dad): That was... very well put dear.
+say: They glance at each other. Mom nods. Dad nods.
+say(Mom): Ok. Yeah. We're with you. I can't say I'm sure this is the right thing. But I'm going to trust you. I do trust you.
+say(Dad): I trust you too.
+say: Over the next five minutes, we gather as many supplies as we can fit into the station wagon.
+say: Tents, camping supplies, and every bit of packaged food we can find. I fill up buckets of water from the tap.
+say: Why does this feel like we're going camping? Actually, I guess that's exactly what we're doing.
+say: Ok. No time to waste. Mom is desperately trying to get Slow Loris into her carrier. With my help, and after a few scratches, we manage it.
+say: And we're on the road. Mom driving the car. Me navigating us to safety. Dad taking inventory of our supplies in the back seat. Loris resting on my lap, purring contentedly.
+say: As we drive past Reed's house, it looks like his car is gone. Good. Maybe they made it out too.
+say: I take a last look at the city in which I spent my childhood.
+say: That world might be over. But life will go on. We will go on.
+say: Before that, though, there's one last thing I need to do. While the cell networks are still running.
+say: I open up my messages app. Not really even sure what I'm going to write before I write it.
+say(Self): Katie. By the time you see this, the networks will be down. You'll probably have already seen or heard what's happening.
+say(Self): I wish I had time to say everything that needs to be said. To tell you how much you mean to me.
+say(Self): But with technology about to fail us, I guess I'll just have to tell you in person.
+say(Self): I don't know how. But I promise you, I'm going to make it out of this. I'm going to find you.
+say(Self): I'm going to get through this. Thanks to you.
+say(Self): I won't see you in another life. Fuck that.
+say(Self): I'll see you in this one.
+say(Self): {ChosenName} (yeah, I'll probably have to explain that when I see you)
+clear
+bg(000000, 5)
+delay(5)
+end
 
 label(ParentConversation_ComingOut_NotConfident)
 say: There's a long pause. My specialty.
@@ -606,24 +658,24 @@ goto(Bedroom_PetTheCat_Sleep_PartialRealization, Gate_PartialRealization)
 goto_reset(LaterRun)
 
 label(Bedroom_PetTheCat_Sleep_PartialRealization)
-say: I'm running without moving. No matter how much I try to move my legs, I can't manage more than a crawl.
+say: I'm running along a winding road in the woods. Trying to run.
+say: No matter how much I try to move my legs, I can't manage more than a crawl.
 say: I don't know what I'm running from, but I know that I absolutely must get away.
-say: I see a figure ahead, standing on a hill. I can barely see her in the fog.
+say: I see a figure ahead, just around a bend. I can barely see her in the fog.
 say: But I know the she's a she. Just as I know my pursuer is a he.
 say: I fight. I need to get to her before he gets to me.
 say: I force my legs to move.
 say: One after the other.
-say: Up the hill.
 say: I can almost make out her face.
-say: Just a few more meters.
+say: Just a few more feet.
 say: He's gaining on me. He's almost caught up.
 say: I see her face. She is me.
 say: I see his face. He is me.
 say: I look back and forth. How can I be both of these people?
 say: I'm so close. She can save me.
-say: I reach out. She catches my hand and pulls me the rest of the way up.
-say: But as she touches me, I am her.
-say: I am pulling me up. The me that I was running from.
+say: I reach out. She catches my hand and pulls me the rest of the way to her.
+say: But as she touches me, my perspective shifts. I am her.
+say: I am her, taking my own hand. The me that I just was becomes the me I was running from.
 say: I see the same fear in his eyes.
 say: But I'm not him. I'm not afraid. I'm her. The her that saved me. The me that saved him.
 set(Gate_GirlDream, true)
@@ -646,6 +698,7 @@ branch: What am I even doing on my phone?
 choice(Bedroom_Phone_CallReed): Call Reed back
 choice(Bedroom_Phone_CallKatie, Gate_MissBestFriend): Call Katie
 choice(Bedroom_Phone_OpenSocial): Open social media
+choice(Bedroom_Phone_AskTheQuestion, Gate_PartialRealization): Ask the question
 end
 
 label(Bedroom_Phone_CallReed)
@@ -670,6 +723,310 @@ say: I tell myself this will hurt them less. They'll think I'm still there with 
 say: The rain has picked up. It runs down my hair and my back. Washing away the sin.
 say: Even walking a block away, I get pretty wet. By the time I climb into Reed's giant monstrosity of an SUV, I'm soaked.
 goto(FriendHangout_Drive)
+
+label(Bedroom_Phone_CallKatie)
+say: My heart is racing as I scroll to her in my contacts.
+say: I haven't talked ot her at all for, what, a year?
+say: I guess we just... weren't good for each other anymore.
+say: Can you love someone so much it destroys you? Burns away everything you are like nuclear fire?
+say: I wouldn't even mind that too much. But it would hurt her too. And that is something that cannot happen.
+say: But now, it looks like we might both be burned away by a very literal nuclear fireball.
+say: So what could be the harm in calling?
+say: The phone rings, and rings again. Maybe she won't pick up. Maybe I can just leave a message that will never be heard.
+say: But she does pick up. And there she is. Her voice.
+say(Katie): Hello?
+say: The voice that stood up for me and comforted me for so many years.
+say: Do I detect some grogginess? Surely she can't have just woken up. That alarm would wake a hibernating bear.
+say: Plus, she's always been such a night owl. No way she would have been asleep yet when the warning system went off.
+say: God I wish I could just be her friend again. That things could be the way they used to be. Without my messy feelings getting in the way.
+say(Katie): Everett? Is, uh, that you? What's going on?
+say: That's weird. Surely she would understand why I'd be calling her right now.
+say(Self): Katie! Uh, hi! How are you doing?
+say: Wow. Real smooth.
+say(Katie): Hey, Everett. Sorry, you kinda did just wake me up. But I'm ok. What's on your mind?
+say: So I was right, she did just wake up.
+say(Self): Huh? But how? Were you not...
+say(Katie): OH. Oh right. Gosh I'm sorry. I hadn't told you.
+say(Katie): I'm in Iceland, for a school project! Holy shit, I know I should have told you. I just kept putting it off.
+say(Katie): I... I don't know. I'm sorry Everett.
+say: Iceland. She's in Iceland. A country pretty fucking far from any nuclear power.
+say: She didn't wake up from the alarm because there was no alarm for her.
+say: Katie's going to be ok.
+say: She's going to be ok!
+say: I'm sobbing. She must not even know yet. And I don't think I have the heart to tell her.
+say: If one person in my life was going to survive this, I'm just so happy that it's her.
+branch(Katie): Everett? What's wrong?
+choice(Bedroom_Phone_CallKatie_MissYou): I just miss you so much.
+choice(Bedroom_Phone_CallKatie_HowThingsWent): I'm so sorry for how things went.
+choice(Bedroom_Phone_CallKatie_ComingOut, Gate_FullRealization): I needed to tell someone. I'm trans!
+choice(Bedroom_Phone_CallKatie_End): I should go.
+end
+
+label(Bedroom_Phone_CallKatie_Choice_Return)
+branch(Katie): Is... there anything else you wanted to talk about?
+choice(Bedroom_Phone_CallKatie_MissYou, !Katie_CameOut): I just miss you so much.
+choice(Bedroom_Phone_CallKatie_HowThingsWent, !Katie_CameOut): I'm so sorry for how things went.
+choice(Bedroom_Phone_CallKatie_ComingOut, Gate_FullRealization): I needed to tell someone. I'm trans!
+choice(Bedroom_Phone_CallKatie_PrepareForParents, Katie_CameOut): Do you think you could help me figure out how to tell my parents?
+choice(Bedroom_Phone_CallKatie_Reading, Katie_CameOut, Katie_Rekindled): Um. Do you think you could, maybe, like read to me or something?
+choice_always(Bedroom_Phone_CallKatie_End): I should go.
+end
+
+label(Bedroom_Phone_CallKatie_MissYou)
+say(Katie): I...
+say(Katie): I miss you too Everett.
+say(Katie): I'm struggling to describe how I'm feeling. Maybe I'm struggling to understand it.
+say(Katie): But you've been such an important person in my life.
+say(Katie): I know things are a bit... icy... between us lately.
+say: God damn it.
+say(Katie): But I don't want to lose touch with you.
+say(Katie): You know, I'll be back in the states in about a week. Maybe we can meet up somewhere? Or you could come visit me!
+say: I should probably tell her that's not going to happen.
+say(Self): Sure! Yeah I would love that.
+goto(Bedroom_Phone_CallKatie_Choice_Return)
+
+label(Bedroom_Phone_CallKatie_HowThingsWent)
+say(Katie): Everett...
+say(Katie): I can't pretend to know everything that's going on in your head.
+say(Katie): Sometimes I feel like there's this hidden person in you who wants to open up to me, but just can't
+say(Katie): But I hope you're not blaming yourself for the way things have been between us.
+say(Katie): It just seemed like... you needed space.
+say(Katie): And with me being away in California, it felt like I was going to hurt you if I kept reaching out.
+say(Self): I wanted to reach out, Katie. More than anything. But I was afraid of hurting you.
+say(Self): Like, well... never mind. I don't know. I'm so bad at talking about stuff lately
+say(Katie): Well... I mean... it's not like I'm completely clueless.
+say(Self): What... what do you mean? About what?
+say(Katie): I mean, come on now. Some things a woman can just tell. And you, my friend, are not exactly good at hiding the way you feel.
+say: FUCK. FUCKFUCKFUCKFUCK.
+say: SHE KNOWS HOW I FEEL???
+say(Self): Katie I... I'm sorry. I don't know what to say.
+say: I'm hyperventilating. This is not the conversation I was planning to have.
+say(Katie): I'm gonna stop you there. It's going to be ok. Seriously.
+say(Katie): Were you about to apologize for having feelings for me? Like that's some kind of offense?
+say(Katie): Listen to me. You don't need to be ashamed of your feelings. Least of all for me.
+say(Katie): I don't care if society says men's emotions are shameful. That the only thing you're allowed to feel is anger.
+say(Katie): Pushing everything down like that doesn't help anyone. Not you, not me. It will only make you resentful.
+say(Katie): PLENTY of guys have fallen into that trap. It doesn't usually lead anywhere good.
+say: Fair enough. How many of our problems really are caused by men bottling up their emotions?
+say: And when that bottle breaks, it can be bad. Nuclear-first-strike bad, maybe.
+say(Katie): Is this making sense?
+say(Self): I... I guess so. I just didn't want to ruin things. To push you away. I know you don't... feel that way too.
+say(Katie): Ok, well, first of all, why should your feelings push me away? Did you want to do me harm?
+say(Self): Well, no. Of course not.
+say(Katie): So why can't two people be friends when one of them has feelings for the other?
+say(Katie): Sure, it might be messy. There might be hurt feelings at times. But friendships are messy!
+say(Katie): Show me one friendship that's worth your time that's not messy at all. And I'll show you two people who just won't acknowledge their conflicts.
+say(Katie): Second of all. Who the fuck are you to tell me what I do and don't feel?
+say(Self): I mean... you don't, do you?
+say(Katie): I'd say this is typical male behavior, assuming you know better than women how we're feeling.
+say(Katie): But I'm trying to be supportive here, so I guess I'll, perhaps you assume too much.
+say: A tug at my heartstrings. A sudden though of what might have been. If things were different.
+say(Self): I... ok. Yeah. Maybe I've been just a bit harsh on myself.
+say(Katie): Aha! Progress! We'll make an emotionally intelligent person out of you yet.
+set(Katie_Rekindled, true)
+goto(Bedroom_Phone_CallKatie_Choice_Return)
+
+label(Bedroom_Phone_CallKatie_ComingOut)
+say(Katie): Oh. OH. Oh my god. That's... wonderful? terrifying? both?
+say(Self): Yeah. Definitely a bit of both.
+say(Katie): I just... I had no idea! But you know, that honestly makes a lot of sense.
+say(Self): It does?
+goto(Bedroom_Phone_CallKatie_ComingOut_Rekindled, Katie_Rekindled)
+goto(Bedroom_Phone_CallKatie_ComingOut_NotRekindled)
+
+label(Bedroom_Phone_CallKatie_ComingOut_Rekindled)
+say(Katie): Like I said, I could tell you haven't been too open with me about something.
+say(Katie): I thought it was just your feelings for me. Which, by the way, we're not done talking about.
+say(Katie): But I can see there was this whole other weight on you too. And I'm going to guess you didn't know what it was either.
+say(Self): No, I most definitely did not.
+say(Katie): But I'm so proud of you for being brave and working to understand yourself better! This couldn't have been an easy thing to accept.
+say(Katie): And coming out to me! I'm so glad you still trusted me to support you.
+say(Self): Nothing could ever make me not trust you.
+say: She pauses. I think I hear a sniffle, from her this time.
+say(Katie): Wait! How should I refer to you now? I'm sorry I used your given name, if you're not going by that anymore.
+say(Katie): And the man comments! Those must have been hard to hear. I really am sorry.
+say(Self): No offense taken. Really. You didn't know, and I'm still figuring a lot of stuff out.
+goto(Bedroom_Phone_CallKatie_ComingOut_Converge)
+
+label(Bedroom_Phone_CallKatie_ComingOut_NotRekindled)
+say(Katie): I have felt like you haven't been too open with me about something.
+say(Katie): I thought it was just... well, never mind what I thought it was.
+say(Katie): But this must have been a huge weight on you! And I'm going to guess you didn't know what it was either.
+say(Self): No, I most definitely did not.
+say(Katie): But I'm so proud of you for being brave and working to understand yourself better! This couldn't have been an easy thing to accept.
+say(Katie): And coming out to me! I'm so glad you trust me to support you.
+say(Self): Yeah! Of course. I trust you.
+say(Katie): Wait! How should I refer to you now? I'm sorry I used your given name, if you're not going by that anymore.
+say(Self): No offense taken. Really. You didn't know, and I'm still figuring a lot of stuff out.
+goto(Bedroom_Phone_CallKatie_ComingOut_Converge)
+
+label(Bedroom_Phone_CallKatie_ComingOut_Converge)
+branch(Katie): Is there a name you'd like me to use?
+choice(Bedroom_Phone_CallKatie_ComingOut_SetName_Evelyn): Evelyn? It's similar enough to my given name, might be easier for people.
+choice(Bedroom_Phone_CallKatie_ComingOut_SetName_Hazel, Unlock_Name_Hazel): Maybe Hazel. The name of my sister, who never got a chance to live.
+choice(Bedroom_Phone_CallKatie_ComingOut_SetName_Emily, Unlock_Name_Emily): I kind of like Emily. After our old cat Emilio.
+choice(Bedroom_Phone_CallKatie_ComingOut_SetName_Azalea, Unlock_Name_Azalea): I like how Azalea sounds. My MMO character. Don't judge.
+end
+
+label(Bedroom_Phone_CallKatie_ComingOut_SetName_Evelyn)
+say(Katie): Evelyn is pretty! I mean, I don't know if you should base it on other peoples' comfort. But I think it works.
+say(Self): Thanks. Yeah, I mean, I can always try something else if it ends up sounding too similar.
+set(ChosenName, Evelyn)
+goto(Bedroom_Phone_CallKatie_ComingOut_SetName_Converge)
+
+label(Bedroom_Phone_CallKatie_ComingOut_SetName_Hazel)
+say(Katie): Oh my gosh, I didn't know. I'm so sorry your family had to go through that.
+say(Katie): That seems like such a sweet way to honor her memory though. And really, it's such a pretty name.
+say(Self): Thanks. I just hope my parents don't mind.
+say(Katie): I think they'll see it as honoring her memory too.
+say(Katie): And hey, maybe it's what they would have named you if the doctor hadn't made a mistake on your birth certificate.
+set(ChosenName, Hazel)
+goto(Bedroom_Phone_CallKatie_ComingOut_SetName_Converge)
+
+label(Bedroom_Phone_CallKatie_ComingOut_SetName_Emily)
+say(Katie): I remember seeing photos of her. She was so cute, even if she was aloof. I know it was hard on you when she passed.
+say(Katie): The name Emily is nice though! I think it suits you very well.
+say(Self): Thank you.
+say(Katie): Not exactly breaking any stereotypes naming yourself after a cat, though. Heh.
+say(Self): What's that supposed to mean?
+say(Katie): Oh, you'll figure it out. You're on the internet plenty.
+say: I guess I won't get an explanation.
+set(ChosenName, Emily)
+goto(Bedroom_Phone_CallKatie_ComingOut_SetName_Converge)
+
+label(Bedroom_Phone_CallKatie_ComingOut_SetName_Azalea)
+say(Katie): Heh. Ok. Well you have to admit that's pretty funny. But I know trans people with far wilder name origin stories.
+say(Katie): Azalea is a beautiful name. For a beautiful girl.
+say: Blood rushes to my cheeks. I don't think anyone has called me beautiful before. Definitely not a beautiful girl.
+say: And this is coming from Katie!
+say: Not sure exactly how she meant it though. Best not to assume.
+set(ChosenName, Azalea)
+goto(Bedroom_Phone_CallKatie_ComingOut_SetName_Converge)
+
+label(Bedroom_Phone_CallKatie_ComingOut_SetName_Converge)
+say(Katie): It's nice to meet the real you, {ChosenName}.
+say: That... sounds weird to me. I don't know. It feels weird to use a different name.
+say: What does that mean? Am I not really trans?
+say(Katie): Girl, discomfort around a new name seems perfectly natural to me. Nobody's called you that before?
+say(Self): You're the first person I've told.
+say(Katie): Awwww! Well, I'm honored to welcome you into the world {ChosenName}.
+say(Self): A bit better the second time.
+say(Katie): Just give it some time. I'm sure it will feel natural after a while.
+say(Katie): Of course, if you ever want to try on another name, just let me know.
+say(Katie): Oh! What pronouns should I use for you?
+say(Self): I guess I haven't really thought about that much. I'm so used to being a he.
+say(Self): I want to be a girl though. Or I am a girl. Still processing that idea too. But I guess that means I should use she?
+say(Katie): Well, that's probably the default, sure. But I don't think it's like 100 percent rigid?
+say(Katie): I know a woman and uses she/they, for instance. And a man who uses they/them.
+say(Self): Hmm. That's a lot to think about. I guess she/her is fine. I just don't know if I've, like, earned that yet.
+say(Katie): You do not have to earn the right to be the person you are, {ChosenName}.
+say(Katie): If you say your pronouns are she/her, and your name is {ChosenName}, that is simply true as far as I'm concerned.
+say(Katie): I know a lot of people think differently about those things, but if you care for one cis woman's opinion, fuck those people.
+say(Self): Ok. Yeah. {ChosenName. She/her. I could get used to that.
+say: If only I had the chance to.
+say(Katie): Anyway, once again, I'm so happy you shared this with me. Let me know if you want to talk more about it.
+set(Katie_CameOut, true)
+goto(Bedroom_Phone_CallKatie_Choice_Return)
+
+label(Bedroom_Phone_CallKatie_PrepareForParents)
+say(Katie): Oh, sure!
+say(Katie): Actually, this is something I have experience in firsthand. I mean, coming out as bi not trans obviously. But I think the same principles hold.
+say(Katie): If I know your parents, I think they'll be accepting.
+say(Katie): They'll probably be startled and confused at first. Not sure how to respond.
+say(Self): Yeah. That's kind of what I'm worried about.
+say(Katie): I think the best thing you can do here is project some confidence.
+say(Katie): Yeah I know. Not the easiest thing to do in the best of times.
+say(Katie): But if you can show them that this is just the way things are. That you're sure this is right for you.
+say(Self): But I don't feel sure. I don't feel sure about anything right now.
+say(Katie): You may just need to pretend a bit, love. Try to think of this as a job interview, where you're the interviewer.
+say(Katie): If you lead the conversation, tell them what this means, what you expect of them and all that, I think they'll take it well.
+say(Katie): And then, when you've said what you need to, let them ask questions if you feel up for it.
+say(Katie): I'm sure they'll have a thousand burning questions right off the bat, but it's important that you take up the space you need first.
+say(Self): That... makes a lot of sense, actually. You know, I was thinking of trying the opposite.
+say(Self): Falling back on uncertainty, on maybes, to lessen the impact.
+say(Katie): Yeah. That's something I have seen you doing. But I would maybe question how effective it's been for you.
+say(Katie): When you refuse to take up space, leave things open for interpretation, you're asking someone to fill that space who hasn't got the first idea how.
+say(Katie): I'm not saying your parents will be full-on transphobic, or that they'd never accept you or anything.
+say(Katie): I just think that taking my advice will make things go more smoothly.
+say(Self): Yeah. You're right. I think that's what I will do.
+say(Self): Thank you, Katie. Thank you for everything.
+set(Gate_ComingOutPrep, true)
+goto(Bedroom_Phone_CallKatie_Choice_Return)
+
+label(Bedroom_Phone_CallKatie_Reading)
+countdown(false)
+say(Katie): Yes. Yes, {ChosenName}, I can read to you.
+say(Katie): If that's what you need right now, I've got you.
+say(Katie): How does some Icelandic poetry sound? I just bought this collection in town. Don't worry, it's translated.
+say(Self): That sounds wonderful.
+say(Katie): Ok. One sec, I'll be right back.
+say: I hear footsteps. Receding away then returning.
+say: She gives a little background, then starts reading.
+say: I hold onto her voice. Use it to anchor myself. To just live in the moment.
+say: Just sitting here, tucked in bed, the person I love taking care of me.
+say: I imagine that we're in the room together. That I'm resting my head in her lap as she reads to me.
+say: I think she can hear me crying. I think I can hear her crying too.
+say: I guess, maybe, she's figured out what's happening. A news headline on her phone. Or a message from another friend in the US.
+say: How long has she been playing along? Waiting for me to say something?
+say: But maybe nothing needs to be said. We both know, and that's enough. Some things can remain unspoken.
+say: I'm not really sure how she's keeping it together though. I didn't think a person could be this strong. Or that I was worth it.
+say: In another life, maybe it doesn't end like this.
+say: In another life, maybe we get to see each other. Smile and embrace. Go on adventures like we used to.
+say: I love her more in this moment than I ever thought it was possible to love anyone.
+say: And I love {ChosenName} too. Something I never thought was possible. But how could I not?
+say: For a brief moment in time, there existed a girl named {ChosenName}.
+say: There's so much she wished she could have done, have been, have said.
+say: So much that was taken from her.
+say: But, in spite of all the hurt in the world, she existed.
+say: And that's just going to have to be enough.
+goto(TimeoutEnding)
+
+label(Bedroom_Phone_CallKatie_End)
+goto(Bedroom_Phone_CallKatie_End_CameOut, Katie_CameOut)
+goto(Bedroom_Phone_CallKatie_End_Rekindled, Katie_Rekindled)
+goto(Bedroom_Phone_CallKatie_End_Default)
+
+label(Bedroom_Phone_CallKatie_End_CameOut)
+say(Katie): Ok, it is pretty late I suppose.
+say(Katie): Once again, I'm so grateful that you shared this with me.
+say(Katie): You are a wonderful girl, {ChosenName}. And I'm glad to be your friend.
+say(Self): I'm glad to have you as a friend, Katie. You really do mean so much to me.
+say(Katie): Let's talk again soon, ok? Don't you dare disappear on me for another year.
+say(Self): Yeah. For sure.
+say: And just like that, she's gone.
+say: I'm so sorry I didn't tell you what's about to happen. I just couldn't bring myself to.
+say: I guess you'll find out in the morning. After I'm long gone.
+say: In another life, maybe it doesn't end like this.
+say: In another life, maybe we don't have to say goodbye.
+say: I'm just glad to know you'll still be around after I'm gone.
+say: And that you remember a girl named {ChosenName}. A girl who, for a brief moment, existed.
+goto(Bedroom_InitialChoice)
+
+label(Bedroom_Phone_CallKatie_End_Rekindled)
+say(Katie): Ok, it is pretty late I suppose.
+say(Katie): It was really nice talking to you Everett.
+say(Katie): You are a wonderful person, and I'm glad to be your friend.
+say(Self): I'm glad to have you as a friend, Katie. You really do mean so much to me.
+say(Katie): Let's talk again soon, ok? Don't you dare disappear on me for another year.
+say(Self): Yeah. For sure.
+say: And just like that, she's gone.
+say: I'm so sorry I didn't tell you what's about to happen. I just couldn't bring myself to.
+say: I guess you'll find out in the morning. After I'm long gone.
+say: In another life, maybe it doesn't end like this.
+say: In another life, maybe we don't have to say goodbye.
+say: I'm just glad to know you'll still be around after I'm gone. I hope you can forgive me.
+goto(Bedroom_InitialChoice)
+
+label(Bedroom_Phone_CallKatie_End_Default)
+say(Katie): Ok, it is pretty late I suppose.
+say(Katie): It was nice to hear from you. Let's talk again soon, ok?
+say(Self): Yeah. For sure.
+say: And just like that, she's gone.
+say: There's so much I could have said.
+say: I'm so sorry I didn't tell you what's about to happen. I just couldn't bring myself to.
+say: I guess you'll find out in the morning. After I'm long gone.
+say: And you'll probably never forgive me. But at least you'll be alive.
+goto(Bedroom_InitialChoice)
 
 label(Bedroom_Phone_OpenSocial)
 say: I glance over my feed at possible take on the current situation, presented passionately by some anonymous user.
@@ -718,7 +1075,7 @@ say: There's a video from two days ago titled "Why You Should be Afraid of Nucle
 say: Oh! A new episode of DevGrrrrl's series about the game she's working on.
 say: I thought for a while that I'd like to be a girl dev.
 say: Game dev! Stupid brain. Anyway, that didn't really work out.
-say: But I still enjoy her videos. Her three-hour AI rant video was what finally convinced me to stop using it so much.
+say: But I still enjoy her videos. Her three-hour AI rant video was what finally convinced me to stop using it for school.
 say: In this video, she's talking about building procedural worlds.
 say: She flies a free camera through what seems to be an endless forest. As far as I can tell, it seems to just go on and on and on.
 say: She stops to comment on a tree that's floating a few feet in the air.
@@ -735,6 +1092,64 @@ say: Yeah. Nothing is working. The page won't refresh and nothing else will load
 say: Trillions of dollars of internet infrastructure have just ceased to exist.
 say: And now, it's my turn to cease to exist.
 goto(TimeoutEnding)
+
+label(Bedroom_Phone_AskTheQuestion)
+say: Question? What question?
+say: You know the one.
+say: What's that supposed to mean.
+say: You've been putting this off too long.
+say: You need to know.
+say: You need to ask the question.
+say: WHAT IS THE GOD DAMN QUESTION YOU FUCKING WORTHLESS BRAIN??
+say: I hit the virtual keys one at a time.
+say: I don't think I really know what I'm typing until I see it in the search bar.
+say: "why do I want to be a girl?"
+say: This is stupid.
+say: Why am I wasting time on this?
+say: What does it even matter if I do want to be a girl?
+say: Time to put down my phone.
+say: I tap the submit button.
+say: I scroll past the AI summary.
+say: I see a few forum threads.
+say: I see a few blog articles.
+say: I see a website with a button promising to "turn you into a girl". I think I've seen memes about that before.
+say: Nobody would press that button. Nobody feels this way. There's something wrong with me.
+say: Everybody would press that button. I mean who doesn't want to try being a different gender?
+say: This is a waste of time. What am I even hoping to find?
+say: Why do I wish so badly for that button to be real?
+say: Without thinking, I click on it. What's the harm, right?
+say: My life is about to be ended by a big red button. Why not press my own big pink button?
+say: I press it. The website asks 'are you sure?'
+say: Of course I'm sure. What a stupid question to ask.
+say: Did I expect to feel any different? Did I expect my dick to fall off and to grow a nice pair of tits?
+say: Am I disappointed that those things didn't happen?
+say: Still though, I actually do feel a bit different. As if I just acknowledged something I've been hiding from my whole life.
+say: Curiosity getting the better of me, I click into a few of the forum posts.
+say: Each and every one of them, a person asking the same question I just did (or some variation).
+say: Why do I want to be a girl?
+say: Why do I want to be a boy?
+say: Why don't I want to be a boy or a girl?
+say: The answer, it seems, tends to be about the same.
+say: Transgender people, we are told, are individuals born in the wrong body.
+say: Depending on who you ask, they are a marginalized group who just want to live their lives, or disgusting child groomers, or 'none of my fucking business'.
+say: They know, from a young age, that they are a different gender than what's on their birth certificate.
+say: I even knew someone in high school who fit that narrative.
+say: They do not, in their early 20s, search online for why they <i>want</i> to be a girl.
+say: So why did so many people search that question and find so much love and acceptance in online trans communities?
+say: If all these people are transgender too, what makes me different?
+say: And I know the answer.
+say: Nothing makes me different.
+say: I am just like them.
+say: So I'm trans?
+say: I am trans.
+say: Holy shit that felt good. Like the weight of the world was just lifted off my back.
+say: There are so many questions I could ask. So much I could dig into and discover about myself.
+say: Now that I've acknowledged this one thing, I feel like I really am turning into a girl.
+say: So I guess, in a way, the button did work.
+say: And for now, those questions will have to wait.
+say: Right now, I just need to tell someone.
+set(Gate_FullRealization, true)
+goto(Bedroom_InitialChoice)
 
 label(Bedroom_Photos)
 say: I'm not sure quite what inspires me. I randomly reach for a photo album from the stack.
@@ -811,7 +1226,7 @@ say: When she would tell me about the boys and girls she went on dates with, my 
 say: I was going to lose her. There was no avoiding it. My best friend would leave me and I would be alone again.
 say: When it came down to it, though, nothing really dramatic happened between us.
 say: More of a heat-death-of-the-universe sort of situation.
-say: She went off to college out of state, and I stayed closer to home.
+say: She went off to college in California, and I stayed closer to home.
 say: The pandemic sent us home and, well, people like her were able to make it work.
 say: People like me were not.
 say: Trying to hold onto the past would just hold her back.
@@ -1099,6 +1514,9 @@ say(Self): I want to be a girl.
 say: Wait.
 say: Did I just say that out loud?
 say: This is going to be a long car ride.
+set(Gate_PartialRealization, true)
+set(Gate_SecretRoad, true)
+set(Gate_BadFriendExperience, true)
 goto(TimeoutEnding)
 
 ######################################### Timeout Ending ##############################################

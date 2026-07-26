@@ -7,9 +7,12 @@ namespace Nodes {
         
         public int ComparisonValue { get; }
         
-        public IntCondition(Variable variable, ComparisonOperator op, int comparisonValue) : base(variable) {
+        public bool Invert { get; }
+        
+        public IntCondition(Variable variable, ComparisonOperator op, int comparisonValue, bool invert) : base(variable) {
             Operator = op;
             ComparisonValue = comparisonValue;
+            Invert = invert;
         }
         
         public override bool CheckCondition(TraversalState traversalState) {
@@ -23,7 +26,7 @@ namespace Nodes {
                 ComparisonOperator.GreaterOrEqual => value >= ComparisonValue,
                 ComparisonOperator.LessOrEqual => value <= ComparisonValue,
                 _ => throw new ArgumentOutOfRangeException(),
-            };
+            } ^  Invert;
         }
     }
 

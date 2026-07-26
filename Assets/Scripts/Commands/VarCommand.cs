@@ -12,7 +12,7 @@ namespace Commands {
             Type = type switch {
                 "int" => VarType.Int,
                 "bool" => VarType.Bool,
-                "String" => VarType.String,
+                "string" => VarType.String,
                 _ => throw new ParsingException(lineNumber, line, $"Invalid var type {type}"),
             };
             Name = name;
