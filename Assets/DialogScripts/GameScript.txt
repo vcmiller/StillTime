@@ -922,7 +922,7 @@ say(Self): Hmm. That's a lot to think about. I guess she/her is fine. I just don
 say(Katie): You do not have to earn the right to be the person you are, {ChosenName}.
 say(Katie): If you say your pronouns are she/her, and your name is {ChosenName}, that is simply true as far as I'm concerned.
 say(Katie): I know a lot of people think differently about those things, but if you care for one cis woman's opinion, fuck those people.
-say(Self): Ok. Yeah. {ChosenName. She/her. I could get used to that.
+say(Self): Ok. Yeah. {ChosenName}. She/her. I could get used to that.
 say: If only I had the chance to.
 say(Katie): Anyway, once again, I'm so happy you shared this with me. Let me know if you want to talk more about it.
 set(Katie_CameOut, true)

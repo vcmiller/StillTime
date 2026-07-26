@@ -11,5 +11,6 @@ namespace Nodes {
         }
 
         public virtual void ApplyToState(ref MutableTraversalState state) { }
+        public virtual void ApplyToStateAfterEnd(ref MutableTraversalState state, ref INode nextNode) { }
     }
 }

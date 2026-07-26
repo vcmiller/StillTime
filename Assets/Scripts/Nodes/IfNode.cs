@@ -14,5 +14,14 @@ namespace Nodes {
             Conditions = conditions;
             TrueBranch = trueBranch;
         }
+
+        public override void ApplyToStateAfterEnd(ref MutableTraversalState state, ref INode nextNode) {
+            base.ApplyToStateAfterEnd(ref state, ref nextNode);
+
+            TraversalState testState = new(state);
+            if (Conditions.All(c => c.CheckCondition(testState))) {
+                nextNode = TrueBranch;
+            }
+        }
     }
 }

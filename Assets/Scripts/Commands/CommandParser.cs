@@ -58,7 +58,9 @@ namespace Commands {
 
                         labelCommand.Commands.Add(labelSubCommand);
 
-                        if (labelSubCommand is BranchBlockCommand or GotoCommand) break;
+                        if (labelSubCommand is BranchBlockCommand or GotoCommand {
+                                Conditions: not { Count: > 0 },
+                            }) break;
                     }
 
                     return labelCommand;

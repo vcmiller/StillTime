@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using Infohazard.Core;
@@ -15,6 +16,7 @@ namespace Game {
         private CancellationTokenSource _cancellationTokenSource;
         private const string SkipAnimationsKey = "StillTime.SkipAnimations";
         private bool _skipAnimations;
+        private Regex _stringInterpRegex = new(@"\{[0-9a-zA-Z_]*\}");
 
         public bool SkipAnimations {
             get => _skipAnimations;
@@ -88,6 +90,33 @@ namespace Game {
             _gameView.SetBgColor(Color.black, 0);
         }
 
+        private string DoStringInterpolation(string str, TraversalState state) {
+            try {
+                string currentString = str;
+                while (_stringInterpRegex.Match(currentString) is { Success: true } match) {
+                    string varName = currentString.Substring(match.Index + 1, match.Length - 2);
+                    if (!_gameGraph.ResourcesByIdentifier.TryGetValue(varName, out Resource resource)) {
+                        Debug.LogError($"Invalid variable identifier: {varName} in interpolated string {str}");
+                        return currentString;
+                    }
+
+                    if (resource is not Variable variable) {
+                        Debug.LogError($"Invalid variable identifier: {varName} in interpolated string {str}");
+                        return currentString;
+                    }
+
+                    string varValue = state.GetVariableValue(variable).ToString();
+
+                    currentString = currentString.Replace(match.Value, varValue);
+                }
+
+                return currentString;
+            } catch (Exception ex) {
+                Debug.LogException(ex);
+                return str;
+            }
+        }
+
         private void RunNode(TraversalState state, CancellationToken cancellationToken) {
             _currentState = state;
             HashSet<INode> seenNodes = new();
@@ -105,14 +134,14 @@ namespace Game {
                 switch (_currentState.CurrentNode) {
                     case SingleTextNode singleTextNode:
                         _gameView.SetSingleText(
-                            singleTextNode.Text,
+                            DoStringInterpolation(singleTextNode.Text, _currentState),
                             singleTextNode.Speaker,
                             () => Advance(_currentState, singleTextNode.Next, cancellationToken),
                             SkipAnimations);
                         break;
                     case BranchNode branchNode:
                         _gameView.SetChoices(
-                            branchNode.Text,
+                            DoStringInterpolation(branchNode.Text, _currentState),
                             branchNode.Speaker,
                             branchNode.Choices
                                       .Where(_currentState.IsChoiceAvailable)

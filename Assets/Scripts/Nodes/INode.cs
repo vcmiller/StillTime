@@ -9,5 +9,6 @@ namespace Nodes {
         public string GetSelfIdentifier();
 
         public void ApplyToState(ref MutableTraversalState state);
+        public void ApplyToStateAfterEnd(ref MutableTraversalState state, ref INode nextNode);
     }
 }

@@ -51,7 +51,7 @@ namespace Game {
             BgColor = bgColor;
         }
 
-        private TraversalState(MutableTraversalState mutableState) {
+        public TraversalState(MutableTraversalState mutableState) {
             CurrentNode = mutableState.CurrentNode;
             NodeForTimeout = mutableState.NodeForTimeout;
             ShowCountdown = mutableState.ShowCountdown;
@@ -116,6 +116,8 @@ namespace Game {
 
         public TraversalState Advance(INode next) {
             MutableTraversalState mutableState = ToMutable();
+
+            mutableState.CurrentNode?.ApplyToStateAfterEnd(ref mutableState, ref next);
 
             if (mutableState is { ShowCountdown: true, CountdownValue: not null }) {
                 mutableState.CountdownValue = Mathf.Max(0, mutableState.CountdownValue.Value - CurrentNode.Cost);
