@@ -68,7 +68,6 @@ say: Whether or not you choose to proceed, know that I appreciate you <3.
 say: I also want to be clear that, while many aspects of the story are drawn from my own experiences, the characters are not meant to depict people I know in any way.
 say: If you are a person who I know personally, please don't construe any interactions herein as a commentary on you as a person.
 say: <b>STILLTIME</b>
-say: By Val Miller
 goto(FirstRun)
 
 label(FirstRun)
@@ -162,6 +161,7 @@ say: Oh god please no, I don't want to relive this.
 say: The boys made fun of me. Called me 'queer'. And some worse terms.
 say: All for <i>not</i> wanting to look at naked male bodies. How does that make sense?
 set(Gate_SignLockerRoom, true)
+cost(180)
 say(Mom): Everett? Can you come back to us dear?
 say(Mom): You know, that was around the time I started to feel you pulling away from us.
 goto(ParentConversation_Childhood_Choice)
@@ -171,6 +171,7 @@ say(Dad): You made friends pretty well I thought.
 say(Mom): You and Katie were always so close. I was so sad when you stopped talking to her.
 say: Katie Marshall. I've been trying to forget that name. Thinking about her is just too painful.
 set(Gate_MissBestFriend, true)
+cost(60)
 say(Dad): Wait, I thought they were dating?
 say(Mom): I don't think so dear. She always seemed like more of a sister to him.
 say(Mom): You always did talk about wanting a sister as a kid. Do you remember that?
@@ -199,6 +200,7 @@ say: Why do I feel such a sense of loss?
 say: It's not like I ever even met her.
 set(Unlock_Name_Hazel, true)
 set(Gate_SignWantSister, true)
+cost(180)
 goto(ParentConversation_Childhood_Choice)
 
 label(ParentConversation_Childhood_FitIn)
@@ -212,6 +214,7 @@ say(Mom): I never really understood why you thought you didn't.
 say: I remember the haircuts. I always thought I looked so ugly. I really did look like every other boy.
 say: And I <i>hated</i> it. But what choice did I have?
 say: I remember looking in the mirror and crying at my short hair and jeans and t-shirt.
+cost(180)
 set(Gate_SignHaircut, true)
 goto(ParentConversation_Childhood_Choice)
 
@@ -248,6 +251,7 @@ say(Mom): Just be glad you're not a woman!
 say: She's joking, but I feel a pinching in my gut.
 say(Self): Yeah.
 incr(Num_Alienation_Choice, 1)
+cost(30)
 goto(ParentConversation_Alienation_Choice)
 
 label(ParentConversation_Alienation_Choice_BestFriend)
@@ -268,6 +272,7 @@ say(Dad): But it's perfectly normal to be around men. You'll need to figure this
 say: He forgot for a second that we're all going to be vaporized within the hour.
 say: My mom was distracted too. It seems like they're happy to be talking to me.
 say: Even if their advice is a bit crap.
+cost(220)
 incr(Num_Alienation_Choice, 1)
 goto(ParentConversation_Alienation_Choice)
 
@@ -280,6 +285,7 @@ goto(ParentConversation_Alienation_Choice)
 
 label(ParentConversation_Realization)
 say: A few minutes pass in silence. I didn't really <i>intend</i> to say that. It just kinda slipped out.
+cost(328)
 say: Ok, I just need to say I misspoke.
 say: Obviously that's stupid. Nobody is 'supposed' to be a girl.
 say: I just need to make up an excuse for why I said that.
@@ -321,12 +327,15 @@ say(Mom): What was that sweetie? I didn't hear you.
 say(Mom): It kind of sounded like you said you wanted to be a girl.
 say(Self): Yeah. I don't know how to explain it. But I think I do.
 say: Another awkward silence that lasts an eternity.
+cost(417)
 say(Mom): ...I'm not really sure what to make of this honey.
 say: Dad is silent. Trapped in his own head.
+cost(215)
 say(Mom): Of all the things you could have said, I did not expect that.
 say(Mom): Of course we love you no matter what.
 say(Mom): I just don't know what we can do about that now.
 say(Self): Yeah. I don't know. I'm sorry.
+countdown(false)
 say: I should be panicking. I'm about to die and I just realized how meaningless my life as a man has been.
 say: And I had to turn our last moments into an awkward... what? Coming out? Coming out as what?
 say: But I'm not thinking about the end.
@@ -357,13 +366,15 @@ say(Self): Yeah. My name is {ChosenName} and my pronouns are she/her.
 say(Self): And I'm not your son, I'm your daughter.
 say(Self): I realize this might come as a shock. But I need to be who I am before it's too late.
 say: The usual silence. But it feels different.
+cost(30)
 say: Mom and Dad don't look uncomfortable. Their faces show a hint of understanding.
+cost(67)
 say: They're both struggling to hold it together.
 cost(60)
 say(Self): I know this might cause you some grief. I think that's normal. But please know I'm still your kid.
 say(Mom): I just... this is... just so much.
 say(Mom): But... I don't think... don't think I'm grieving.
-say(Mom): I lost my daughter. I was so scared for so many years of losing my son.
+say(Mom): I lost my daughter all those years ago. I was so scared for so many years of losing my son.
 say(Mom): But I didn't. I had a daughter all along. A perfect, wonderful daughter.
 say(Mom): And I'm so glad I got to meet her before the end.
 say: Now it's my turn to break down crying.
@@ -376,6 +387,7 @@ choice(ParentConversation_ComingOut_Confident_Choice): Actually, there's somethi
 end
 
 label(ParentConversation_ComingOut_Confident_Ending)
+countdown(false)
 say: I'm not sure how long it lasts. Time just stands still.
 say: I've been here hugging my parents for hours. Days. Years. A fraction of a second.
 say: It could never be enough time.
@@ -435,6 +447,7 @@ say(Dad): More than anything.
 say(Mom): Forever and always.
 say: My head swims.
 say: Without really thinking about what I'm doing, I get up.
+cost(15)
 say: I walk to the door. I grab the keys to the station wagon.
 cost(30)
 say: I walk out the door, into the humid night air.
@@ -453,16 +466,15 @@ end
 
 label(ParentConversation_ComingOut_Confident_Driving_Alone_Highway)
 say: I have to survive. I have to try.
-cost(5)
 say: The hope I'm trying to kindle gradually fades into dread.
 say: Dad was right, surely. The highways will all be at a standstill with the amount of people trying to get out.
 say: No. I have to have hope. I will force myself to have hope.
-cost(5)
+cost(191)
 say: Then I see the line of cars, and the dread is replaced by despair.
 cost(30)
 say: I'm at the top of a small hill, about a mile from the nearest freeway entrance.
 say: Every intersection I can see is blocked with cars. And they're all stationary.
-say: The cacophony of car horns, alarms, screaming baby boomers, and panicking pets puts me over the edge.
+say: The cacophony of car horns, alarms, screaming drivers, and panicking pets puts me over the edge.
 cost(30)
 say: I think I can hear gunfire. So glad half my country fought for us to be able to murder each other before we get a chance to all die together.
 cost(30)
@@ -492,8 +504,8 @@ goto_reset(LaterRun)
 
 label(ParentConversation_ComingOut_Confident_Driving_Alone_SecretRoad)
 say: That's it. The secret road. By Reed's house.
-say: Where did I even hear about that? It almost feels like a dream.
-say: But I've been there. I'm sure of it.
+say: Where did that come up recently? It almost feels like a dream.
+say: But I've driven down it. I'm sure of it.
 cost(30)
 say: I floor the gas pedal. My body is pumped full of adrenaline.
 say: I'm not running on empty hope anymore. Now I have a plan.
@@ -515,6 +527,7 @@ say: Oh my god. I've wasted so much time. I need to get back.
 say: What have I done? I've been so selfish.
 say: Please just let there still be time. I just need to see them again.
 say: I drive as fast as the old car can manage. I doubt any cops are out issuing speeding tickets right now.
+cost(93)
 say: I'm painfully aware of every second passing.
 say: Terrified the end will come before I make it back.
 say: I slam the car into the garden wall as I try to pull into the driveway.
@@ -553,11 +566,16 @@ say: They glance at each other. Mom nods. Dad nods.
 say(Mom): Ok. Yeah. We're with you. I can't say I'm sure this is the right thing. But I'm going to trust you. I do trust you.
 say(Dad): I trust you too.
 say: Over the next five minutes, we gather as many supplies as we can fit into the station wagon.
+cost(281)
 say: Tents, camping supplies, and every bit of packaged food we can find. I fill up buckets of water from the tap.
 say: Why does this feel like we're going camping? Actually, I guess that's exactly what we're doing.
+cost(30)
 say: Ok. No time to waste. Mom is desperately trying to get Slow Loris into her carrier. With my help, and after a few scratches, we manage it.
+cost(75)
 say: And we're on the road. Mom driving the car. Me navigating us to safety. Dad taking inventory of our supplies in the back seat. Loris resting on my lap, purring contentedly.
+cost(831)
 say: As we drive past Reed's house, it looks like his car is gone. Good. Maybe they made it out too.
+cost(30)
 say: I take a last look at the city in which I spent my childhood.
 say: That world might be over. But life will go on. We will go on.
 say: Before that, though, there's one last thing I need to do. While the cell networks are still running.
@@ -589,6 +607,7 @@ say(Mom): If I had more time to process it, I don't know, maybe I'd be ok.
 say: Does anyone actually care how I feel?
 say(Mom): I'm sorry. I just can't lose my son right now. And you will always be my son.
 say(Mom): I need us to be whole, to be together, to be content with each other and who we are right now.
+countdown(false)
 say: Because of course I should be upset.
 say: Of course I should be hating myself because everyone knows trans people hate themselves. Ourselves.
 say: Because being trans is trying to be someone you aren't.
@@ -612,6 +631,7 @@ goto(TimeoutEnding)
 
 label(Bedroom_Entry)
 say: I absentmindedly walk up the stairs to my childhood bedroom.
+cost(30)
 say: It's really remarkable how little the room has changed.
 say: It looks just about like it did before I went off to college.
 say: I take a look around. My laptop sits on the kid desk in sleep mode.
@@ -643,12 +663,14 @@ say: I sit down on the bed next to her. She perks her ears up and opens her eyes
 say: I move in to scratch her head, just behind the ears. Her eyes close again and she leans into my hand.
 say: All 20 pounds of her starts revving up like a race car. She's kneading the bed like she's on that one baking show.
 say: This is a happy animal who hasn't got a fucking clue what's going on in the world outside.
+cost(437)
 branch: Honestly, I could stay here forever.
-choice(Bedroom_PetTheCat_Sleep): Keep petting the cat
+choice(Bedroom_PetTheCat_Sleep): Stay here forever
 choice(Bedroom_PetTheCat_Leave): Pull myself away
 end
 
 label(Bedroom_PetTheCat_Sleep)
+countdown(false)
 say: I Keep petting her for I don't know how long.
 say: The purring calms me down and without really realizing it, I lie down on the bed.
 say: My last conscious thought as I fade into sleep: this is not such a bad way to go.
@@ -691,7 +713,7 @@ label(Bedroom_Phone)
 say: The emergency alerts have stopped. My phone feels strangely normal. Mundane.
 say: An object that occupies so much of my life just feels out of place in such a surreal moment.
 say: I do have a missed call, from Reed.
-say: Not sure why, but I don't really feel like I want to talk to my friends right now.
+say: Not sure why, but I don't really feel like I want to talk to those guys right now.
 say: I've always felt a bit like I'm pretending to be someone when I'm around them. I just don't want that right now.
 say: Still, he's been a pretty good friend to me even if he and the rest of them like to give me shit.
 branch: What am I even doing on my phone?
@@ -720,12 +742,15 @@ say: I can't let my parents know I'm abandoning them. I lock my bedroom door and
 say: Just like a teenage girl in a high school romance movie.
 say: Why does that make me feel better about it?
 say: I tell myself this will hurt them less. They'll think I'm still there with them, silent but close by.
-say: The rain has picked up. It runs down my hair and my back. Washing away the sin.
+cost(30)
+say: The rain has picked up. It runs down my hair and my back. Washing away the sin I'm committing.
+cost(65)
 say: Even walking a block away, I get pretty wet. By the time I climb into Reed's giant monstrosity of an SUV, I'm soaked.
 goto(FriendHangout_Drive)
 
 label(Bedroom_Phone_CallKatie)
 say: My heart is racing as I scroll to her in my contacts.
+cost(30)
 say: I haven't talked ot her at all for, what, a year?
 say: I guess we just... weren't good for each other anymore.
 say: Can you love someone so much it destroys you? Burns away everything you are like nuclear fire?
@@ -733,6 +758,7 @@ say: I wouldn't even mind that too much. But it would hurt her too. And that is 
 say: But now, it looks like we might both be burned away by a very literal nuclear fireball.
 say: So what could be the harm in calling?
 say: The phone rings, and rings again. Maybe she won't pick up. Maybe I can just leave a message that will never be heard.
+cost(30)
 say: But she does pick up. And there she is. Her voice.
 say(Katie): Hello?
 say: The voice that stood up for me and comforted me for so many years.
@@ -798,6 +824,7 @@ say(Katie): Well... I mean... it's not like I'm completely clueless.
 say(Self): What... what do you mean? About what?
 say(Katie): I mean, come on now. Some things a woman can just tell. And you, my friend, are not exactly good at hiding the way you feel.
 say: FUCK. FUCKFUCKFUCKFUCK.
+cost(15)
 say: SHE KNOWS HOW I FEEL???
 say(Self): Katie I... I'm sorry. I don't know what to say.
 say: I'm hyperventilating. This is not the conversation I was planning to have.
@@ -819,7 +846,7 @@ say(Katie): Show me one friendship that's worth your time that's not messy at al
 say(Katie): Second of all. Who the fuck are you to tell me what I do and don't feel?
 say(Self): I mean... you don't, do you?
 say(Katie): I'd say this is typical male behavior, assuming you know better than women how we're feeling.
-say(Katie): But I'm trying to be supportive here, so I guess I'll, perhaps you assume too much.
+say(Katie): But I'm trying to be supportive here, so I guess I'll just say, perhaps you assume too much.
 say: A tug at my heartstrings. A sudden though of what might have been. If things were different.
 say(Self): I... ok. Yeah. Maybe I've been just a bit harsh on myself.
 say(Katie): Aha! Progress! We'll make an emotionally intelligent person out of you yet.
@@ -954,7 +981,6 @@ set(Gate_ComingOutPrep, true)
 goto(Bedroom_Phone_CallKatie_Choice_Return)
 
 label(Bedroom_Phone_CallKatie_Reading)
-countdown(false)
 say(Katie): Yes. Yes, {ChosenName}, I can read to you.
 say(Katie): If that's what you need right now, I've got you.
 say(Katie): How does some Icelandic poetry sound? I just bought this collection in town. Don't worry, it's translated.
@@ -962,6 +988,7 @@ say(Self): That sounds wonderful.
 say(Katie): Ok. One sec, I'll be right back.
 say: I hear footsteps. Receding away then returning.
 say: She gives a little background, then starts reading.
+countdown(false)
 say: I hold onto her voice. Use it to anchor myself. To just live in the moment.
 say: Just sitting here, tucked in bed, the person I love taking care of me.
 say: I imagine that we're in the room together. That I'm resting my head in her lap as she reads to me.
@@ -1039,6 +1066,7 @@ say: This is the only possible outcome of nuclear proliferation.
 say: This is the prophesied end, and we should rejoice.
 say: This whole thing is a hoax to herd us like cattle into shelters.
 say: And about any other thought you can imagine. Probably quite a few you can't.
+cost(590)
 say: I notice one post in a forum I'm not familiar with.
 say(ForumUser1): Anybody else just have their egg cracked by the world ending??
 say: Not sure what that means - I can't imagine cooking is at the top of anyone's priority list right now.
@@ -1363,17 +1391,20 @@ goto(InitialChoice)
 
 label(FriendHangout_Drive)
 say: All of them are there. Reed driving, Hoyt riding shotgun, Vaughn in the back with me.
+cost(52)
 say(Reed): Vaughn, get this man a DRINK!
 say(Vaughn): Aye aye, captain!
 say: Before I can react, Vaughn is reaching into the cooler behind us and pulling out a can of cheap beer.
+cost(15)
 say: And it's in my hands, and it's open, and I'm drinking it. Because that's what a man does with his bros.
 say: Do people really think this tastes good?
 say: Judging by the number of empty cans on the car floor, I guess they must.
+cost(217)
 say: With a bit of a shock, I realize Reed is holding an open can in one hand and the wheel in the other.
 say: He's definitely reckless but I haven't seen him drink and drive before.
-say(Reed): Don't worry bro! What are they gonna do, suspend my license?
+say(Reed): Don't worry! What are they gonna do, suspend my license?
 say: He must have seen the look on my face.
-say(Reed): If this baby gets in a crash, it's the other person who's fucked.
+say(Reed): If this car gets in a crash, it's the other person who's fucked.
 say: It's true. This three-ton hunk of metal could probably drive right over my parents' old station wagon.
 say: Does he really believe that though? I kind of think the other guys bring out a worse side of him.
 say: They probably bring out a worse side of me too. Or a side of me that's barely a person.
@@ -1383,7 +1414,7 @@ say(Reed): Come on Hoyt, let's just chill. There's a lot going on.
 say(Reed): But this crew is sticking together until the end!
 say(Vaughn): I've got your cure right here, matey! Drink up!
 say: Wow, that is genuinely the worse pirate accent I think I'e ever heard.
-say: As I struggle to drink my one, another beer is thrust into my empty hand.
+say: As I struggle to drink one, another beer is thrust into my empty hand.
 say(Vaughn): Ye best be finishing that before we reach land, lest ye be forced to walk the plank!
 say(Hoyt): God you're such a dumbass Vaughn. Just don't get all 'It's not gay if it's at sea' on us.
 say(Vaughn): You insult me woman! A man's bond with his crew is sacred.
@@ -1394,9 +1425,10 @@ say: Hoyt eventually joins in too, and even I get into it a little bit.
 say: As far as drunk car-rides with your friends go, this isn't so bad.
 say: By the time we're pulling into the long driveway to Reed's house, we've gotten through <i>Drunken Sailor</i>,\
 <i>Spanish Ladies</i>, <i>Rolling Down to Old Maui</i>, and ended on <i>Leaver her, Johnny</i>.
+cost(490)
 say: If we were girls, we'd be sharing our feelings and crying together.
 say: I suppose this is just the male version of that. The version we're allowed.
-say: I've only had three cans, but it's starting to get to me. The others seem to have had <i>much</i>more.
+say: I've only had three cans, but it's starting to get to me. The others seem to have had <i>much</i> more.
 say: We all stumble through the double front door into the foyer.
 say: A blast of cold air greets us as we make our way through the house and onto the back deck.
 say: Not sure where his parents are. Off on some trip probably.
@@ -1417,7 +1449,7 @@ say(Vaughn): Uuuurrrr a fuuu... a fuuucking whole ass... ass hole Hoyyyyt.
 say(Vaughn): But youuuu know I glove... I urrrrp love you guys riiiiiight?
 say(Hoyt): Aaaand here comes the gay shit.
 say: Not sure what Hoyt's problem is either. He can be kind of a dick sometimes, sure.
-say: But tonight he can't even open his mouth without insulting someone.
+say: But tonight he can't even open his mouth without saying something offensive.
 say: Should I say something? Do guys stick up for their friends?
 say: Whatever, who gives a shit what a guy would do.
 say(Self): Come on now Hoyt. What's your problem? You've done nothing but give us shit all night.
