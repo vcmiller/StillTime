@@ -22,8 +22,6 @@ namespace Game {
 
         public int? CountdownValue { get; }
         
-        public bool WasSelfNodeUnexplored { get; }
-        
         public Color BgColor { get; }
 
         public TraversalState(
@@ -35,7 +33,6 @@ namespace Game {
             IReadOnlyDictionary<Variable, object> globalVariables,
             IEnumerable<INode> visitedNodesCurrentRun,
             IEnumerable<INode> visitedNodesOverall,
-            bool wasSelfNodeUnexplored,
             Color bgColor) {
             CurrentNode = node;
             NodeForTimeout = nodeForTimeout;
@@ -45,7 +42,6 @@ namespace Game {
             GlobalVariables = new Dictionary<Variable, object>(globalVariables);
             VisitedNodesCurrentRun = new ReadOnlySet<INode>(visitedNodesCurrentRun);
             VisitedNodesOverall = new ReadOnlySet<INode>(visitedNodesOverall);
-            WasSelfNodeUnexplored = wasSelfNodeUnexplored;
             BgColor = bgColor;
         }
 
@@ -58,7 +54,6 @@ namespace Game {
             GlobalVariables = mutableState.GlobalVariables;
             VisitedNodesCurrentRun = new ReadOnlySet<INode>(mutableState.VisitedNodesCurrentRun);
             VisitedNodesOverall = new ReadOnlySet<INode>(mutableState.VisitedNodesOverall);
-            WasSelfNodeUnexplored = mutableState.WasSelfNodeUnexplored;
             BgColor = mutableState.BgColor;
         }
 
@@ -107,7 +102,6 @@ namespace Game {
                 NodeForTimeout = NodeForTimeout,
                 ShowCountdown = ShowCountdown,
                 CountdownValue = CountdownValue,
-                WasSelfNodeUnexplored = WasSelfNodeUnexplored,
                 BgColor = BgColor,
             };
         }
@@ -128,9 +122,14 @@ namespace Game {
 
             mutableState.CurrentNode = next;
             mutableState.VisitedNodesCurrentRun.Add(next);
-            mutableState.WasSelfNodeUnexplored = mutableState.VisitedNodesOverall.Add(next);
+            mutableState.VisitedNodesOverall.Add(next);
             
             mutableState.CurrentNode.ApplyToState(ref mutableState);
+            
+            // If the node applies a different node as the current (a branch node for example), 
+            mutableState.VisitedNodesCurrentRun.Add(mutableState.CurrentNode);
+            mutableState.VisitedNodesOverall.Add(mutableState.CurrentNode);
+            
             TraversalState nextState = new(mutableState);
             return nextState;
         }

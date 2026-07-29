@@ -11,7 +11,6 @@ namespace Game {
         public string NodeForTimeout { get; set; }
         public bool ShowCountdown { get; set; }
         public int? CountdownValue { get; set; }
-        public bool WasSelfNodeUnexplored { get; set; }
         public string BgColor { get; set; }
 
         public SerializedTraversalState Clone() {
@@ -24,7 +23,6 @@ namespace Game {
                 NodeForTimeout = NodeForTimeout,
                 ShowCountdown = ShowCountdown,
                 CountdownValue = CountdownValue,
-                WasSelfNodeUnexplored = WasSelfNodeUnexplored,
                 BgColor = BgColor,
             };
         }

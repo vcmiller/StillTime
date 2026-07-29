@@ -35,7 +35,6 @@ namespace Game {
                 new Dictionary<Variable, object>(),
                 Enumerable.Empty<INode>(),
                 Enumerable.Empty<INode>(),
-                false,
                 Color.black);
         }
 
@@ -49,7 +48,6 @@ namespace Game {
                 NodeForTimeout = state.NodeForTimeout?.FullIdentifier,
                 ShowCountdown = state.ShowCountdown,
                 CountdownValue = state.CountdownValue,
-                WasSelfNodeUnexplored = state.WasSelfNodeUnexplored,
                 BgColor = ColorUtility.ToHtmlStringRGB(state.BgColor),
             };
         }
@@ -75,7 +73,6 @@ namespace Game {
                 ConvertVariables(serializedState.GlobalVariables),
                 serializedState.VisitedNodesCurrentRun.SelectWhere<string, INode>(TryGetNode),
                 serializedState.VisitedNodesOverall.SelectWhere<string, INode>(TryGetNode),
-                serializedState.WasSelfNodeUnexplored,
                 ColorUtility.TryParseHtmlString($"#{serializedState.BgColor}", out Color bgColor)
                     ? bgColor
                     : Color.black);

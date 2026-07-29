@@ -146,9 +146,9 @@ namespace Game {
                             branchNode.Choices
                                       .Where(_currentState.IsChoiceAvailable)
                                       .Select(c => {
-                                          Stack<TraversalState> stack = new();
-                                          stack.Push(_currentState.Advance(c.Next));
-                                          bool hasNewContent = ExploreBranchForNewContent(stack, 10000);
+                                          List<TraversalState> stack = new() { _currentState };
+                                          TraversalState testState = _currentState.Advance(c.Next);
+                                          bool hasNewContent = ExploreBranchForNewContent(stack, testState, 10_000);
                                           return (c.Text,
                                               new Action(() => Advance(_currentState, c.Next, cancellationToken)),
                                               hasNewContent);
@@ -202,38 +202,41 @@ namespace Game {
             }
         }
 
-        private static bool ExploreBranchForNewContent(Stack<TraversalState> stack, int maxDepth) {
-            if (!stack.TryPeek(out TraversalState state)) return false;
+        private static bool ExploreBranchForNewContent(List<TraversalState> stack, TraversalState state, int maxDepth) {
+            TraversalState previousState = stack[^1];
 
-            if (state.WasSelfNodeUnexplored) return true;
+            if (!previousState.VisitedNodesOverall.Contains(state.CurrentNode)) {
+                return true;
+            }
 
             if (stack.Count >= maxDepth) {
                 Debug.LogError("Search reached max depth. This should not happen.");
                 return true;
             }
 
-            foreach (INode possibleNext in state.GetAvailableNodes()) {
-                if (possibleNext is null or ResetRunNode) continue;
+            try {
+                stack.Add(state);
+                
+                foreach (INode possibleNext in state.GetAvailableNodes()) {
+                    if (possibleNext is null or ResetRunNode) continue;
 
-                TraversalState previousState = stack.LastOrDefault(s => s.CurrentNode == possibleNext);
-                if (previousState != null && 
-                    previousState.GlobalVariables.SequenceEqual(state.GlobalVariables) &&
-                    previousState.RunVariables.SequenceEqual(state.RunVariables)) {
-                    continue;
-                }
-
-                TraversalState nextState = state.Advance(possibleNext);
-
-                stack.Push(nextState);
-
-                try {
-                    if (ExploreBranchForNewContent(stack, maxDepth)) return true;
-                } finally {
-                    TraversalState poppedState = stack.Pop();
-                    if (poppedState != nextState) {
-                        throw new Exception("Error in stack operation");
+                    TraversalState previousStateAtNode = stack.FindLast(s => s.CurrentNode == possibleNext);
+                    if (previousStateAtNode != null && 
+                        previousStateAtNode.GlobalVariables.SequenceEqual(state.GlobalVariables) &&
+                        previousStateAtNode.RunVariables.SequenceEqual(state.RunVariables)) {
+                        continue;
                     }
+
+                    TraversalState nextState = state.Advance(possibleNext);
+                    
+                    if (ExploreBranchForNewContent(stack, nextState, maxDepth)) return true;
                 }
+            } finally {
+                if (stack[^1] != state) {
+                    throw new Exception("Error in stack operation");
+                }
+
+                stack.RemoveAt(stack.Count - 1);
             }
 
             return false;

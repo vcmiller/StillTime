@@ -14,7 +14,6 @@ namespace Game {
         public INode NodeForTimeout { get; set; }
         public bool ShowCountdown { get; set; }
         public int? CountdownValue { get; set; }
-        public bool WasSelfNodeUnexplored { get; set; }
         public Color BgColor { get; set; }
 
         public void SetVariableValue(Variable variable, object value) {
