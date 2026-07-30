@@ -143,7 +143,7 @@ say(Mom): I worry about you. Sometimes I feel like I'm losing my son.
 goto(ParentConversation_Childhood_Choice)
 
 label(ParentConversation_Childhood_Choice)
-branch(Mom): I just keep wondering what was going on in your head.
+branch(Mom): I just keep wondering what's going on in your head.
 choice_always(InitialChoice): I'm sorry! I just don't know how to talk about this.
 choice(ParentConversation_Childhood_WellBehaved): I only ever know how to follow the rules.
 choice(ParentConversation_Childhood_Lonely): I just feel so lonely.
@@ -536,7 +536,7 @@ say: I run into the house, practically collapsing through the door.
 say: Mom and Dad are still there, right where I left them.
 say: They look up. I see a glimmer of relief on Mom's face.
 say: Maybe a hint of disappointment too, that I didn't escape against all odds.
-say: Nothing needs to be said. I know they understand. 
+say: Nothing needs to be said. I know they understand.
 say: I know they forgive me.
 goto(ParentConversation_ComingOut_Confident_Ending)
 
@@ -647,7 +647,7 @@ goto(Bedroom_InitialChoice)
 label(Bedroom_InitialChoice)
 branch: I stand in the middle of the room.
 choice(Bedroom_PetTheCat): Pet the cat
-choice(Bedroom_Phone): Pick up my phone
+choice_always(Bedroom_Phone): Pick up my phone
 choice(Bedroom_Photos): Take a look at the photos
 choice(Bedroom_Computer): Open the laptop
 choice_always(InitialChoice): Head back to the living room
@@ -721,6 +721,7 @@ choice(Bedroom_Phone_CallReed): Call Reed back
 choice(Bedroom_Phone_CallKatie, Gate_MissBestFriend): Call Katie
 choice(Bedroom_Phone_OpenSocial): Open social media
 choice(Bedroom_Phone_AskTheQuestion, Gate_PartialRealization): Ask the question
+choice_always(Bedroom_InitialChoice): Never mind
 end
 
 label(Bedroom_Phone_CallReed)
@@ -932,8 +933,8 @@ goto(Bedroom_Phone_CallKatie_ComingOut_SetName_Converge)
 
 label(Bedroom_Phone_CallKatie_ComingOut_SetName_Converge)
 say(Katie): It's nice to meet the real you, {ChosenName}.
-say: That... sounds weird to me. I don't know. It feels weird to use a different name.
-say: What does that mean? Am I not really trans?
+say(Self): That... sounds weird to me. I don't know. It feels weird to use a different name.
+say(Self): What does that mean? Am I not really trans?
 say(Katie): Girl, discomfort around a new name seems perfectly natural to me. Nobody's called you that before?
 say(Self): You're the first person I've told.
 say(Katie): Awwww! Well, I'm honored to welcome you into the world {ChosenName}.
@@ -1006,7 +1007,7 @@ say: There's so much she wished she could have done, have been, have said.
 say: So much that was taken from her.
 say: But, in spite of all the hurt in the world, she existed.
 say: And that's just going to have to be enough.
-goto(TimeoutEnding)
+goto(FadeToBlackEnding)
 
 label(Bedroom_Phone_CallKatie_End)
 goto(Bedroom_Phone_CallKatie_End_CameOut, Katie_CameOut)
@@ -1330,7 +1331,7 @@ say: As I approach, I hear music. That's weird. It's not the typical generic med
 say: It's some EDM song I've never heard. Definitely a bit out of place, but it's not really coming from the game at all.
 say: It's coming from one player's voice chat, filtered by what's obviously a shitty laptop mic.
 say: And everyone is just standing in a mob around them. Doing dance emotes.
-say: I think I stumped into an end-of-the-world dance party.
+say: I think I stumbled into an end-of-the-world dance party.
 say: For a lot of people in this game, it's their only connection to the outside world.
 say: The only place they feel like a real person. I've felt that way at times.
 say: All these people have come together to be with the only community they have before the end.
@@ -1413,7 +1414,7 @@ say(Hoyt): Everett man, you're even quieter than usual? What, did your cat die a
 say(Reed): Come on Hoyt, let's just chill. There's a lot going on.
 say(Reed): But this crew is sticking together until the end!
 say(Daniel): I've got your cure right here, matey! Drink up!
-say: Wow, that is genuinely the worse pirate accent I think I'e ever heard.
+say: Wow, that is genuinely the worse pirate accent I think I've ever heard.
 say: As I struggle to drink one, another beer is thrust into my empty hand.
 say(Daniel): Ye best be finishing that before we reach land, lest ye be forced to walk the plank!
 say(Hoyt): God you're such a dumbass Daniel. Just don't get all 'It's not gay if it's at sea' on us.
@@ -1424,7 +1425,7 @@ say: They continue, eager to share their extensive knowledge of sea shanties.
 say: Hoyt eventually joins in too, and even I get into it a little bit.
 say: As far as drunk car-rides with your friends go, this isn't so bad.
 say: By the time we're pulling into the long driveway to Reed's house, we've gotten through <i>Drunken Sailor</i>,\
-<i>Spanish Ladies</i>, <i>Rolling Down to Old Maui</i>, and ended on <i>Leaver her, Johnny</i>.
+<i>Spanish Ladies</i>, <i>Rolling Down to Old Maui</i>, and ended on <i>Leave her, Johnny</i>.
 cost(490)
 say: If we were girls, we'd be sharing our feelings and crying together.
 say: I suppose this is just the male version of that. The version we're allowed.
@@ -1459,7 +1460,7 @@ say: More likely, he just can't keep his homophobia and misogyny straight.
 say: And fuck you brain for making that pun.
 say: Come to think of it, if any of my friends are making shitty comments, it's usually started by him.
 say: But I think, all of a sudden, I see through him.
-say: He comes from a family where you hae to make those comments. Or else they'll be made at you.
+say: He comes from a family where you have to make those comments. Or else they'll be made at you.
 say: Nuclear deterrence. We won't fire at you as long as you can fire back. And just look at how well that worked out for us.
 say: I wonder how Hoyt would really feel about these things if he didn't have to have his hand on the button at all times.
 say(Daniel): Youuuu urp guyssss... wha.. whyyy are we waiting here. waiting here to die. Should... shouldn't we just get in the car and driiiive away?
@@ -1481,13 +1482,13 @@ say(Reed): Oh. My god, yeah of course I remember. I randomly thought about it on
 say(Reed): It goes on for miles! An old logging road I guess.
 say(Reed): Pretty bumpy and overgrown at points but it will take you right through the hills and away from the city.
 say(Hoyt): Man what are you on about?
-say(Reed): A road, that nobody knows about, reading right out of town, that's not on any maps.
+say(Reed): A road, that nobody knows about, heading right out of town, that's not on any maps.
 say(Reed): Everybody, grab anything you can from the kitchen. Water bottles, protein bars, anything that'll keep.
 say(Reed): Oh, and Everett, you grab Daniel. Get him in the car.
 say(Reed): We're getting out of here. Guys, we're going to make it. We're gonna survive.
 say: Okay, so Daniel's processing this by getting shitfaced and turning his brain off.
 say: Hoyt's leaning hard into his offense-as-defense mindset.
-say: Reed, it seems, has found some comfort in taking whatever control of the situation he can manage. That makes sense too, given who he is. 
+say: Reed, it seems, has found some comfort in taking whatever control of the situation he can manage. That makes sense too, given who he is.
 say: What about me? How am I coping with this? Psychoanalyzing my friends? That's new for me I guess.
 say: Hoyt looks skeptical of the plan, but Reed is hard to say no to. Daniel is pretty much fully passed out at this point.
 say: As for me? I don't know, really.
@@ -1525,9 +1526,9 @@ say: One of
 say: The boys.
 say: But I don't want to be.
 say: Wait what? Where did that thought come from?
-say: Of course I want to be one of the boys. I am. Of course I am. A boy is what I am. Pretty sure that's not something get to choose.
+say: Of course I want to be one of the boys. I am. Of course I am. A boy is what I am. Pretty sure that's not something I get to choose.
 say: But the thought is there, and now that I've thought it, it's not going away.
-say: Why wouldn't I want to be one of he boys?
+say: Why wouldn't I want to be one of the boys?
 say: Because I'm not. Because I never have been.
 say: Hmm? Not sure I follow.
 say: Yes I do.
@@ -1549,9 +1550,17 @@ say: This is going to be a long car ride.
 set(Gate_PartialRealization, true)
 set(Gate_SecretRoad, true)
 set(Gate_BadFriendExperience, true)
-goto(TimeoutEnding)
+goto(FadeToBlackEnding)
 
-######################################### Timeout Ending ##############################################
+######################################### Shared Endings ##############################################
+
+label(FadeToBlackEnding)
+timeout
+countdown(false)
+clear
+bg(000000, 2)
+delay(2)
+goto_reset(LaterRun)
 
 label(TimeoutEnding)
 timeout
