@@ -1,9 +1,9 @@
 const cacheName = "Infohazard Games-StillTime-0.1.0";
 const contentToCache = [
     "Build/build-dev.loader.js",
-    "Build/build-dev.framework.js.br",
-    "Build/build-dev.data.br",
-    "Build/build-dev.wasm.br",
+    "Build/build-dev.framework.js",
+    "Build/build-dev.data",
+    "Build/build-dev.wasm",
     "TemplateData/style.css"
 
 ];
