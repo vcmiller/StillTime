@@ -210,8 +210,8 @@ namespace Commands {
             }
 
             int cmdEnd = 0;
-            for (int i = 0; i < line.Length; i++) {
-                char c = line[i];
+            for (int i = 0; i < actualLineSpan.Length; i++) {
+                char c = actualLineSpan[i];
                 if (c == '_' || char.IsLetterOrDigit(c)) {
                     cmdEnd++;
                 } else {
@@ -223,7 +223,7 @@ namespace Commands {
                 throw new ParsingException(lineNumber, line, "Failed to parse command name");
             }
 
-            cmd = line[..cmdEnd].ToString();
+            cmd = actualLineSpan[..cmdEnd].ToString();
             text = null;
             args = null;
             isTextContinued = false;

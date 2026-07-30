@@ -1889,7 +1889,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Game.ScriptRunner
   _script: {fileID: 4900000, guid: f654f7386bc14986825505033820a7a2, type: 3}
+  _scriptUrl: https://vcmiller.github.io/StillTime/data/GameScript.txt
   _gameRunner: {fileID: 648243592}
+  _editorUsesLocalScript: 0
   _saveGameTimer:
     _initialInterval: 0
     _interval: 10
