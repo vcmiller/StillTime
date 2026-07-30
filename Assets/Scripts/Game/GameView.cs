@@ -28,14 +28,15 @@ namespace Game {
         private int _visibleButtonCount;
         private readonly List<ChoiceView> _currentChoices = new();
         private TMP_TextInfo _textInfo;
+        private bool _autoAdvance;
 
         private void OnEnable() {
             _mainButton.onClick.RemoveListener(HandleButton);
             _mainButton.onClick.AddListener(HandleButton);
-            
+
             _showWordTimer.Initialize();
             _showButtonTimer.Initialize();
-            
+
             HideCountdown();
         }
 
@@ -74,7 +75,7 @@ namespace Game {
             return $"<color=#{color}>{speaker.Text}</color>\n{text}";
         }
 
-        public void SetSingleText(string text, Speaker speaker, Action next, bool skipAnimation) {
+        public void SetSingleText(string text, Speaker speaker, Action next, bool skipAnimation, bool autoAdvance) {
             Clear();
 
             SetText(AddSpeakerToText(text, speaker));
@@ -82,9 +83,10 @@ namespace Game {
 
             if (skipAnimation) {
                 SkipAnimation();
-            } else {
-                _showWordTimer.StartInterval();
             }
+
+            _autoAdvance = autoAdvance;
+            _showWordTimer.StartInterval();
         }
 
         public void SetChoices(string mainText, Speaker speaker, List<(string text, Action action, bool hasNew)> choices, bool skipAnimation) {
@@ -150,6 +152,15 @@ namespace Game {
                         _mainButton.gameObject.SetActive(false);
                     }
                 }
+            }
+
+            if (_textInfo != null &&
+                _mainText.maxVisibleWords >= _textInfo.wordCount + 1 &&
+                _currentChoices.Count == 0 &&
+                _autoAdvance &&
+                _mainButtonAction != null &&
+                _showWordTimer.TryConsume()) {
+                _mainButtonAction();
             }
         }
 

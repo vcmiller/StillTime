@@ -12,6 +12,7 @@ namespace Game {
         public bool ShowCountdown { get; set; }
         public int? CountdownValue { get; set; }
         public string BgColor { get; set; }
+        public bool WasCurrentStateUnexplored { get; set; }
 
         public SerializedTraversalState Clone() {
             return new SerializedTraversalState {
@@ -24,6 +25,7 @@ namespace Game {
                 ShowCountdown = ShowCountdown,
                 CountdownValue = CountdownValue,
                 BgColor = BgColor,
+                WasCurrentStateUnexplored = WasCurrentStateUnexplored,
             };
         }
     }

@@ -7,22 +7,24 @@ using Utility;
 namespace Game {
     public class TraversalState {
         public IReadOnlyDictionary<Variable, object> RunVariables { get; }
-        
+
         public IReadOnlyDictionary<Variable, object> GlobalVariables { get; }
-        
+
         public ReadOnlySet<INode> VisitedNodesCurrentRun { get; }
-        
+
         public ReadOnlySet<INode> VisitedNodesOverall { get; }
 
         public INode CurrentNode { get; }
-        
+
         public INode NodeForTimeout { get; }
-        
+
         public bool ShowCountdown { get; }
 
         public int? CountdownValue { get; }
-        
+
         public Color BgColor { get; }
+
+        public bool WasCurrentNodeUnexplored { get; }
 
         public TraversalState(
             INode node,
@@ -33,7 +35,8 @@ namespace Game {
             IReadOnlyDictionary<Variable, object> globalVariables,
             IEnumerable<INode> visitedNodesCurrentRun,
             IEnumerable<INode> visitedNodesOverall,
-            Color bgColor) {
+            Color bgColor,
+            bool wasCurrentNodeUnexplored) {
             CurrentNode = node;
             NodeForTimeout = nodeForTimeout;
             ShowCountdown = showCountdown;
@@ -43,9 +46,10 @@ namespace Game {
             VisitedNodesCurrentRun = new ReadOnlySet<INode>(visitedNodesCurrentRun);
             VisitedNodesOverall = new ReadOnlySet<INode>(visitedNodesOverall);
             BgColor = bgColor;
+            WasCurrentNodeUnexplored = wasCurrentNodeUnexplored;
         }
 
-        public TraversalState(MutableTraversalState mutableState) {
+        public TraversalState(MutableTraversalState mutableState, bool wasCurrentNodeUnexplored) {
             CurrentNode = mutableState.CurrentNode;
             NodeForTimeout = mutableState.NodeForTimeout;
             ShowCountdown = mutableState.ShowCountdown;
@@ -55,6 +59,7 @@ namespace Game {
             VisitedNodesCurrentRun = new ReadOnlySet<INode>(mutableState.VisitedNodesCurrentRun);
             VisitedNodesOverall = new ReadOnlySet<INode>(mutableState.VisitedNodesOverall);
             BgColor = mutableState.BgColor;
+            WasCurrentNodeUnexplored = wasCurrentNodeUnexplored;
         }
 
         public IEnumerable<INode> GetAvailableNodes() {
@@ -121,16 +126,17 @@ namespace Game {
             }
 
             mutableState.CurrentNode = next;
-            mutableState.VisitedNodesCurrentRun.Add(next);
-            mutableState.VisitedNodesOverall.Add(next);
-            
-            mutableState.CurrentNode.ApplyToState(ref mutableState);
-            
-            // If the node applies a different node as the current (a branch node for example), 
-            mutableState.VisitedNodesCurrentRun.Add(mutableState.CurrentNode);
-            mutableState.VisitedNodesOverall.Add(mutableState.CurrentNode);
-            
-            TraversalState nextState = new(mutableState);
+
+            bool unexplored = false;
+            INode prevNode;
+            do {
+                prevNode = mutableState.CurrentNode;
+                mutableState.VisitedNodesCurrentRun.Add(mutableState.CurrentNode);
+                unexplored |= mutableState.VisitedNodesOverall.Add(mutableState.CurrentNode);
+                mutableState.CurrentNode.ApplyToState(ref mutableState);
+            } while (mutableState.CurrentNode != prevNode);
+
+            TraversalState nextState = new(mutableState, unexplored);
             return nextState;
         }
     }

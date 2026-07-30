@@ -84,7 +84,7 @@ say: The TV is already on. I can't tell the channel in my half-awake state, but 
 say: Every news station is showing the same thing.
 say: The asshole-in-chief is giving a speech from a bunker, ranting about the fire and fury that will rain down on our enemies.
 say: The view changes to a map showing every major city in the US. Each one has a timer next to it, counting down.
-say: I find us, nothing more than a little dot on a screen. With a number next to it. 00:56:31.
+say: I find us, nothing more than a little dot on a screen. With a number next to it. <color=#FF5700>00:56:31</color>.
 countdown(true, 3391)
 say: My parents don't say anything. I think I see a tear in my dad's eye.
 goto(InitialChoice)
@@ -96,7 +96,7 @@ say: It's a warm, rainy July evening. I'm in bed, passing in and out of sleep.
 say: My brain is processing something it hasn't decided is a dream or a... memory?
 say: My phone blasts an alarm. Wait. I've heard this before. Right?
 say: I head to the living room. See the TV. How do I know what's happening? Did I just dream this?
-say: On the TV, there's a map of major US cities, all showing little timers. Next to us is a number: 00:56:31.
+say: On the TV, there's a map of major US cities, all showing little timers. Next to us is a number: <color=#FF5700>00:56:31</color>.
 countdown(true, 3391)
 say: My parents don't say anything. I think I see a tear in my dad's eye.
 say: There's something important I need to remember. Or a lot of things.
@@ -104,7 +104,7 @@ goto(InitialChoice)
 
 label(InitialChoice)
 branch: Nobody seems to want to break the silence.
-choice_always(ParentConversation_Entry): Mom... Dad...
+choice(ParentConversation_Entry): Mom... Dad...
 choice_always(Bedroom_Entry): I need to be alone.
 choice(TryToDriveAlone_Entry): What are you doing? We need to get out of here!
 end
@@ -144,12 +144,12 @@ goto(ParentConversation_Childhood_Choice)
 
 label(ParentConversation_Childhood_Choice)
 branch(Mom): I just keep wondering what's going on in your head.
-choice_always(InitialChoice): I'm sorry! I just don't know how to talk about this.
 choice(ParentConversation_Childhood_WellBehaved): I only ever know how to follow the rules.
 choice(ParentConversation_Childhood_Lonely): I just feel so lonely.
 choice(ParentConversation_Childhood_FitIn): I tried so hard to fit in.
 choice(ParentConversation_Alienation, Gate_BadFriendExperience): Even now, I feel like I don't belong.
 choice(ParentConversation_ComingOut, Gate_FullRealization): Actually, I think I know. This might be kind of a shock.
+choice_always(InitialChoice): I'm sorry! I just don't know how to talk about this.
 end
 
 label(ParentConversation_Childhood_WellBehaved)

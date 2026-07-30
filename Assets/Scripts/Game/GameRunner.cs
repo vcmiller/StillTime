@@ -15,7 +15,9 @@ namespace Game {
         private TraversalState _currentState;
         private CancellationTokenSource _cancellationTokenSource;
         private const string SkipAnimationsKey = "StillTime.SkipAnimations";
+        private const string SkipSeenDialogKey = "StillTime.SkipSeenDialog";
         private bool _skipAnimations;
+        private bool _skipSeenDialogue;
         private Regex _stringInterpRegex = new(@"\{[0-9a-zA-Z_]*\}");
 
         public bool SkipAnimations {
@@ -27,8 +29,18 @@ namespace Game {
             }
         }
 
+        public bool SkipSeenDialogue {
+            get => _skipSeenDialogue;
+            set {
+                if (_skipSeenDialogue == value) return;
+                _skipSeenDialogue = value;
+                PlayerPrefs.SetInt(SkipSeenDialogKey, value ? 1 : 0);
+            }
+        }
+
         private void OnEnable() {
-            _skipAnimations = PlayerPrefs.GetInt(SkipAnimationsKey) != 0;
+            _skipAnimations = PlayerPrefs.GetInt(SkipAnimationsKey, 0) != 0;
+            _skipSeenDialogue = PlayerPrefs.GetInt(SkipSeenDialogKey, 1) != 0;
         }
 
         public void LoadGameGraph(GameGraph gameGraph) {
@@ -137,7 +149,8 @@ namespace Game {
                             DoStringInterpolation(singleTextNode.Text, _currentState),
                             singleTextNode.Speaker,
                             () => Advance(_currentState, singleTextNode.Next, cancellationToken),
-                            SkipAnimations);
+                            SkipAnimations,
+                            SkipSeenDialogue && !_currentState.WasCurrentNodeUnexplored);
                         break;
                     case BranchNode branchNode:
                         _gameView.SetChoices(
@@ -216,19 +229,19 @@ namespace Game {
 
             try {
                 stack.Add(state);
-                
+
                 foreach (INode possibleNext in state.GetAvailableNodes()) {
                     if (possibleNext is null or ResetRunNode) continue;
 
                     TraversalState previousStateAtNode = stack.FindLast(s => s.CurrentNode == possibleNext);
-                    if (previousStateAtNode != null && 
+                    if (previousStateAtNode != null &&
                         previousStateAtNode.GlobalVariables.SequenceEqual(state.GlobalVariables) &&
                         previousStateAtNode.RunVariables.SequenceEqual(state.RunVariables)) {
                         continue;
                     }
 
                     TraversalState nextState = state.Advance(possibleNext);
-                    
+
                     if (ExploreBranchForNewContent(stack, nextState, maxDepth)) return true;
                 }
             } finally {

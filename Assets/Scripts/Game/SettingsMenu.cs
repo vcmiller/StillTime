@@ -6,15 +6,21 @@ using UnityEngine.UI;
 namespace Game {
     public class SettingsMenu : MonoBehaviour {
         public Toggle _skipToggle;
+        public Toggle _skipSeenToggle;
         public GameRunner _gameRunner;
         public TMP_InputField _jumpInput;
 
         private void OnEnable() {
             _skipToggle.isOn = _gameRunner.SkipAnimations;
+            _skipSeenToggle.isOn = _gameRunner.SkipSeenDialogue;
         }
 
         public void ToggleAnimations(bool value) {
             _gameRunner.SkipAnimations = value;
+        }
+
+        public void ToggleSkipSeen(bool value) {
+            _gameRunner.SkipSeenDialogue = value;
         }
 
         public void ResetGame() {

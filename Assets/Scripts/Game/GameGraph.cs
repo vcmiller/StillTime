@@ -35,7 +35,8 @@ namespace Game {
                 new Dictionary<Variable, object>(),
                 Enumerable.Empty<INode>(),
                 Enumerable.Empty<INode>(),
-                Color.black);
+                Color.black,
+                true);
         }
 
         public SerializedTraversalState SerializeState(TraversalState state) {
@@ -49,6 +50,7 @@ namespace Game {
                 ShowCountdown = state.ShowCountdown,
                 CountdownValue = state.CountdownValue,
                 BgColor = ColorUtility.ToHtmlStringRGB(state.BgColor),
+                WasCurrentStateUnexplored = state.WasCurrentNodeUnexplored,
             };
         }
 
@@ -75,7 +77,9 @@ namespace Game {
                 serializedState.VisitedNodesOverall.SelectWhere<string, INode>(TryGetNode),
                 ColorUtility.TryParseHtmlString($"#{serializedState.BgColor}", out Color bgColor)
                     ? bgColor
-                    : Color.black);
+                    : Color.black,
+                serializedState.WasCurrentStateUnexplored
+            );
         }
 
         private Dictionary<Variable, object> ConvertVariables(Dictionary<string, JValue> values) {
