@@ -3,7 +3,7 @@ using Nodes;
 using UnityEngine;
 
 namespace Commands {
-    public class SpeakerCommand : Command {
+    public class SpeakerCommand : Command, IResourceCommand {
         public string Name { get; }
         public Color Color { get; }
         public string Text { get; }
@@ -15,8 +15,8 @@ namespace Commands {
             Text = text;
         }
 
-        public override void CreateResources(Dictionary<string, Resource> resources,
-                                             Dictionary<string, INode> nodeDictionary) {
+        public void CreateResources(Dictionary<string, Resource> resources,
+                                    Dictionary<string, INode> nodeDictionary) {
             Speaker speaker = new(Name, Color, Text);
             resources.Add(Name, speaker);
         }

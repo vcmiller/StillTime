@@ -156,14 +156,16 @@ namespace Game {
                         _gameView.SetChoices(
                             DoStringInterpolation(branchNode.Text, _currentState),
                             branchNode.Speaker,
-                            branchNode.Choices
-                                      .Where(_currentState.IsChoiceAvailable)
-                                      .Select(c => {
+                            branchNode.Options
+                                      .Where(o => o.IsAvailable(_currentState))
+                                      .Select(o => {
+                                          INode next = o.GetNextNode(_currentState);
+                                          string text = o.GetText(_currentState);
                                           List<TraversalState> stack = new() { _currentState };
-                                          TraversalState testState = _currentState.Advance(c.Next);
+                                          TraversalState testState = _currentState.Advance(next);
                                           bool hasNewContent = ExploreBranchForNewContent(stack, testState, 10_000);
-                                          return (c.Text,
-                                              new Action(() => Advance(_currentState, c.Next, cancellationToken)),
+                                          return (text,
+                                              new Action(() => Advance(_currentState, next, cancellationToken)),
                                               hasNewContent);
                                       })
                                       .ToList(),

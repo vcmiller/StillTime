@@ -68,7 +68,7 @@ namespace Game {
                     yield return singleNextNode.Next;
                     break;
                 case BranchNode branchNode:
-                    foreach (Choice choice in branchNode.Choices) {
+                    foreach (Choice choice in branchNode.Options) {
                         if (IsChoiceAvailable(choice)) {
                             yield return choice.Next;
                         }

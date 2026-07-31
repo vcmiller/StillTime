@@ -6,6 +6,7 @@ using Cysharp.Threading.Tasks;
 using Infohazard.Core;
 using Newtonsoft.Json;
 using Nodes;
+using Parsers;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -45,7 +46,7 @@ namespace Game {
         }
 
         private void LoadFromScriptText(string scriptText) {
-            List<Command> commands = CommandParser.ParseScript(scriptText);
+            List<Command> commands = ScriptParser.ParseScript(scriptText);
             GameGraph graph = GraphBuilder.BuildGraph(commands);
 
             _gameRunner.LoadGameGraph(graph);

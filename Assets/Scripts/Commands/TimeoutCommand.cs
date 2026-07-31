@@ -2,17 +2,17 @@
 using Nodes;
 
 namespace Commands {
-    public class TimeoutCommand : Command {
+    public class TimeoutCommand : Command, ISequentialCommand {
         public string TargetLabel { get; }
 
         public TimeoutCommand(int lineNumber, string line, string targetLabel) : base(lineNumber, line) {
             TargetLabel = targetLabel;
         }
 
-        public override void ApplyToSequence(ref ISingleNextNode nextNode,
-                                             IReadOnlyDictionary<string, Resource> resources,
-                                             IReadOnlyDictionary<string, INode> nodeDictionary,
-                                             List<INode> createdNodes) {
+        public void ApplyToSequence(ref ISingleNextNode nextNode,
+                                    Dictionary<string, Resource> resourceDictionary,
+                                    Dictionary<string, INode> nodeDictionary,
+                                    List<INode> createdNodes) {
             INode timeoutTarget = TargetLabel != null
                 ? CommandUtility.GetNode(this, TargetLabel, nodeDictionary)
                 : null;

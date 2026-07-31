@@ -2,7 +2,7 @@
 using Nodes;
 
 namespace Commands {
-    public class CountdownCommand : Command {
+    public class CountdownCommand : Command, ISequentialCommand {
         public bool Show { get; }
 
         public int? Value { get; }
@@ -12,10 +12,10 @@ namespace Commands {
             Value = value;
         }
 
-        public override void ApplyToSequence(ref ISingleNextNode nextNode,
-                                             IReadOnlyDictionary<string, Resource> resources,
-                                             IReadOnlyDictionary<string, INode> nodeDictionary,
-                                             List<INode> createdNodes) {
+        public void ApplyToSequence(ref ISingleNextNode nextNode,
+                                    Dictionary<string, Resource> resourceDictionary,
+                                    Dictionary<string, INode> nodeDictionary,
+                                    List<INode> createdNodes) {
             CountdownNode node = new(Show, Value);
             createdNodes.Add(node);
             nextNode.Next = node;

@@ -1,8 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Nodes;
 
 namespace Commands {
-    public class LabelBlockCommand : Command {
+    public class LabelBlockCommand : Command, IResourceCommand, ISubtreeCommand {
         public string Identifier { get; }
 
         public List<Command> Commands { get; } = new();
@@ -11,10 +12,21 @@ namespace Commands {
             Identifier = identifier;
         }
 
-        public override void CreateResources(Dictionary<string, Resource> resources,
-                                             Dictionary<string, INode> nodeDictionary) {
+        public void CreateResources(
+            Dictionary<string, Resource> resources,
+            Dictionary<string, INode> nodeDictionary) {
             EmptyNode rootNode = new() { FullIdentifier = Identifier };
             nodeDictionary.Add(Identifier, rootNode);
+        }
+
+        public void BuildNodeTree(
+            Dictionary<string, Resource> resources,
+            Dictionary<string, INode> nodeDictionary) {
+            if (!nodeDictionary.TryGetValue(Identifier, out INode node) || node is not EmptyNode emptyNode) {
+                throw new Exception($"Could not find empty node for label {Identifier} in provided dictionary.");
+            }
+
+            CommandUtility.ProcessLinearNodes($"{Identifier}:", emptyNode, Commands, nodeDictionary, resources);
         }
     }
 }

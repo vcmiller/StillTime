@@ -45,7 +45,7 @@ namespace Commands {
 
             bool invert = condition.StartsWith('!');
             if (invert) condition = condition[1..];
-            
+
             if (condition.All(c => c == '_' || char.IsLetterOrDigit(c))) {
                 Variable variable = GetResource<Variable>(command, condition, resources);
                 if (variable.Type != VarType.Bool) {
@@ -79,21 +79,22 @@ namespace Commands {
 
             throw new ParsingException(command.LineNumber, command.Line, $"Failed to parse condition {condition}");
         }
-        
+
         public static void ProcessLinearNodes(
             string identifierBase,
             ISingleNextNode previousNode,
             List<Command> commands,
             Dictionary<string, INode> nodesByIdentifier,
             Dictionary<string, Resource> resources) {
-            
+
             List<INode> createdNodes = new();
 
             foreach (Command command in commands) {
+                if (command is not ISequentialCommand sequentialCommand) continue;
                 if (previousNode == null) break;
-                command.ApplyToSequence(ref previousNode, resources, nodesByIdentifier, createdNodes);
+                sequentialCommand.ApplyToSequence(ref previousNode, resources, nodesByIdentifier, createdNodes);
             }
-            
+
             Dictionary<string, int> countByLocalId = new();
             foreach (INode createdNode in createdNodes) {
                 string localId = createdNode.GetSelfIdentifier();

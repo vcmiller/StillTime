@@ -2,7 +2,7 @@
 using Nodes;
 
 namespace Commands {
-    public class SetVarCommand : Command {
+    public class SetVarCommand : Command, ISequentialCommand {
         public string VarName { get; }
         public string Value { get; }
 
@@ -11,12 +11,11 @@ namespace Commands {
             Value = value;
         }
 
-        public override void ApplyToSequence(ref ISingleNextNode nextNode,
-                                             IReadOnlyDictionary<string, Resource> resources,
-                                             IReadOnlyDictionary<string, INode> nodeDictionary,
-                                             List<INode> createdNodes) {
-            
-            Variable variable = CommandUtility.GetResource<Variable>(this, VarName, resources);
+        public void ApplyToSequence(ref ISingleNextNode nextNode,
+                                    Dictionary<string, Resource> resourceDictionary,
+                                    Dictionary<string, INode> nodeDictionary,
+                                    List<INode> createdNodes) {
+            Variable variable = CommandUtility.GetResource<Variable>(this, VarName, resourceDictionary);
             if (!variable.TryParseValue(Value, out object varValue)) {
                 throw new ParsingException(LineNumber, Line, $"Invalid value {Value} for var type {variable.Type}");
             }

@@ -3,12 +3,14 @@ using System.Linq;
 using Nodes;
 
 namespace Commands {
-    public class GotoCommand : Command {
+    public class GotoCommand : Command, ISequentialCommand, ISequenceTerminatingCommand {
         public string TargetLabel { get; }
 
         public bool ResetRunState { get; }
 
         public IReadOnlyList<string> Conditions { get; }
+
+        public bool IsTerminating => Conditions.Count == 0;
 
         public GotoCommand(int lineNumber, string line, string targetLabel, bool resetRunState,
                            IReadOnlyList<string> conditions) : base(lineNumber, line) {
@@ -17,10 +19,10 @@ namespace Commands {
             Conditions = conditions;
         }
 
-        public override void ApplyToSequence(ref ISingleNextNode nextNode,
-                                             IReadOnlyDictionary<string, Resource> resources,
-                                             IReadOnlyDictionary<string, INode> nodeDictionary,
-                                             List<INode> createdNodes) {
+        public void ApplyToSequence(ref ISingleNextNode nextNode,
+                                    Dictionary<string, Resource> resourceDictionary,
+                                    Dictionary<string, INode> nodeDictionary,
+                                    List<INode> createdNodes) {
             INode gotoTarget = CommandUtility.GetNode(this, TargetLabel, nodeDictionary);
 
             if (ResetRunState) {
@@ -31,7 +33,7 @@ namespace Commands {
 
             if (Conditions.Count > 0) {
                 List<ICondition> conditions =
-                    Conditions.Select(str => CommandUtility.ProcessCondition(this, str, resources))
+                    Conditions.Select(str => CommandUtility.ProcessCondition(this, str, resourceDictionary))
                               .ToList();
 
 

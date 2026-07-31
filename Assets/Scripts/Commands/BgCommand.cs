@@ -3,7 +3,7 @@ using Nodes;
 using UnityEngine;
 
 namespace Commands {
-    public class BgCommand : Command {
+    public class BgCommand : Command, ISequentialCommand {
         public Color Color { get; }
         public float Time { get; }
 
@@ -12,12 +12,12 @@ namespace Commands {
             Time = time;
         }
 
-        public override void ApplyToSequence(
+        public void ApplyToSequence(
             ref ISingleNextNode nextNode,
-            IReadOnlyDictionary<string, Resource> resources,
-            IReadOnlyDictionary<string, INode> nodeDictionary,
+            Dictionary<string, Resource> resourceDictionary,
+            Dictionary<string, INode> nodeDictionary,
             List<INode> createdNodes) {
-            
+
             BgNode node = new(Color, Time);
             createdNodes.Add(node);
             nextNode.Next = node;

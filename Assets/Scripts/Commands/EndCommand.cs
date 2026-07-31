@@ -2,13 +2,13 @@
 using Nodes;
 
 namespace Commands {
-    public class EndCommand : Command {
+    public class EndCommand : Command, ISequentialCommand, ISequenceTerminatingCommand {
         public EndCommand(int lineNumber, string line) : base(lineNumber, line) { }
 
-        public override void ApplyToSequence(ref ISingleNextNode nextNode,
-                                              IReadOnlyDictionary<string, Resource> resources,
-                                              IReadOnlyDictionary<string, INode> nodeDictionary,
-                                              List<INode> createdNodes) {
+        public void ApplyToSequence(ref ISingleNextNode nextNode,
+                                    Dictionary<string, Resource> resourceDictionary,
+                                    Dictionary<string, INode> nodeDictionary,
+                                    List<INode> createdNodes) {
             nextNode = null;
         }
     }

@@ -31,6 +31,8 @@ namespace Game {
         private bool _autoAdvance;
 
         private void OnEnable() {
+            Clear(true);
+
             _mainButton.onClick.RemoveListener(HandleButton);
             _mainButton.onClick.AddListener(HandleButton);
 

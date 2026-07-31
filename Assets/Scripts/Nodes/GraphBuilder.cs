@@ -11,15 +11,12 @@ namespace Nodes {
             Dictionary<string, Resource> resources = new();
             Dictionary<string, INode> nodesByIdentifier = new();
 
-            foreach (Command command in commands) {
-                command.CreateResources(resources, nodesByIdentifier);
+            foreach (IResourceCommand resourceCommand in commands.OfType<IResourceCommand>()) {
+                resourceCommand.CreateResources(resources, nodesByIdentifier);
             }
 
-            foreach (Command command in commands) {
-                if (command is not LabelBlockCommand labelBlockCommand) continue;
-                string labelId = labelBlockCommand.Identifier;
-                EmptyNode labelNode = (EmptyNode)nodesByIdentifier[labelId];
-                CommandUtility.ProcessLinearNodes($"{labelId}:", labelNode, labelBlockCommand.Commands, nodesByIdentifier, resources);
+            foreach (ISubtreeCommand command in commands.OfType<ISubtreeCommand>()) {
+                command.BuildNodeTree(resources, nodesByIdentifier);
             }
 
             EmptyNode rootNode = new() { FullIdentifier = "#ROOT" };
