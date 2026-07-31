@@ -1,7 +1,7 @@
-﻿namespace Nodes {
-    public class DelayNode : Node, ISingleNextNode {
-        public INode Next { get; set; }
-        
+﻿using Game;
+
+namespace Nodes {
+    public class DelayNode : SequentialNode {
         public float Time { get; }
 
         public DelayNode(float time) {

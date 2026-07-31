@@ -1,5 +1,7 @@
-﻿namespace Nodes {
+﻿using Game;
+
+namespace Nodes {
     public interface ISingleNextNode : INode {
-        public INode Next { get; set; }
+        public INode GetSingleNextNode(TraversalState state);
     }
 }

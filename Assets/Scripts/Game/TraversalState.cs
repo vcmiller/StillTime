@@ -62,28 +62,6 @@ namespace Game {
             WasCurrentNodeUnexplored = wasCurrentNodeUnexplored;
         }
 
-        public IEnumerable<INode> GetAvailableNodes() {
-            switch (CurrentNode) {
-                case ISingleNextNode singleNextNode:
-                    yield return singleNextNode.Next;
-                    break;
-                case BranchNode branchNode:
-                    foreach (Choice choice in branchNode.Options) {
-                        if (IsChoiceAvailable(choice)) {
-                            yield return choice.Next;
-                        }
-                    }
-
-                    break;
-            }
-        }
-
-        public bool IsChoiceAvailable(Choice choice) {
-            if (!choice.BypassVisitedCheck && VisitedNodesCurrentRun.Contains(choice.Next)) return false;
-            if (!choice.Conditions.TrueForAll(g => g.CheckCondition(this))) return false;
-            return true;
-        }
-
         public T GetVariableValue<T>(Variable variable) {
             if (typeof(T) != variable.DefaultValue.GetType()) {
                 throw new InvalidOperationException($"Trying to get variable {variable.Identifier} value with invalid type {typeof(T)}");
@@ -113,8 +91,6 @@ namespace Game {
 
         public TraversalState Advance(INode next) {
             MutableTraversalState mutableState = ToMutable();
-
-            mutableState.CurrentNode?.ApplyToStateAfterEnd(ref mutableState, ref next);
 
             if (mutableState is { ShowCountdown: true, CountdownValue: not null }) {
                 mutableState.CountdownValue = Mathf.Max(0, mutableState.CountdownValue.Value - CurrentNode.Cost);

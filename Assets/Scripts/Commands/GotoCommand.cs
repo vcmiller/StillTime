@@ -19,7 +19,7 @@ namespace Commands {
             Conditions = conditions;
         }
 
-        public void ApplyToSequence(ref ISingleNextNode nextNode,
+        public void ApplyToSequence(ref ISequentialNode nextNode,
                                     Dictionary<string, Resource> resourceDictionary,
                                     Dictionary<string, INode> nodeDictionary,
                                     List<INode> createdNodes) {

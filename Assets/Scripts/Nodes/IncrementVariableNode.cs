@@ -3,18 +3,16 @@ using Commands;
 using Game;
 
 namespace Nodes {
-    public class IncrementVariableNode : Node, ISingleNextNode {
-        public INode Next { get; set; }
-    
+    public class IncrementVariableNode : SequentialNode {
         public Variable Variable { get; }
-        
+
         public int Increment { get; }
-        
+
         public IncrementVariableNode(Variable variable, int increment) {
             if (variable.Type != VarType.Int) {
                 throw new Exception("Increment is only valid for int variable.");
             }
-            
+
             Variable = variable;
             Increment = increment;
         }

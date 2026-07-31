@@ -1,5 +1,5 @@
-﻿namespace Nodes {
-    public class ClearNode : Node, ISingleNextNode {
-        public INode Next { get; set; }
-    }
+﻿using Game;
+
+namespace Nodes {
+    public class ClearNode : SequentialNode { }
 }

@@ -144,7 +144,7 @@ namespace Game {
                 CheckTimer(_currentState);
 
                 switch (_currentState.CurrentNode) {
-                    case SingleTextNode singleTextNode:
+                    case SayNode singleTextNode:
                         _gameView.SetSingleText(
                             DoStringInterpolation(singleTextNode.Text, _currentState),
                             singleTextNode.Speaker,
@@ -185,8 +185,9 @@ namespace Game {
                                 break;
                         }
 
-                        if (singleNextNode.Next != null) {
-                            _currentState = _currentState.Advance(singleNextNode.Next);
+                        INode next = singleNextNode.GetSingleNextNode(_currentState);
+                        if (next != null) {
+                            _currentState = _currentState.Advance(next);
                             Debug.Log($"Going to next state '{_currentState.CurrentNode.FullIdentifier}'");
                             continue;
                         } else {
@@ -232,7 +233,7 @@ namespace Game {
             try {
                 stack.Add(state);
 
-                foreach (INode possibleNext in state.GetAvailableNodes()) {
+                foreach (INode possibleNext in state.CurrentNode.GetPossibleNextNodes(state)) {
                     if (possibleNext is null or ResetRunNode) continue;
 
                     TraversalState previousStateAtNode = stack.FindLast(s => s.CurrentNode == possibleNext);

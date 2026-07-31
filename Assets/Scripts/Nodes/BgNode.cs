@@ -2,11 +2,9 @@
 using UnityEngine;
 
 namespace Nodes {
-    public class BgNode : Node, ISingleNextNode {
-        public INode Next { get; set; }
-        
+    public class BgNode : SequentialNode {
         public Color Color { get; }
-        
+
         public float Time { get; }
 
         public BgNode(Color color, float time) {

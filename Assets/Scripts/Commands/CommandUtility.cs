@@ -82,7 +82,7 @@ namespace Commands {
 
         public static void ProcessLinearNodes(
             string identifierBase,
-            ISingleNextNode previousNode,
+            ISequentialNode previousNode,
             List<Command> commands,
             Dictionary<string, INode> nodesByIdentifier,
             Dictionary<string, Resource> resources) {
@@ -90,8 +90,9 @@ namespace Commands {
             List<INode> createdNodes = new();
 
             foreach (Command command in commands) {
-                if (command is not ISequentialCommand sequentialCommand) continue;
                 if (previousNode == null) break;
+
+                if (command is not ISequentialCommand sequentialCommand) continue;
                 sequentialCommand.ApplyToSequence(ref previousNode, resources, nodesByIdentifier, createdNodes);
             }
 
