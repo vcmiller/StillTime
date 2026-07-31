@@ -21,7 +21,7 @@ namespace Nodes {
 
             EmptyNode rootNode = new() { FullIdentifier = "#ROOT" };
             nodesByIdentifier[rootNode.FullIdentifier] = rootNode;
-            CommandUtility.ProcessLinearNodes(string.Empty, rootNode, commands, nodesByIdentifier, resources);
+            CommandUtility.ProcessLinearNodesAndAssignIds(string.Empty, rootNode, commands, nodesByIdentifier, resources, out _);
             return new GameGraph(rootNode, nodesByIdentifier, resources);
         }
 

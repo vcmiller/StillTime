@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Nodes;
+using Unity.VisualScripting;
 
 namespace Commands {
     public class GotoCommand : Command, ISequentialCommand, ISequenceTerminatingCommand {
@@ -37,10 +38,17 @@ namespace Commands {
                               .ToList();
 
 
-                IfNode ifNode = new(conditions, gotoTarget);
+                EmptyNode convergence = new();
+                createdNodes.Add(convergence);
+
+                IfNode ifNode = new(conditions) {
+                    TrueBranch = gotoTarget,
+                    FalseBranch = convergence,
+                };
+
                 createdNodes.Add(ifNode);
                 nextNode.Next = ifNode;
-                nextNode = ifNode;
+                nextNode = convergence;
             } else {
                 nextNode.Next = gotoTarget;
                 nextNode = null;

@@ -26,7 +26,7 @@ namespace Commands {
 
             if (resource is not T typed) {
                 throw new ParsingException(command.LineNumber, command.Line,
-                    $"Resource {name} is wrong type {resource} (expected {typeof(T).Name})");
+                                           $"Resource {name} is wrong type {resource} (expected {typeof(T).Name})");
             }
 
             return typed;
@@ -42,7 +42,6 @@ namespace Commands {
 
         public static ICondition ProcessCondition(Command command, string condition,
                                                   IReadOnlyDictionary<string, Resource> resources) {
-
             bool invert = condition.StartsWith('!');
             if (invert) condition = condition[1..];
 
@@ -50,7 +49,7 @@ namespace Commands {
                 Variable variable = GetResource<Variable>(command, condition, resources);
                 if (variable.Type != VarType.Bool) {
                     throw new ParsingException(command.LineNumber, command.Line,
-                        $"Cannot use variable of type {variable.Type} as a condition by itself");
+                                               $"Cannot use variable of type {variable.Type} as a condition by itself");
                 }
 
                 return new BoolCondition(variable, !invert);
@@ -66,12 +65,12 @@ namespace Commands {
                 Variable variable = GetResource<Variable>(command, lhs, resources);
                 if (variable.Type != VarType.Int) {
                     throw new ParsingException(command.LineNumber, command.Line,
-                        $"Cannot use variable of type {variable.Type} as an int operand");
+                                               $"Cannot use variable of type {variable.Type} as an int operand");
                 }
 
                 if (!int.TryParse(rhs, out int rhsInt)) {
                     throw new ParsingException(command.LineNumber, command.Line,
-                        $"Failed to parse value {rhs} as int.");
+                                               $"Failed to parse value {rhs} as int.");
                 }
 
                 return new IntCondition(variable, op, rhsInt, invert);
@@ -80,21 +79,17 @@ namespace Commands {
             throw new ParsingException(command.LineNumber, command.Line, $"Failed to parse condition {condition}");
         }
 
-        public static void ProcessLinearNodes(
+        public static void ProcessLinearNodesAndAssignIds(
             string identifierBase,
             ISequentialNode previousNode,
             List<Command> commands,
             Dictionary<string, INode> nodesByIdentifier,
-            Dictionary<string, Resource> resources) {
+            Dictionary<string, Resource> resources,
+            out ISequentialNode lastNode) {
 
             List<INode> createdNodes = new();
 
-            foreach (Command command in commands) {
-                if (previousNode == null) break;
-
-                if (command is not ISequentialCommand sequentialCommand) continue;
-                sequentialCommand.ApplyToSequence(ref previousNode, resources, nodesByIdentifier, createdNodes);
-            }
+            ProcessLinearNodes(previousNode, commands, nodesByIdentifier, resources, createdNodes, out lastNode);
 
             Dictionary<string, int> countByLocalId = new();
             foreach (INode createdNode in createdNodes) {
@@ -105,6 +100,24 @@ namespace Commands {
                 countByLocalId[localId] = count + 1;
                 nodesByIdentifier.Add(globalId, createdNode);
             }
+        }
+
+        public static void ProcessLinearNodes(
+            ISequentialNode previousNode,
+            List<Command> commands,
+            Dictionary<string, INode> nodesByIdentifier,
+            Dictionary<string, Resource> resources,
+            List<INode> createdNodes,
+            out ISequentialNode lastNode) {
+
+            foreach (Command command in commands) {
+                if (previousNode == null) break;
+
+                if (command is not ISequentialCommand sequentialCommand) continue;
+                sequentialCommand.ApplyToSequence(ref previousNode, resources, nodesByIdentifier, createdNodes);
+            }
+
+            lastNode = previousNode;
         }
     }
 }

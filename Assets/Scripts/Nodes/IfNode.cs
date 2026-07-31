@@ -3,22 +3,27 @@ using System.Linq;
 using Game;
 
 namespace Nodes {
-    public class IfNode : SequentialNode {
+    public class IfNode : Node, ISingleNextNode {
         public IReadOnlyList<ICondition> Conditions { get; }
 
-        public INode TrueBranch { get; }
+        public INode TrueBranch { get; set; }
 
-        public IfNode(IReadOnlyList<ICondition> conditions, INode trueBranch) {
+        public INode FalseBranch { get; set; }
+
+        public IfNode(IReadOnlyList<ICondition> conditions) {
             Conditions = conditions;
-            TrueBranch = trueBranch;
         }
 
-        public override INode GetSingleNextNode(TraversalState state) {
+        public INode GetSingleNextNode(TraversalState state) {
             if (Conditions.All(c => c.CheckCondition(state))) {
                 return TrueBranch;
             } else {
-                return Next;
+                return FalseBranch;
             }
+        }
+
+        public override IEnumerable<INode> GetPossibleNextNodes(TraversalState state) {
+            yield return GetSingleNextNode(state);
         }
     }
 }
