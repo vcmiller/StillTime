@@ -1891,7 +1891,7 @@ MonoBehaviour:
   _script: {fileID: 4900000, guid: f654f7386bc14986825505033820a7a2, type: 3}
   _scriptUrl: https://vcmiller.github.io/StillTime/data/GameScript.txt
   _gameRunner: {fileID: 648243592}
-  _editorUsesLocalScript: 0
+  _editorUsesLocalScript: 1
   _saveGameTimer:
     _initialInterval: 0
     _interval: 10

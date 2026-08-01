@@ -48,6 +48,7 @@ namespace Game {
         private void LoadFromScriptText(string scriptText) {
             List<Command> commands = ScriptParser.ParseScript(scriptText);
             GameGraph graph = GraphBuilder.BuildGraph(commands);
+            graph.Validate();
 
             _gameRunner.LoadGameGraph(graph);
 

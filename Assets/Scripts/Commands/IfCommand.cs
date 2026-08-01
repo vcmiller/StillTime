@@ -26,7 +26,6 @@ namespace Commands {
             Dictionary<string, Resource> resourceDictionary,
             Dictionary<string, INode> nodeDictionary,
             List<INode> createdNodes) {
-
             List<ICondition> conditions =
                 Conditions.Select(str => CommandUtility.ProcessCondition(this, str, resourceDictionary))
                           .ToList();
@@ -37,6 +36,7 @@ namespace Commands {
                 TrueBranch =
                     CreateBranch(Commands, ref convergence, createdNodes, nodeDictionary, resourceDictionary),
             };
+            createdNodes.Add(firstIfNode);
 
             IfNode lastIfNode = firstIfNode;
             foreach (ElseIfCommand elseIf in ElseIfCommands) {
@@ -50,6 +50,7 @@ namespace Commands {
                 IfNode nextIfNode = new(elseIfConditions) {
                     TrueBranch = branch,
                 };
+                createdNodes.Add(nextIfNode);
 
                 lastIfNode.FalseBranch = nextIfNode;
                 lastIfNode = nextIfNode;
@@ -57,43 +58,49 @@ namespace Commands {
 
             if (ElseCommand != null) {
                 EmptyNode falseBranch =
-                    CreateBranch(ElseCommand.Commands, ref convergence, createdNodes, nodeDictionary, resourceDictionary);
+                    CreateBranch(ElseCommand.Commands, ref convergence, createdNodes, nodeDictionary,
+                                 resourceDictionary);
 
                 lastIfNode.FalseBranch = falseBranch;
+                createdNodes.Add(falseBranch);
             }
 
             nextNode.Next = firstIfNode;
             nextNode = convergence;
         }
 
-        private EmptyNode CreateBranch(List<Command> branchCommands,
-                                       ref EmptyNode convergenceNode,
-                                       List<INode> createdNodes,
-                                       Dictionary<string, INode> nodeDictionary,
-                                       Dictionary<string, Resource> resourceDictionary) {
+        private static EmptyNode CreateBranch(List<Command> branchCommands,
+                                              ref EmptyNode convergenceNode,
+                                              List<INode> createdNodes,
+                                              Dictionary<string, INode> nodeDictionary,
+                                              Dictionary<string, Resource> resourceDictionary) {
             if (branchCommands.Count == 0) {
-                convergenceNode ??= new EmptyNode();
-                createdNodes.Add(convergenceNode);
+                CreateConvergenceNode(ref convergenceNode, createdNodes);
                 return convergenceNode;
             }
 
             EmptyNode branchNode = new();
 
+            ISequentialNode lastBranchNode = branchNode;
             CommandUtility.ProcessLinearNodes(
-                branchNode,
-                Commands,
+                ref lastBranchNode,
+                branchCommands,
                 nodeDictionary,
                 resourceDictionary,
-                createdNodes,
-                out ISequentialNode lastBranchNode);
+                createdNodes);
 
             if (lastBranchNode != null) {
-                convergenceNode ??= new EmptyNode();
-                createdNodes.Add(convergenceNode);
+                CreateConvergenceNode(ref convergenceNode, createdNodes);
                 lastBranchNode.Next = convergenceNode;
             }
 
             return branchNode;
+        }
+
+        private static void CreateConvergenceNode(ref EmptyNode convergenceNode, List<INode> createdNodes) {
+            if (convergenceNode != null) return;
+            convergenceNode = new EmptyNode();
+            createdNodes.Add(convergenceNode);
         }
 
         private bool IsSequenceTerminating(List<Command> sequence) {

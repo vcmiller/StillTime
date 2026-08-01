@@ -44,7 +44,7 @@ namespace Parsers {
             args = null;
             isTextContinued = false;
 
-            ReadOnlySpan<char> remaining = line[cmdEnd..].Trim();
+            ReadOnlySpan<char> remaining = actualLineSpan[cmdEnd..].Trim();
             if (remaining.StartsWith("(")) {
                 int indexOfClose = remaining.IndexOf(')');
                 if (indexOfClose < 0) {

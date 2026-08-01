@@ -20,8 +20,10 @@ namespace Nodes {
             }
 
             EmptyNode rootNode = new() { FullIdentifier = "#ROOT" };
+            ISequentialNode currentNode = rootNode;
             nodesByIdentifier[rootNode.FullIdentifier] = rootNode;
-            CommandUtility.ProcessLinearNodesAndAssignIds(string.Empty, rootNode, commands, nodesByIdentifier, resources, out _);
+            CommandUtility.ProcessLinearNodesAndAssignIds(string.Empty, ref currentNode, commands, nodesByIdentifier,
+                                                          resources);
             return new GameGraph(rootNode, nodesByIdentifier, resources);
         }
 

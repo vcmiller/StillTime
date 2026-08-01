@@ -26,7 +26,9 @@ namespace Commands {
                 throw new Exception($"Could not find empty node for label {Identifier} in provided dictionary.");
             }
 
-            CommandUtility.ProcessLinearNodesAndAssignIds($"{Identifier}:", emptyNode, Commands, nodeDictionary, resources, out _);
+            ISequentialNode currentNode = emptyNode;
+            CommandUtility.ProcessLinearNodesAndAssignIds($"{Identifier}:", ref currentNode, Commands, nodeDictionary,
+                                                          resources);
         }
     }
 }

@@ -81,15 +81,14 @@ namespace Commands {
 
         public static void ProcessLinearNodesAndAssignIds(
             string identifierBase,
-            ISequentialNode previousNode,
+            ref ISequentialNode previousNode,
             List<Command> commands,
             Dictionary<string, INode> nodesByIdentifier,
-            Dictionary<string, Resource> resources,
-            out ISequentialNode lastNode) {
+            Dictionary<string, Resource> resources) {
 
             List<INode> createdNodes = new();
 
-            ProcessLinearNodes(previousNode, commands, nodesByIdentifier, resources, createdNodes, out lastNode);
+            ProcessLinearNodes(ref previousNode, commands, nodesByIdentifier, resources, createdNodes);
 
             Dictionary<string, int> countByLocalId = new();
             foreach (INode createdNode in createdNodes) {
@@ -103,12 +102,11 @@ namespace Commands {
         }
 
         public static void ProcessLinearNodes(
-            ISequentialNode previousNode,
+            ref ISequentialNode previousNode,
             List<Command> commands,
             Dictionary<string, INode> nodesByIdentifier,
             Dictionary<string, Resource> resources,
-            List<INode> createdNodes,
-            out ISequentialNode lastNode) {
+            List<INode> createdNodes) {
 
             foreach (Command command in commands) {
                 if (previousNode == null) break;
@@ -116,8 +114,6 @@ namespace Commands {
                 if (command is not ISequentialCommand sequentialCommand) continue;
                 sequentialCommand.ApplyToSequence(ref previousNode, resources, nodesByIdentifier, createdNodes);
             }
-
-            lastNode = previousNode;
         }
     }
 }

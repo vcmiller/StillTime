@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Game;
 
@@ -7,6 +8,8 @@ namespace Nodes {
         int Cost { get; set; }
 
         string FullIdentifier { get; set; }
+
+        public StackTrace CreationStackTrace { get; }
 
         public string GetSelfIdentifier();
 

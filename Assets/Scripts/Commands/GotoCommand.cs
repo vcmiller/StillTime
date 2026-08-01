@@ -9,21 +9,17 @@ namespace Commands {
 
         public bool ResetRunState { get; }
 
-        public IReadOnlyList<string> Conditions { get; }
-
-        public bool IsTerminating => Conditions.Count == 0;
-
-        public GotoCommand(int lineNumber, string line, string targetLabel, bool resetRunState,
-                           IReadOnlyList<string> conditions) : base(lineNumber, line) {
+        public GotoCommand(int lineNumber, string line, string targetLabel, bool resetRunState) :
+            base(lineNumber, line) {
             TargetLabel = targetLabel;
             ResetRunState = resetRunState;
-            Conditions = conditions;
         }
 
         public void ApplyToSequence(ref ISequentialNode nextNode,
                                     Dictionary<string, Resource> resourceDictionary,
                                     Dictionary<string, INode> nodeDictionary,
                                     List<INode> createdNodes) {
+            
             INode gotoTarget = CommandUtility.GetNode(this, TargetLabel, nodeDictionary);
 
             if (ResetRunState) {
@@ -32,27 +28,8 @@ namespace Commands {
                 createdNodes.Add(resetNode);
             }
 
-            if (Conditions.Count > 0) {
-                List<ICondition> conditions =
-                    Conditions.Select(str => CommandUtility.ProcessCondition(this, str, resourceDictionary))
-                              .ToList();
-
-
-                EmptyNode convergence = new();
-                createdNodes.Add(convergence);
-
-                IfNode ifNode = new(conditions) {
-                    TrueBranch = gotoTarget,
-                    FalseBranch = convergence,
-                };
-
-                createdNodes.Add(ifNode);
-                nextNode.Next = ifNode;
-                nextNode = convergence;
-            } else {
-                nextNode.Next = gotoTarget;
-                nextNode = null;
-            }
+            nextNode.Next = gotoTarget;
+            nextNode = null;
         }
     }
 }

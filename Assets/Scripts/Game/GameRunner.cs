@@ -11,6 +11,7 @@ using UnityEngine;
 namespace Game {
     public class GameRunner : MonoBehaviour {
         public GameView _gameView;
+        public bool _alwaysSkip;
         private GameGraph _gameGraph;
         private TraversalState _currentState;
         private CancellationTokenSource _cancellationTokenSource;
@@ -143,6 +144,10 @@ namespace Game {
 
                 CheckTimer(_currentState);
 
+                bool skipDialog =
+                    (_alwaysSkip && Application.isEditor) ||
+                    (SkipSeenDialogue && !_currentState.WasCurrentNodeUnexplored);
+
                 switch (_currentState.CurrentNode) {
                     case SayNode singleTextNode:
                         _gameView.SetSingleText(
@@ -150,7 +155,7 @@ namespace Game {
                             singleTextNode.Speaker,
                             () => Advance(_currentState, singleTextNode.Next, cancellationToken),
                             SkipAnimations,
-                            SkipSeenDialogue && !_currentState.WasCurrentNodeUnexplored);
+                            skipDialog);
                         break;
                     case BranchNode branchNode:
                         _gameView.SetChoices(

@@ -20,6 +20,7 @@ namespace Parsers {
                 if (subCommand is ElseIfCommand elseIfCommand) {
                     processingIfCommands = false;
                     ifCommand.ElseIfCommands.Add(elseIfCommand);
+                    continue;
                 } else if (subCommand is ElseCommand elseCommand) {
                     ifCommand.ElseCommand = elseCommand;
                     break;
@@ -29,7 +30,7 @@ namespace Parsers {
 
                 if (!processingIfCommands) {
                     throw new ParsingException(subCommand.LineNumber, subCommand.Line,
-                                               "Expected only 'elif', 'else', or 'end'");
+                                               $"Expected only 'elif', 'else', or 'end'; found {subCommand}");
                 }
 
                 if (subCommand is not ISequentialCommand) {
@@ -42,7 +43,7 @@ namespace Parsers {
                 ifCommand.Commands.Add(subCommand);
 
                 if (subCommand is ISequenceTerminatingCommand { IsTerminating: true }) {
-                    break;
+                    processingIfCommands = false;
                 }
             }
 

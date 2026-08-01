@@ -25,6 +25,21 @@ namespace Game {
             ResourcesByIdentifier = resourcesByIdentifier;
         }
 
+        public void Validate() {
+            HashSet<INode> seenNodes = new();
+            Queue<INode> toExplore = new();
+            toExplore.Enqueue(RootNode);
+
+            while (toExplore.TryDequeue(out INode node)) {
+                if (!seenNodes.Add(node)) continue;
+
+                if (string.IsNullOrEmpty(node.FullIdentifier)) {
+                    Debug.LogError(
+                        $"Node {node} has empty identifier. Creation stack trace:\n{node.CreationStackTrace}");
+                }
+            }
+        }
+
         public TraversalState BuildInitialState() {
             return new TraversalState(
                 RootNode,

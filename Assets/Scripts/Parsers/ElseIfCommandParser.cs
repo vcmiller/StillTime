@@ -12,12 +12,13 @@ namespace Parsers {
             ElseIfCommand elseIfCommand = new(originalLineNumber, line, args);
 
             while (lineNumber < lines.Length) {
+                int lineNumberBefore = lineNumber;
                 Command subCommand = CommandParserDelegator.ParseCommand(lines, ref lineNumber);
 
                 if (subCommand == null) continue;
 
                 if (subCommand is ElseIfCommand or ElseCommand or EndCommand) {
-                    lineNumber--;
+                    lineNumber = lineNumberBefore;
                     break;
                 }
 
