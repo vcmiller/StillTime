@@ -1876,6 +1876,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Game.NodeRunner
   _gameView: {fileID: 1040294737}
+  _alwaysSkip: 0
 --- !u!114 &648243593
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1888,10 +1889,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b7ef2f40377b4e7cbeb90c3d1a5fa399, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Game.ScriptRunner
-  _script: {fileID: 4900000, guid: f654f7386bc14986825505033820a7a2, type: 3}
-  _scriptUrl: https://vcmiller.github.io/StillTime/data/GameScript.txt
+  _scriptPath: DialogScripts/GameScript.txt
   _gameRunner: {fileID: 648243592}
-  _editorUsesLocalScript: 1
   _saveGameTimer:
     _initialInterval: 0
     _interval: 10

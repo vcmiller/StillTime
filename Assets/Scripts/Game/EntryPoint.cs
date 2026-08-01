@@ -12,26 +12,21 @@ using UnityEngine.Networking;
 
 namespace Game {
     public class EntryPoint : MonoBehaviour {
-        public TextAsset _script;
-        public string _scriptUrl = "https://vcmiller.github.io/StillTime/data/GameScript.txt";
+        public string _scriptPath;
         public GameRunner _gameRunner;
-        public bool _editorUsesLocalScript = true;
 
         public PassiveTimer _saveGameTimer;
 
         private const string SaveGameKey = "StillTime.SaveData";
 
         private void Start() {
-            if (Application.isEditor && _editorUsesLocalScript) {
-                LoadFromScriptText(_script.text);
-            } else {
-                LoadFromWebAsync().Forget();
-            }
+            LoadFromWebAsync().Forget();
         }
 
         private async UniTask LoadFromWebAsync() {
             using DownloadHandlerBuffer buffer = new();
-            using UnityWebRequest request = new(new Uri(_scriptUrl), "GET");
+            string scriptPath = Path.Combine(Application.streamingAssetsPath, _scriptPath);
+            using UnityWebRequest request = new(new Uri(scriptPath), "GET");
             request.downloadHandler = buffer;
 
             try {
@@ -41,7 +36,6 @@ namespace Game {
                 Debug.Log("Successfully loaded remote script.");
             } catch (Exception ex) {
                 Debug.LogException(ex);
-                LoadFromScriptText(_script.text);
             }
         }
 
