@@ -1231,7 +1231,7 @@ label(Bedroom_Photos_Astronaut)
 label(Bedroom_Photos_Cat)
     say: Emilio. My parents found her on the roadside years before I was born.
     say: They had her for months thinking she was a boy. Hence the name.
-    say: It's not always easy to tell the sex a kitten, especially when they're afraid of people.
+    say: It's not always easy to tell the sex of a kitten, especially when they're afraid of people.
     say: Just like everything else, Emilio was a constant in my life as a kid.
     say: I was sure that everything would always be exactly the way it was.
     say: Some things force you out of that delusion.
