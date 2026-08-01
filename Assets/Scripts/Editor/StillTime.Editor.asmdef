@@ -2,7 +2,8 @@
     "name": "StillTime.Editor",
     "rootNamespace": "StillTime",
     "references": [
-        "GUID:4071f2989e750064c9e9dcbe19b20573"
+        "GUID:4071f2989e750064c9e9dcbe19b20573",
+        "GUID:574362b15decf30448ab74b2ee336afb"
     ],
     "includePlatforms": [
         "Editor"

@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using StillTime.Commands;
 using StillTime.Game;
-using StillTime.Nodes;
-using StillTime.Parsers;
+using StillTime.Sts.Commands;
+using StillTime.Sts.Nodes;
+using StillTime.Sts.Parsers;
 using UnityEditor;
 using UnityEngine;
 

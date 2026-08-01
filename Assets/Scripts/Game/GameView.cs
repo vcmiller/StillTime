@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using DG.Tweening;
 using Infohazard.Core;
-using StillTime.Nodes;
+using StillTime.Sts.Nodes;
+using StillTime.Sts.Utility;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -73,7 +74,7 @@ namespace StillTime.Game {
         private string AddSpeakerToText(string text, Speaker speaker) {
             if (speaker == null) return text;
 
-            string color = ColorUtility.ToHtmlStringRGB(speaker.Color);
+            string color = speaker.Color.ToHexString();
             return $"<color=#{color}>{speaker.Text}</color>\n{text}";
         }
 
@@ -118,12 +119,13 @@ namespace StillTime.Game {
             _countdownObject.SetActive(false);
         }
 
-        public void SetBgColor(Color color, float time) {
+        public void SetBgColor(StsColor color, float time) {
             _camera.DOKill();
+            Color unityColor = new(color.R, color.G, color.B, color.A);
             if (time == 0) {
-                _camera.backgroundColor = color;
+                _camera.backgroundColor = unityColor;
             } else {
-                _camera.DOColor(color, time);
+                _camera.DOColor(unityColor, time);
             }
         }
 

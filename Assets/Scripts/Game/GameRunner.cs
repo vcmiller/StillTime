@@ -4,7 +4,9 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
 using Cysharp.Threading.Tasks;
-using StillTime.Nodes;
+using StillTime.Sts.Nodes;
+using StillTime.Sts.Runtime;
+using StillTime.Sts.Utility;
 using UnityEngine;
 
 namespace StillTime.Game {
@@ -71,7 +73,7 @@ namespace StillTime.Game {
                 throw new InvalidOperationException("Game is already running.");
             }
 
-            TraversalState state = _gameGraph.DeserializeState(data);
+            TraversalState state = StateSerializer.DeserializeState(_gameGraph, data);
             _cancellationTokenSource = new CancellationTokenSource();
             _gameView.SetBgColor(state.BgColor, 0);
             RunNode(state, _cancellationTokenSource.Token);
@@ -86,7 +88,7 @@ namespace StillTime.Game {
                 throw new InvalidOperationException("Game is not running.");
             }
 
-            return _gameGraph.SerializeState(_currentState);
+            return StateSerializer.SerializeState(_currentState);
         }
 
         public void ClearGameState() {
@@ -99,7 +101,7 @@ namespace StillTime.Game {
             _cancellationTokenSource?.Cancel();
             _cancellationTokenSource?.Dispose();
             _cancellationTokenSource = null;
-            _gameView.SetBgColor(Color.black, 0);
+            _gameView.SetBgColor(new StsColor(0, 0, 0), 0);
         }
 
         private string DoStringInterpolation(string str, TraversalState state) {
