@@ -1,7 +1,7 @@
 ﻿using System;
-using Game;
+using StillTime.Game;
 
-namespace Nodes {
+namespace StillTime.Nodes {
     public class IntCondition : VariableCondition {
         public ComparisonOperator Operator { get; }
         

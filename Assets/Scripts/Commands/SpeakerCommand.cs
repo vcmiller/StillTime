@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
-using Nodes;
+using StillTime.Nodes;
 using UnityEngine;
 
-namespace Commands {
+namespace StillTime.Commands {
     public class SpeakerCommand : Command, IResourceCommand {
         public string Name { get; }
         public Color Color { get; }

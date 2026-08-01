@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Nodes;
+using StillTime.Nodes;
 
-namespace Commands {
+namespace StillTime.Commands {
     public class IfCommand : Command, ISequentialCommand, ISequenceTerminatingCommand {
         public IReadOnlyList<string> Conditions { get; }
 

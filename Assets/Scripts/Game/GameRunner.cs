@@ -4,11 +4,10 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
 using Cysharp.Threading.Tasks;
-using Infohazard.Core;
-using Nodes;
+using StillTime.Nodes;
 using UnityEngine;
 
-namespace Game {
+namespace StillTime.Game {
     public class GameRunner : MonoBehaviour {
         public GameView _gameView;
         public bool _alwaysSkip;

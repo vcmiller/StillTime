@@ -1,6 +1,6 @@
-﻿using Commands;
+﻿using StillTime.Commands;
 
-namespace Parsers {
+namespace StillTime.Parsers {
     [CustomCommandParser("end")]
     public class EndCommandParser : ICommandParser {
         public Command ParseCommand(string[] lines, ref int lineNumber, string cmd, string[] args, string text,

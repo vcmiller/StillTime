@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-namespace Utility {
+namespace StillTime.Utility {
     public class ReadOnlySet<T> : IReadOnlyCollection<T> {
         private readonly HashSet<T> _internalHashSet;
 
@@ -23,7 +23,7 @@ namespace Utility {
         public HashSet<T>.Enumerator GetEnumerator() {
             return _internalHashSet.GetEnumerator();
         }
-        
+
         IEnumerator<T> IEnumerable<T>.GetEnumerator() {
             return GetEnumerator();
         }
@@ -45,7 +45,7 @@ namespace Utility {
                     Debug.LogError($"Encountered item with null conversion value: {item}");
                     continue;
                 }
-                
+
                 result.Add(current);
             }
 

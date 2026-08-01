@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using Commands;
-using Game;
+using StillTime.Commands;
+using StillTime.Game;
 
-namespace Nodes {
+namespace StillTime.Nodes {
     public static class GraphBuilder {
 
         public static GameGraph BuildGraph(List<Command> commands) {

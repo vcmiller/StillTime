@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using Commands;
+using StillTime.Commands;
 
-namespace Parsers {
+namespace StillTime.Parsers {
     public static class ScriptParser {
         public static List<Command> ParseScript(string scriptContent) {
             string[] lines = scriptContent.Split('\n');

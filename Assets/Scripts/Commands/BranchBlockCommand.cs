@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using Nodes;
+using StillTime.Nodes;
 
-namespace Commands {
+namespace StillTime.Commands {
     public class BranchBlockCommand : TextCommand, ISequentialCommand, ISequenceTerminatingCommand {
         public List<IBranchSubCommand> SubCommands { get; } = new();
 

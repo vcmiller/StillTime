@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
-using Nodes;
+using StillTime.Nodes;
 using UnityEngine;
 
-namespace Commands {
+namespace StillTime.Commands {
     public class BgCommand : Command, ISequentialCommand {
         public Color Color { get; }
         public float Time { get; }

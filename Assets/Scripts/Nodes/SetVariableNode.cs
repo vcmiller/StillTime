@@ -1,8 +1,7 @@
 ﻿using System;
-using Commands;
-using Game;
+using StillTime.Game;
 
-namespace Nodes {
+namespace StillTime.Nodes {
     public class SetVariableNode : SequentialNode {
         public Variable Variable { get; }
 

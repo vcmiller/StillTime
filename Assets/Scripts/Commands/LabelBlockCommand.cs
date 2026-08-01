@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using Nodes;
+using StillTime.Nodes;
 
-namespace Commands {
+namespace StillTime.Commands {
     public class LabelBlockCommand : Command, IResourceCommand, ISubtreeCommand {
         public string Identifier { get; }
 

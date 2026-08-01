@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Commands {
+namespace StillTime.Commands {
     public class ElseCommand : Command {
         public List<Command> Commands { get; } = new();
 

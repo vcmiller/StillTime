@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using Nodes;
+using StillTime.Nodes;
 
-namespace Commands {
+namespace StillTime.Commands {
     public class CostCommand : Command, ISequentialCommand {
         public int Cost { get; }
 

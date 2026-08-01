@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
 
-namespace Game {
+namespace StillTime.Game {
     public class SerializedTraversalState {
         public Dictionary<string, JValue> RunVariables { get; set; }
         public Dictionary<string, JValue> GlobalVariables { get; set; }

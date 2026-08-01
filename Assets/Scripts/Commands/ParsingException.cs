@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Commands {
+namespace StillTime.Commands {
     public class ParsingException : Exception {
         public int LineNumber { get; set; }
         public string Text { get; set; }

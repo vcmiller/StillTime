@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Nodes;
+using StillTime.Nodes;
 
-namespace Commands {
+namespace StillTime.Commands {
     public static class CommandUtility {
         private static readonly List<(string, ComparisonOperator)> ComparisonOps = new() {
             ("==", ComparisonOperator.Equal),

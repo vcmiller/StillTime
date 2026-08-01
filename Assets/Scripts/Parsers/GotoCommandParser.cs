@@ -1,6 +1,6 @@
-﻿using Commands;
+﻿using StillTime.Commands;
 
-namespace Parsers {
+namespace StillTime.Parsers {
     [CustomCommandParser("goto")]
     [CustomCommandParser("goto_reset")]
     public class GotoCommandParser : ICommandParser {

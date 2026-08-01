@@ -1889,7 +1889,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b7ef2f40377b4e7cbeb90c3d1a5fa399, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Game.ScriptRunner
-  _scriptPath: DialogScripts/GameScript.txt
+  _scriptPath: DialogScripts/GameScript.sts
   _gameRunner: {fileID: 648243592}
   _saveGameTimer:
     _initialInterval: 0

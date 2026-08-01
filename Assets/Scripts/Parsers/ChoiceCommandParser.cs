@@ -1,6 +1,6 @@
-﻿using Commands;
+﻿using StillTime.Commands;
 
-namespace Parsers {
+namespace StillTime.Parsers {
     [CustomCommandParser("choice")]
     [CustomCommandParser("choice_always")]
     public class ChoiceCommandParser : ICommandParser {

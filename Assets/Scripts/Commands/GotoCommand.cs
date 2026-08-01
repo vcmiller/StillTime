@@ -1,9 +1,7 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
-using Nodes;
-using Unity.VisualScripting;
+using StillTime.Nodes;
 
-namespace Commands {
+namespace StillTime.Commands {
     public class GotoCommand : Command, ISequentialCommand, ISequenceTerminatingCommand {
         public string TargetLabel { get; }
 
@@ -19,7 +17,7 @@ namespace Commands {
                                     Dictionary<string, Resource> resourceDictionary,
                                     Dictionary<string, INode> nodeDictionary,
                                     List<INode> createdNodes) {
-            
+
             INode gotoTarget = CommandUtility.GetNode(this, TargetLabel, nodeDictionary);
 
             if (ResetRunState) {

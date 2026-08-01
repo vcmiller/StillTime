@@ -1,4 +1,4 @@
-﻿namespace Nodes {
+﻿namespace StillTime.Nodes {
     public abstract class TextNode : Node {
         public string Text { get; }
         public Speaker Speaker { get; }

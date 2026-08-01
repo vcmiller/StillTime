@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Game;
+using StillTime.Game;
 
-namespace Nodes {
+namespace StillTime.Nodes {
     public class IfNode : Node, ISingleNextNode {
         public IReadOnlyList<ICondition> Conditions { get; }
 

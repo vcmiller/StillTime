@@ -1,7 +1,7 @@
 ﻿using System;
 using JetBrains.Annotations;
 
-namespace Parsers {
+namespace StillTime.Parsers {
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
     [MeansImplicitUse]
     public class CustomCommandParserAttribute : Attribute {

@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using Commands;
 using Cysharp.Threading.Tasks;
 using Infohazard.Core;
 using Newtonsoft.Json;
-using Nodes;
-using Parsers;
+using StillTime.Commands;
+using StillTime.Nodes;
+using StillTime.Parsers;
 using UnityEngine;
 using UnityEngine.Networking;
 
-namespace Game {
+namespace StillTime.Game {
     public class EntryPoint : MonoBehaviour {
         public string _scriptPath;
         public GameRunner _gameRunner;

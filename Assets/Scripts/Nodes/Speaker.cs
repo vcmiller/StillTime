@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Nodes {
+namespace StillTime.Nodes {
     public class Speaker : Resource {
         public Color Color { get; }
         public string Text { get; }

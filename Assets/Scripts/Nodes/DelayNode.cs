@@ -1,6 +1,4 @@
-﻿using Game;
-
-namespace Nodes {
+﻿namespace StillTime.Nodes {
     public class DelayNode : SequentialNode {
         public float Time { get; }
 

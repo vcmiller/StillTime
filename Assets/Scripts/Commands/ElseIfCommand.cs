@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Commands {
+namespace StillTime.Commands {
     public class ElseIfCommand : Command {
         public IReadOnlyList<string> Conditions { get; }
 

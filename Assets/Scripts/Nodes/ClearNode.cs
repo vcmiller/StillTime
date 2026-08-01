@@ -1,5 +1,3 @@
-﻿using Game;
-
-namespace Nodes {
+﻿namespace StillTime.Nodes {
     public class ClearNode : SequentialNode { }
 }

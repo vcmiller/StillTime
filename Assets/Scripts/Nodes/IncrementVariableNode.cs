@@ -1,8 +1,8 @@
 ﻿using System;
-using Commands;
-using Game;
+using StillTime.Commands;
+using StillTime.Game;
 
-namespace Nodes {
+namespace StillTime.Nodes {
     public class IncrementVariableNode : SequentialNode {
         public Variable Variable { get; }
 

@@ -1,4 +1,4 @@
-﻿namespace Nodes {
+﻿namespace StillTime.Nodes {
     public class Resource {
         public string Identifier { get; }
         

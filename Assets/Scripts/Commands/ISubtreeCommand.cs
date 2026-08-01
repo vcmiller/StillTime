@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using Nodes;
+using StillTime.Nodes;
 
-namespace Commands {
+namespace StillTime.Commands {
     public interface ISubtreeCommand {
         public void BuildNodeTree(
             Dictionary<string, Resource> resources,

@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using Nodes;
+using StillTime.Nodes;
+using StillTime.Utility;
 using UnityEngine;
-using Utility;
 
-namespace Game {
+namespace StillTime.Game {
     public class TraversalState {
         public IReadOnlyDictionary<Variable, object> RunVariables { get; }
 

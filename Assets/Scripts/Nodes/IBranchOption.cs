@@ -1,6 +1,6 @@
-﻿using Game;
+﻿using StillTime.Game;
 
-namespace Nodes {
+namespace StillTime.Nodes {
     public interface IBranchOption {
         public string GetText(TraversalState state);
         public bool IsAvailable(TraversalState state);

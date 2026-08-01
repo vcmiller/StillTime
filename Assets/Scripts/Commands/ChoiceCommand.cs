@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using Nodes;
+using StillTime.Nodes;
 
-namespace Commands {
+namespace StillTime.Commands {
     public class ChoiceCommand : TextCommand, IBranchSubCommand {
         public string TargetLabel { get; }
         public IReadOnlyList<string> Conditions { get; }

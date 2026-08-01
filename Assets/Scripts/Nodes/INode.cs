@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using Game;
+using StillTime.Game;
 
-namespace Nodes {
+namespace StillTime.Nodes {
     public interface INode {
         int Cost { get; set; }
 

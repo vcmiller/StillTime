@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using DG.Tweening;
 using Infohazard.Core;
-using Nodes;
+using StillTime.Nodes;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Game {
+namespace StillTime.Game {
     public class GameView : MonoBehaviour {
         public GameObject _mainPanel;
         public TMP_Text _mainText;

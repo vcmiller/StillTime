@@ -1,7 +1,7 @@
-﻿using Game;
+﻿using StillTime.Game;
 using UnityEngine;
 
-namespace Nodes {
+namespace StillTime.Nodes {
     public class BgNode : SequentialNode {
         public Color Color { get; }
 

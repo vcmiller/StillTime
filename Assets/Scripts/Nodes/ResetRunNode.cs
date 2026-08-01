@@ -1,6 +1,6 @@
-﻿using Game;
+﻿using StillTime.Game;
 
-namespace Nodes {
+namespace StillTime.Nodes {
     public class ResetRunNode : SequentialNode {
         public override void ApplyToState(ref MutableTraversalState state) {
             base.ApplyToState(ref state);

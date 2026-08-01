@@ -1,7 +1,7 @@
 ﻿using System;
-using Commands;
+using StillTime.Commands;
 
-namespace Nodes {
+namespace StillTime.Nodes {
     public class Variable : Resource {
         public VarType Type { get; }
         

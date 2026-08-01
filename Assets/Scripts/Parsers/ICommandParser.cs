@@ -1,6 +1,6 @@
-﻿using Commands;
+﻿using StillTime.Commands;
 
-namespace Parsers {
+namespace StillTime.Parsers {
     public interface ICommandParser {
         public Command ParseCommand(string[] lines,
                                     ref int lineNumber,

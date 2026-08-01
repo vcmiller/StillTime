@@ -1,4 +1,4 @@
-﻿namespace Commands {
+﻿namespace StillTime.Commands {
     public class Command {
         public int LineNumber { get; }
         public string Line { get; }

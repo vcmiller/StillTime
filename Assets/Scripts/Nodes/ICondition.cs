@@ -1,6 +1,6 @@
-﻿using Game;
+﻿using StillTime.Game;
 
-namespace Nodes {
+namespace StillTime.Nodes {
     public interface ICondition {
         public bool CheckCondition(TraversalState traversalState);
     }

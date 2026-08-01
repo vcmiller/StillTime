@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Commands;
 using Infohazard.Core;
+using StillTime.Commands;
 using UnityEngine;
 
-namespace Parsers {
+namespace StillTime.Parsers {
     public static class CommandParserDelegator {
         private static readonly Dictionary<string, ICommandParser> AllCommandParsers = new();
 

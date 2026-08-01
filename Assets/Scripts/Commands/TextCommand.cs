@@ -1,4 +1,4 @@
-﻿namespace Commands {
+﻿namespace StillTime.Commands {
     public abstract class TextCommand : Command {
         public string Speaker { get; }
         public string Text { get; }

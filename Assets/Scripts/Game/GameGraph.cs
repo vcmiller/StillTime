@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
-using Commands;
 using Infohazard.Core;
 using Newtonsoft.Json.Linq;
-using Nodes;
+using StillTime.Commands;
+using StillTime.Nodes;
 using UnityEngine;
 
-namespace Game {
+namespace StillTime.Game {
     public class GameGraph {
         public INode RootNode { get; }
 

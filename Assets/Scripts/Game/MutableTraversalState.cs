@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using Commands;
-using Nodes;
+using StillTime.Commands;
+using StillTime.Nodes;
 using UnityEngine;
 
-namespace Game {
+namespace StillTime.Game {
     public struct MutableTraversalState {
         public Dictionary<Variable, object> RunVariables { get; set; }
         public Dictionary<Variable, object> GlobalVariables { get; set; }

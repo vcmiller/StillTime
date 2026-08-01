@@ -1,7 +1,7 @@
-﻿using Commands;
+﻿using StillTime.Commands;
 using UnityEngine;
 
-namespace Parsers {
+namespace StillTime.Parsers {
     [CustomCommandParser("bg")]
     public class BgCommandParser : ICommandParser {
         public Command ParseCommand(string[] lines, ref int lineNumber, string cmd, string[] args, string text,

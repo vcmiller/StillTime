@@ -3,7 +3,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Game {
+namespace StillTime.Game {
     public class SettingsMenu : MonoBehaviour {
         public Toggle _skipToggle;
         public Toggle _skipSeenToggle;

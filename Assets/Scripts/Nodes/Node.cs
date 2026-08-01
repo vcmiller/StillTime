@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using System.Diagnostics;
-using Game;
+using StillTime.Game;
 
-namespace Nodes {
+namespace StillTime.Nodes {
     public abstract class Node : INode {
         public int Cost { get; set; }
 

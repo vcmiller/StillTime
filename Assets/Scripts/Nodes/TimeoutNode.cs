@@ -1,6 +1,6 @@
-﻿using Game;
+﻿using StillTime.Game;
 
-namespace Nodes {
+namespace StillTime.Nodes {
     public class TimeoutNode : SequentialNode {
         public INode TimeoutTarget { get; }
 

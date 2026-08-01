@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using Game;
+using StillTime.Game;
 
-namespace Nodes {
+namespace StillTime.Nodes {
     public class SequentialNode : Node, ISequentialNode {
         public INode Next { get; set; }
 

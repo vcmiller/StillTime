@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Commands;
+using StillTime.Commands;
 
-namespace Parsers {
+namespace StillTime.Parsers {
     public static class ParsingUtility {
         public static ReadOnlySpan<char> GetActualSpanFromLine(string line) {
             int commentIndex = line.IndexOf('#');

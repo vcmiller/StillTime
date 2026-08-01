@@ -1,6 +1,6 @@
-﻿using Game;
+﻿using StillTime.Game;
 
-namespace Nodes {
+namespace StillTime.Nodes {
     public abstract class VariableCondition : ICondition {
         public Variable Variable { get; }
         
