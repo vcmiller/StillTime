@@ -1453,7 +1453,7 @@ label(FriendHangout_Drive)
     say: Being up on a hill, you can see a lot of the city from here.
     say(Reed): Ok, boys, here we are! Front-row seats to witness the end!
     say: I'm not really up to speed on my nuclear weapons, but I know they've gotten orders of magnitude more powerful than the first ones.
-    say: Somehow, I don't think being tucked away a few miles from from the center of town will give us much time to witness anything.
+    say: Somehow, I don't think being tucked away a few miles from the center of town will give us much time to witness anything.
     say: Still though. It's nice Reed wanted to bring the crew together, one last time.
     say: I just don't know how they're acting so normal.
     say: As we sit down on the patio chairs under the porch roof, Reed breaks out the strong stuff.
