@@ -37,8 +37,8 @@ namespace StillTime.Sts.Parsers {
             }
         }
 
-        public static Command ParseCommand(string[] lines, ref int lineNumber) {
-            string line = lines[lineNumber];
+        public static Command ParseCommand(string[] lines, ref int lineNumber, string line = null) {
+            line ??= lines[lineNumber];
 
             ReadOnlySpan<char> actualSpan = ParsingUtility.GetActualSpanFromLine(line);
             if (actualSpan.IsEmpty) {

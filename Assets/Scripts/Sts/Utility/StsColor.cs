@@ -70,14 +70,14 @@ namespace StillTime.Sts.Utility {
         }
 
         public void FormatComponents(Span<char> hex, int cSize, int cCount) {
-            int cMax = (1 << (cCount * 8)) - 1;
+            int cMax = (1 << (cSize * 4)) - 1;
 
             for (int i = 0; i < cCount; i++) {
                 float vFloat = this[i];
                 int v = (int)Math.Round(vFloat * cMax, MidpointRounding.AwayFromZero);
                 int start = i * cSize;
                 Span<char> c = hex.Slice(start, cSize);
-                if (!v.TryFormat(c, out _, "X"))
+                if (!v.TryFormat(c, out _, "x2"))
                     throw new Exception("Unexpected problem writing integer as hex");
             }
         }
@@ -99,7 +99,7 @@ namespace StillTime.Sts.Utility {
         private static bool ParseComponents(ReadOnlySpan<char> hex, int cSize, int cCount, out StsColor color) {
             color = new StsColor(0, 0, 0, 1);
 
-            float cMax = (1 << (cCount * 8)) - 1;
+            float cMax = (1 << (cSize * 4)) - 1;
 
             for (int i = 0; i < cCount; i++) {
                 int start = i * cSize;

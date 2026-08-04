@@ -587,11 +587,8 @@ label(ParentConversation_ComingOut_Confident_Driving_Together)
     say(Self): I'm going to get through this. Thanks to you.
     say(Self): I won't see you in another life. Fuck that.
     say(Self): I'll see you in this one.
-    if(Katie_CameOut)
-        say(Self): {ChosenName}
-    else
-        say(Self): {ChosenName} (yeah, I'll probably have to explain that when I see you)
-    end
+    if(Katie_CameOut): say(Self): {ChosenName}
+    else: say(Self): {ChosenName} (yeah, I'll probably have to explain that when I see you)
     clear
     bg(000000, 5)
     delay(6)

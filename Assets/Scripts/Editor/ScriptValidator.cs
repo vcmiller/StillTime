@@ -11,7 +11,6 @@ using UnityEngine;
 namespace StillTime.Editor {
     [InitializeOnLoad]
     public static class ScriptValidator {
-        private const string ScriptDirectory = "Assets/StreamingAssets";
         private static readonly Dictionary<string, DateTime> LastValidatedFileDateTimes = new();
 
         static ScriptValidator() {
@@ -32,7 +31,7 @@ namespace StillTime.Editor {
         }
 
         private static void ValidateScripts() {
-            foreach (string scriptPath in Directory.GetFiles(ScriptDirectory, "*.sts", SearchOption.AllDirectories)) {
+            foreach (string scriptPath in Directory.GetFiles(Application.streamingAssetsPath, "*.sts", SearchOption.AllDirectories)) {
                 DateTime lastModifiedTime = File.GetLastWriteTime(scriptPath);
 
                 if (LastValidatedFileDateTimes.TryGetValue(scriptPath, out DateTime lastValidateTime) &&

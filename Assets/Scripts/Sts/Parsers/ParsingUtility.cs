@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using StillTime.Sts.Commands;
+using StillTime.Sts.Nodes;
 
 namespace StillTime.Sts.Parsers {
     public static class ParsingUtility {
@@ -85,6 +87,58 @@ namespace StillTime.Sts.Parsers {
             return text[..endIndex].Trim().ToString();
         }
 
+        public static List<Command> ParseCondBlockCommand(string cmd,
+                                                          string[] args,
+                                                          string text,
+                                                          string[] lines,
+                                                          ref int lineNumber,
+                                                          bool expectConditions) {
+            int originalLineNumber = lineNumber;
+            string line = lines[lineNumber++];
+            int minArgs = expectConditions ? 1 : 0;
+            int maxArgs = expectConditions ? 100 : 0;
+            ValidateCommand(line, originalLineNumber, cmd, args, text, minArgs, maxArgs, false, true);
+
+            List<Command> result = new();
+
+            if (!string.IsNullOrWhiteSpace(text)) {
+                Command subCommand = CommandParserDelegator.ParseCommand(lines, ref lineNumber, text);
+                if (subCommand != null) {
+                    if (subCommand is not ISequentialCommand) {
+                        throw new ParsingException(
+                            subCommand.LineNumber,
+                            text,
+                            "Expected sequential command");
+                    }
+
+                    result.Add(subCommand);
+                    return result;
+                }
+            }
+
+            while (lineNumber < lines.Length) {
+                int lineNumberBeforeSubCommand = lineNumber;
+                Command subCommand = CommandParserDelegator.ParseCommand(lines, ref lineNumber);
+
+                if (subCommand == null) continue;
+
+                if (subCommand is not ISequentialCommand) {
+                    lineNumber = lineNumberBeforeSubCommand;
+                    return result;
+                }
+
+                if (subCommand is not EndCommand) {
+                    result.Add(subCommand);
+                }
+
+                if (subCommand is ISequenceTerminatingCommand { IsTerminating: true }) {
+                    return result;
+                }
+            }
+
+            return result;
+        }
+
         public static void ValidateCommand(
             string line,
             int lineNumber,
@@ -93,16 +147,17 @@ namespace StillTime.Sts.Parsers {
             string text,
             int minArgs,
             int maxArgs,
-            bool expectText) {
+            bool requireText,
+            bool optionalText = false) {
             int argCount = args?.Length ?? 0;
             if (argCount < minArgs || argCount > maxArgs) {
                 throw new ParsingException(lineNumber, line,
                                            $"Unexpected arg count for command {cmd} - expected between {minArgs} and {maxArgs}");
             }
 
-            if (!expectText && text != null) {
+            if (!requireText && !optionalText && text != null) {
                 throw new ParsingException(lineNumber, line, $"Unexpected text for command {cmd}");
-            } else if (expectText && text == null) {
+            } else if (requireText && text == null) {
                 throw new ParsingException(lineNumber, line, $"Missing expected text for command {cmd}");
             }
         }
