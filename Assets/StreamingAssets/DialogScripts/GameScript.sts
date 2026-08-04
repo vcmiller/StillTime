@@ -678,7 +678,7 @@ label(Bedroom_PetTheCat)
 
 label(Bedroom_PetTheCat_Sleep)
     countdown(false)
-    say: I Keep petting her for I don't know how long.
+    say: I keep petting her for I don't know how long.
     say: The purring calms me down and without really realizing it, I lie down on the bed.
     say: My last conscious thought as I fade into sleep: this is not such a bad way to go.
     bg(000000, 2)
@@ -857,7 +857,7 @@ label(Bedroom_Phone_CallKatie_HowThingsWent)
     say(Self): I mean... you don't, do you?
     say(Katie): I'd say this is typical male behavior, assuming you know better than women how we're feeling.
     say(Katie): But I'm trying to be supportive here, so I guess I'll just say, perhaps you assume too much.
-    say: A tug at my heartstrings. A sudden though of what might have been. If things were different.
+    say: A tug at my heartstrings. A sudden thought of what might have been. If things were different.
     say(Self): I... ok. Yeah. Maybe I've been just a bit harsh on myself.
     say(Katie): Aha! Progress! We'll make an emotionally intelligent person out of you yet.
     set(Katie_Rekindled, true)
@@ -1450,7 +1450,7 @@ label(FriendHangout_Drive)
     say: Being up on a hill, you can see a lot of the city from here.
     say(Reed): Ok, boys, here we are! Front-row seats to witness the end!
     say: I'm not really up to speed on my nuclear weapons, but I know they've gotten orders of magnitude more powerful than the first ones.
-    say: Somehow, I don't think being tucked away a few miles from from the center of town will give us much time to witness anything.
+    say: Somehow, I don't think being tucked away a few miles from the center of town will give us much time to witness anything.
     say: Still though. It's nice Reed wanted to bring the crew together, one last time.
     say: I just don't know how they're acting so normal.
     say: As we sit down on the patio chairs under the porch roof, Reed breaks out the strong stuff.
