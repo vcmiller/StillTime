@@ -22,11 +22,11 @@ namespace StillTime.Sts.Parsers {
                         "Invalid command inside label");
                 }
 
-                labelCommand.Commands.Add(subCommand);
-
-                if (subCommand is ISequenceTerminatingCommand { IsTerminating: true }) {
+                if (subCommand is EndCommand) {
                     break;
                 }
+
+                labelCommand.Commands.Add(subCommand);
             }
 
             return labelCommand;

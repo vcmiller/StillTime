@@ -3,7 +3,7 @@ using System.Linq;
 using StillTime.Sts.Nodes;
 
 namespace StillTime.Sts.Commands {
-    public class IfCommand : Command, ISequentialCommand, ISequenceTerminatingCommand {
+    public class IfCommand : Command, ISequentialCommand {
         public IReadOnlyList<string> Conditions { get; }
 
         public List<Command> Commands { get; } = new();
@@ -11,11 +11,6 @@ namespace StillTime.Sts.Commands {
         public List<ElseIfCommand> ElseIfCommands { get; } = new();
 
         public ElseCommand ElseCommand { get; set; }
-
-        public bool IsTerminating =>
-            IsSequenceTerminating(Commands) &&
-            IsSequenceTerminating(ElseCommand?.Commands) &&
-            ElseIfCommands.All(e => IsSequenceTerminating(e.Commands));
 
         public IfCommand(int lineNumber, string line, IReadOnlyList<string> conditions) : base(lineNumber, line) {
             Conditions = conditions;
@@ -101,11 +96,6 @@ namespace StillTime.Sts.Commands {
             if (convergenceNode != null) return;
             convergenceNode = new EmptyNode();
             createdNodes.Add(convergenceNode);
-        }
-
-        private bool IsSequenceTerminating(List<Command> sequence) {
-            return sequence is { Count: > 0 } &&
-                   sequence.Any(c => c is ISequenceTerminatingCommand { IsTerminating: true });
         }
     }
 }

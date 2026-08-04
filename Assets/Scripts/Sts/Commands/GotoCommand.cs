@@ -2,7 +2,7 @@
 using StillTime.Sts.Nodes;
 
 namespace StillTime.Sts.Commands {
-    public class GotoCommand : Command, ISequentialCommand, ISequenceTerminatingCommand {
+    public class GotoCommand : Command, ISequentialCommand {
         public string TargetLabel { get; }
 
         public bool ResetRunState { get; }

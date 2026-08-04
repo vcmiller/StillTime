@@ -102,7 +102,8 @@ namespace StillTime.Sts.Parsers {
             List<Command> result = new();
 
             if (!string.IsNullOrWhiteSpace(text)) {
-                Command subCommand = CommandParserDelegator.ParseCommand(lines, ref lineNumber, text);
+                int tempLineNumber = originalLineNumber;
+                Command subCommand = CommandParserDelegator.ParseCommand(lines, ref tempLineNumber, text);
                 if (subCommand != null) {
                     if (subCommand is not ISequentialCommand) {
                         throw new ParsingException(
@@ -112,6 +113,7 @@ namespace StillTime.Sts.Parsers {
                     }
 
                     result.Add(subCommand);
+                    lineNumber = tempLineNumber;
                     return result;
                 }
             }
@@ -127,13 +129,11 @@ namespace StillTime.Sts.Parsers {
                     return result;
                 }
 
-                if (subCommand is not EndCommand) {
-                    result.Add(subCommand);
+                if (subCommand is EndCommand) {
+                    break;
                 }
 
-                if (subCommand is ISequenceTerminatingCommand { IsTerminating: true }) {
-                    return result;
-                }
+                result.Add(subCommand);
             }
 
             return result;

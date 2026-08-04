@@ -2,7 +2,7 @@
 using StillTime.Sts.Nodes;
 
 namespace StillTime.Sts.Commands {
-    public class EndCommand : Command, ISequentialCommand, ISequenceTerminatingCommand {
+    public class EndCommand : Command, ISequentialCommand {
         public EndCommand(int lineNumber, string line) : base(lineNumber, line) { }
 
         public void ApplyToSequence(ref ISequentialNode nextNode,

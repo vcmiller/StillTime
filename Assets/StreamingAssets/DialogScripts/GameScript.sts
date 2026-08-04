@@ -69,6 +69,7 @@ label(Intro)
     say: If you are a person who I know personally, please don't construe any interactions herein as a commentary on you as a person.
     say: <b>STILLTIME</b>
     goto(FirstRun)
+end
 
 label(FirstRun)
     say: I've seen it a hundred times in my dreams. How could anyone not?
@@ -88,6 +89,7 @@ label(FirstRun)
     countdown(true, 3391)
     say: My parents don't say anything. I think I see a tear in my dad's eye.
     goto(InitialChoice)
+end
 
 label(LaterRun)
     bg(0D2411)
@@ -101,6 +103,7 @@ label(LaterRun)
     say: My parents don't say anything. I think I see a tear in my dad's eye.
     say: There's something important I need to remember. Or a lot of things.
     goto(InitialChoice)
+end
 
 label(InitialChoice)
     branch: Nobody seems to want to break the silence.
@@ -108,6 +111,7 @@ label(InitialChoice)
         choice_always(Bedroom_Entry): I need to be alone.
         choice(TryToDriveAlone_Entry): What are you doing? We need to get out of here!
     end
+end
 
 ######################################### Parent Conversation ##############################################
 
@@ -125,22 +129,26 @@ label(ParentConversation_Entry)
         choice(ParentConversation_ComingOut, Gate_FullRealization): I need to tell you both something. This might be kind of a shock.
         choice_always(InitialChoice): I don't feel like talking right now.
     end
+end
 
 label(ParentConversation_ChooseTopic_Warm)
     say(Mom): We love you too sweetie. Until the end of the world.
     say(Dad): So, so much.
     goto(ParentConversation_ChooseTopic)
+end
 
 label(ParentConversation_ChooseTopic_Angry)
     say(Mom): I know sweetie. I know.
     say(Dad): You barely got to grow up. The pandemic stole your college years, and now the world is being taken from you.
     goto(ParentConversation_ChooseTopic)
+end
 
 label(ParentConversation_ChooseTopic)
     say(Mom): Would you maybe... just talk to us a bit?
     say(Mom): It feels like you've been so disconnected lately.
     say(Mom): I worry about you. Sometimes I feel like I'm losing my son.
     goto(ParentConversation_Childhood_Choice)
+end
 
 label(ParentConversation_Childhood_Choice)
     branch(Mom): I just keep wondering what's going on in your head.
@@ -151,6 +159,7 @@ label(ParentConversation_Childhood_Choice)
         choice(ParentConversation_ComingOut, Gate_FullRealization): Actually, I think I know. This might be kind of a shock.
         choice_always(InitialChoice): I'm sorry! I just don't know how to talk about this.
     end
+end
 
 label(ParentConversation_Childhood_WellBehaved)
     say(Dad): You were such a well-behaved kid. We never had to worry about you getting into trouble.
@@ -165,6 +174,7 @@ label(ParentConversation_Childhood_WellBehaved)
     say(Mom): Everett? Can you come back to us dear?
     say(Mom): You know, that was around the time I started to feel you pulling away from us.
     goto(ParentConversation_Childhood_Choice)
+end
 
 label(ParentConversation_Childhood_Lonely)
     say(Dad): You made friends pretty well I thought.
@@ -202,6 +212,7 @@ label(ParentConversation_Childhood_Lonely)
     set(Gate_SignWantSister, true)
     cost(180)
     goto(ParentConversation_Childhood_Choice)
+end
 
 label(ParentConversation_Childhood_FitIn)
     say(Mom): You did! You kept talking about wishing you could be like other kids.
@@ -217,6 +228,7 @@ label(ParentConversation_Childhood_FitIn)
     cost(180)
     set(Gate_SignHaircut, true)
     goto(ParentConversation_Childhood_Choice)
+end
 
 label(ParentConversation_Alienation)
     say(Self): I don't really feel connected to anyone.
@@ -234,8 +246,9 @@ label(ParentConversation_Alienation)
     say(Mom): See this is what I'm talking about! When someone cares about you, you seem to just shut down.
     say(Self): Maybe... I've just been thinking about some things.
     goto(ParentConversation_Alienation_Choice)
+end
 
-    label(ParentConversation_Alienation_Choice)
+label(ParentConversation_Alienation_Choice)
     branch(Mom): Please just tell us what's bothering you.
         choice_always(InitialChoice): I can't.
         choice(ParentConversation_Alienation_Choice_Haircut, Gate_SignHaircut): I've never been happy with how I look.
@@ -244,6 +257,7 @@ label(ParentConversation_Alienation)
         choice(ParentConversation_Alienation_Choice_Sister, Gate_SignWantSister): Why do I specifically wish I had a sister?
         choice(ParentConversation_Realization, Num_Alienation_Choice >= 4): What if... I'm not supposed to be a boy at all?
     end
+end
 
 label(ParentConversation_Alienation_Choice_Haircut)
     say(Mom): Everyone is uncomfortable with how they look sometimes.
@@ -253,6 +267,7 @@ label(ParentConversation_Alienation_Choice_Haircut)
     incr(Num_Alienation_Choice, 1)
     cost(30)
     goto(ParentConversation_Alienation_Choice)
+end
 
 label(ParentConversation_Alienation_Choice_BestFriend)
     say(Dad): That just means you're a ladies' man! I know it's hard for you, but women like confidence in a man.
@@ -263,6 +278,7 @@ label(ParentConversation_Alienation_Choice_BestFriend)
     say: Yeah not sure how to respond to that one.
     incr(Num_Alienation_Choice, 1)
     goto(ParentConversation_Alienation_Choice)
+end
 
 label(ParentConversation_Alienation_Choice_LockerRoom)
     say(Mom): Well it seems perfectly reasonable to me.
@@ -275,6 +291,7 @@ label(ParentConversation_Alienation_Choice_LockerRoom)
     cost(220)
     incr(Num_Alienation_Choice, 1)
     goto(ParentConversation_Alienation_Choice)
+end
 
 label(ParentConversation_Alienation_Choice_Sister)
     say(Dad): Sounds like you just want someone to boss around!
@@ -282,6 +299,7 @@ label(ParentConversation_Alienation_Choice_Sister)
     say: Look who learned a new word.
     incr(Num_Alienation_Choice, 1)
     goto(ParentConversation_Alienation_Choice)
+end
 
 label(ParentConversation_Realization)
     say: A few minutes pass in silence. I didn't really <i>intend</i> to say that. It just kinda slipped out.
@@ -316,11 +334,13 @@ label(ParentConversation_Realization)
         choice(ParentConversation_Realization_BackOut): Sorry I misspoke.
         choice(ParentConversation_Realization_Accept): <sub>I think I wish I was a girl.</sub>
     end
+end
 
 label(ParentConversation_Realization_BackOut)
     say(Mom): Oh. That's great honey.
     say(Mom): I'm... glad we could talk a bit.
     goto(InitialChoice)
+end
 
 label(ParentConversation_Realization_Accept)
     say(Mom): What was that sweetie? I didn't hear you.
@@ -354,12 +374,14 @@ label(ParentConversation_Realization_Accept)
     say: It's too late to do anything.
     set(Gate_PartialRealization, true)
     goto(TimeoutEnding)
+end
 
 label(ParentConversation_ComingOut)
     branch(Dad): What it it son? You can tell us anything.
         choice(ParentConversation_ComingOut_Confident, Gate_ComingOutPrep, Gate_SignWantSister): Mom, Dad, I'm trans.
         choice(ParentConversation_ComingOut_NotConfident): I think I might be trans.
     end
+end
 
 label(ParentConversation_ComingOut_Confident)
     say(Self): Yeah. My name is {ChosenName} and my pronouns are she/her.
@@ -385,6 +407,7 @@ label(ParentConversation_ComingOut_Confident)
         choice(ParentConversation_ComingOut_Confident_Ending): Stay like this forever.
         choice(ParentConversation_ComingOut_Confident_Choice): Actually, there's something else.
     end
+end
 
 label(ParentConversation_ComingOut_Confident_Ending)
     countdown(false)
@@ -409,6 +432,7 @@ label(ParentConversation_ComingOut_Confident_Ending)
     say: And for a few brief moments, I do.
     set(Gate_ParentsNeedTime, true)
     goto(TimeoutEnding)
+end
 
 label(ParentConversation_ComingOut_Confident_Choice)
     branch(Mom): It seems like something else is on your mind Ever... I mean {ChosenName}! I'm sorry!
@@ -416,6 +440,7 @@ label(ParentConversation_ComingOut_Confident_Choice)
         choice(ParentConversation_ComingOut_Confident_Driving): We need to get out of here!
         choice(ParentConversation_ComingOut_Confident_Ending): Never mind. It's not important.
     end
+end
 
 label(ParentConversation_ComingOut_Confident_Driving)
     say(Dad): Of course we've thought about that.
@@ -431,6 +456,7 @@ label(ParentConversation_ComingOut_Confident_Driving)
         choice(ParentConversation_ComingOut_Confident_Driving_Alone): No. I can't. I need to go, even if it's alone.
         choice(ParentConversation_ComingOut_Confident_Driving_Together, Gate_ParentsNeedTime, Gate_SecretRoad): Oh my god. I've got it!
     end
+end
 
 label(ParentConversation_ComingOut_Confident_Driving_Alone)
     say(Dad): Just where do you think you're going young lady??
@@ -463,6 +489,7 @@ label(ParentConversation_ComingOut_Confident_Driving_Alone)
         choice(ParentConversation_ComingOut_Confident_Driving_Alone_Highway): No. I have to keep going.
         choice(ParentConversation_ComingOut_Confident_Driving_Alone_SecretRoad, Gate_SecretRoad): Wait... the secret road!
     end
+end
 
 label(ParentConversation_ComingOut_Confident_Driving_Alone_Highway)
     say: I have to survive. I have to try.
@@ -501,6 +528,7 @@ label(ParentConversation_ComingOut_Confident_Driving_Alone_Highway)
     say: <b>INTERLUDE:</b> If you choose to keep playing, you may find that there is hope even in the darkest circumstances.
     say: <b>INTERLUDE:</b> There is always still time.
     goto_reset(LaterRun)
+end
 
 label(ParentConversation_ComingOut_Confident_Driving_Alone_SecretRoad)
     say: That's it. The secret road. By Reed's house.
@@ -521,6 +549,7 @@ label(ParentConversation_ComingOut_Confident_Driving_Alone_SecretRoad)
     bg(000000, 2)
     delay(2)
     goto_reset(LaterRun)
+end
 
 label(ParentConversation_ComingOut_Confident_Driving_Alone_GoBack)
     say: Oh my god. I've wasted so much time. I need to get back.
@@ -539,6 +568,7 @@ label(ParentConversation_ComingOut_Confident_Driving_Alone_GoBack)
     say: Nothing needs to be said. I know they understand.
     say: I know they forgive me.
     goto(ParentConversation_ComingOut_Confident_Ending)
+end
 
 label(ParentConversation_ComingOut_Confident_Driving_Together)
     say(Mom): What's that sweetie?
@@ -633,6 +663,7 @@ label(ParentConversation_ComingOut_NotConfident)
     say: And for a few brief moments, I do.
     set(Gate_ParentsNeedTime, true)
     goto(TimeoutEnding)
+end
 
 ######################################### Bedroom ##############################################
 
@@ -650,6 +681,7 @@ label(Bedroom_Entry)
     say: I'm not really sure why I came in here, or what I was planning to do.
     say: Guess I just needed to process on my own.
     goto(Bedroom_InitialChoice)
+end
 
 label(Bedroom_InitialChoice)
     branch: I stand in the middle of the room.
@@ -659,6 +691,7 @@ label(Bedroom_InitialChoice)
     choice(Bedroom_Computer): Open the laptop
     choice_always(InitialChoice): Head back to the living room
     end
+end
 
 label(Bedroom_PetTheCat)
     say: Slow Loris. The fat old tabby cat's been around well over a decade.
@@ -675,6 +708,7 @@ label(Bedroom_PetTheCat)
     choice(Bedroom_PetTheCat_Sleep): Stay here forever
     choice(Bedroom_PetTheCat_Leave): Pull myself away
     end
+end
 
 label(Bedroom_PetTheCat_Sleep)
     countdown(false)
@@ -683,10 +717,9 @@ label(Bedroom_PetTheCat_Sleep)
     say: My last conscious thought as I fade into sleep: this is not such a bad way to go.
     bg(000000, 2)
     delay(2)
-    if(Gate_PartialRealization)
-        goto(Bedroom_PetTheCat_Sleep_PartialRealization)
-    else
-        goto_reset(LaterRun)
+    if(Gate_PartialRealization): goto(Bedroom_PetTheCat_Sleep_PartialRealization)
+    else: goto_reset(LaterRun)
+end
 
 label(Bedroom_PetTheCat_Sleep_PartialRealization)
     say: I'm running along a winding road in the woods. Trying to run.
@@ -711,12 +744,14 @@ label(Bedroom_PetTheCat_Sleep_PartialRealization)
     say: But I'm not him. I'm not afraid. I'm her. The her that saved me. The me that saved him.
     set(Gate_GirlDream, true)
     goto_reset(LaterRun)
+end
 
 label(Bedroom_PetTheCat_Leave)
     say: Neither of us wants the petting to end. As I pull my hand away, she nips at me, wanting to stop me from leaving.
     say: To stop me from leaving for the last time.
     say: But I have less than an hour left. I need to make the most of it.
     goto(Bedroom_InitialChoice)
+end
 
 label(Bedroom_Phone)
     say: The emergency alerts have stopped. My phone feels strangely normal. Mundane.
@@ -732,6 +767,7 @@ label(Bedroom_Phone)
         choice(Bedroom_Phone_AskTheQuestion, Gate_PartialRealization): Ask the question
         choice_always(Bedroom_InitialChoice): Never mind
     end
+end
 
 label(Bedroom_Phone_CallReed)
     say: I hesitate. Do I really want to talk to him right now?
@@ -757,6 +793,7 @@ label(Bedroom_Phone_CallReed)
     cost(65)
     say: Even walking a block away, I get pretty wet. By the time I climb into Reed's giant monstrosity of an SUV, I'm soaked.
     goto(FriendHangout_Drive)
+end
 
 label(Bedroom_Phone_CallKatie)
     say: My heart is racing as I scroll to her in my contacts.
@@ -797,6 +834,7 @@ label(Bedroom_Phone_CallKatie)
         choice(Bedroom_Phone_CallKatie_ComingOut, Gate_FullRealization): I needed to tell someone. I'm trans!
         choice(Bedroom_Phone_CallKatie_End): I should go.
     end
+end
 
 label(Bedroom_Phone_CallKatie_Choice_Return)
     branch(Katie): Is... there anything else you wanted to talk about?
@@ -807,6 +845,7 @@ label(Bedroom_Phone_CallKatie_Choice_Return)
         choice(Bedroom_Phone_CallKatie_Reading, Katie_CameOut, Katie_Rekindled): Um. Do you think you could, maybe, like read to me or something?
         choice_always(Bedroom_Phone_CallKatie_End): I should go.
     end
+end
 
 label(Bedroom_Phone_CallKatie_MissYou)
     say(Katie): I...
@@ -820,6 +859,7 @@ label(Bedroom_Phone_CallKatie_MissYou)
     say: I should probably tell her that's not going to happen.
     say(Self): Sure! Yeah I would love that.
     goto(Bedroom_Phone_CallKatie_Choice_Return)
+end
 
 label(Bedroom_Phone_CallKatie_HowThingsWent)
     say(Katie): Everett...
@@ -862,16 +902,16 @@ label(Bedroom_Phone_CallKatie_HowThingsWent)
     say(Katie): Aha! Progress! We'll make an emotionally intelligent person out of you yet.
     set(Katie_Rekindled, true)
     goto(Bedroom_Phone_CallKatie_Choice_Return)
+end
 
 label(Bedroom_Phone_CallKatie_ComingOut)
     say(Katie): Oh. OH. Oh my god. That's... wonderful? terrifying? both?
     say(Self): Yeah. Definitely a bit of both.
     say(Katie): I just... I had no idea! But you know, that honestly makes a lot of sense.
     say(Self): It does?
-    if (Katie_Rekindled)
-        goto(Bedroom_Phone_CallKatie_ComingOut_Rekindled)
-    else
-        goto(Bedroom_Phone_CallKatie_ComingOut_NotRekindled)
+    if (Katie_Rekindled): goto(Bedroom_Phone_CallKatie_ComingOut_Rekindled)
+    else: goto(Bedroom_Phone_CallKatie_ComingOut_NotRekindled)
+end
 
 label(Bedroom_Phone_CallKatie_ComingOut_Rekindled)
     say(Katie): Like I said, I could tell you haven't been too open with me about something.
@@ -886,6 +926,7 @@ label(Bedroom_Phone_CallKatie_ComingOut_Rekindled)
     say(Katie): And the man comments! Those must have been hard to hear. I really am sorry.
     say(Self): No offense taken. Really. You didn't know, and I'm still figuring a lot of stuff out.
     goto(Bedroom_Phone_CallKatie_ComingOut_Converge)
+end
 
 label(Bedroom_Phone_CallKatie_ComingOut_NotRekindled)
     say(Katie): I have felt like you haven't been too open with me about something.
@@ -898,6 +939,7 @@ label(Bedroom_Phone_CallKatie_ComingOut_NotRekindled)
     say(Katie): Wait! How should I refer to you now? I'm sorry I used your given name, if you're not going by that anymore.
     say(Self): No offense taken. Really. You didn't know, and I'm still figuring a lot of stuff out.
     goto(Bedroom_Phone_CallKatie_ComingOut_Converge)
+end
 
 label(Bedroom_Phone_CallKatie_ComingOut_Converge)
     branch(Katie): Is there a name you'd like me to use?
@@ -906,12 +948,14 @@ label(Bedroom_Phone_CallKatie_ComingOut_Converge)
         choice(Bedroom_Phone_CallKatie_ComingOut_SetName_Emily, Unlock_Name_Emily): I kind of like Emily. After our old cat Emilio.
         choice(Bedroom_Phone_CallKatie_ComingOut_SetName_Azalea, Unlock_Name_Azalea): I like how Azalea sounds. My MMO character. Don't judge.
     end
+end
 
 label(Bedroom_Phone_CallKatie_ComingOut_SetName_Evelyn)
     say(Katie): Evelyn is pretty! I mean, I don't know if you should base it on other peoples' comfort. But I think it works.
     say(Self): Thanks. Yeah, I mean, I can always try something else if it ends up sounding too similar.
     set(ChosenName, Evelyn)
     goto(Bedroom_Phone_CallKatie_ComingOut_SetName_Converge)
+end
 
 label(Bedroom_Phone_CallKatie_ComingOut_SetName_Hazel)
     say(Katie): Oh my gosh, I didn't know. I'm so sorry your family had to go through that.
@@ -921,6 +965,7 @@ label(Bedroom_Phone_CallKatie_ComingOut_SetName_Hazel)
     say(Katie): And hey, maybe it's what they would have named you if the doctor hadn't made a mistake on your birth certificate.
     set(ChosenName, Hazel)
     goto(Bedroom_Phone_CallKatie_ComingOut_SetName_Converge)
+end
 
 label(Bedroom_Phone_CallKatie_ComingOut_SetName_Emily)
     say(Katie): I remember seeing photos of her. She was so cute, even if she was aloof. I know it was hard on you when she passed.
@@ -932,6 +977,7 @@ label(Bedroom_Phone_CallKatie_ComingOut_SetName_Emily)
     say: I guess I won't get an explanation.
     set(ChosenName, Emily)
     goto(Bedroom_Phone_CallKatie_ComingOut_SetName_Converge)
+end
 
 label(Bedroom_Phone_CallKatie_ComingOut_SetName_Azalea)
     say(Katie): Heh. Ok. Well you have to admit that's pretty funny. But I know trans people with far wilder name origin stories.
@@ -941,6 +987,7 @@ label(Bedroom_Phone_CallKatie_ComingOut_SetName_Azalea)
     say: Not sure exactly how she meant it though. Best not to assume.
     set(ChosenName, Azalea)
     goto(Bedroom_Phone_CallKatie_ComingOut_SetName_Converge)
+end
 
 label(Bedroom_Phone_CallKatie_ComingOut_SetName_Converge)
     say(Katie): It's nice to meet the real you, {ChosenName}.
@@ -966,6 +1013,7 @@ label(Bedroom_Phone_CallKatie_ComingOut_SetName_Converge)
     say(Katie): Anyway, once again, I'm so happy you shared this with me. Let me know if you want to talk more about it.
     set(Katie_CameOut, true)
     goto(Bedroom_Phone_CallKatie_Choice_Return)
+end
 
 label(Bedroom_Phone_CallKatie_PrepareForParents)
     say(Katie): Oh, sure!
@@ -991,6 +1039,7 @@ label(Bedroom_Phone_CallKatie_PrepareForParents)
     say(Self): Thank you, Katie. Thank you for everything.
     set(Gate_ComingOutPrep, true)
     goto(Bedroom_Phone_CallKatie_Choice_Return)
+end
 
 label(Bedroom_Phone_CallKatie_Reading)
     say(Katie): Yes. Yes, {ChosenName}, I can read to you.
@@ -1019,14 +1068,13 @@ label(Bedroom_Phone_CallKatie_Reading)
     say: But, in spite of all the hurt in the world, she existed.
     say: And that's just going to have to be enough.
     goto(FadeToBlackEnding)
+end
 
 label(Bedroom_Phone_CallKatie_End)
-    if(Katie_CameOut)
-        goto(Bedroom_Phone_CallKatie_End_CameOut)
-    elif(Katie_Rekindled)
-        goto(Bedroom_Phone_CallKatie_End_Rekindled)
-    else
-        goto(Bedroom_Phone_CallKatie_End_Default)
+    if(Katie_CameOut): goto(Bedroom_Phone_CallKatie_End_CameOut)
+    elif(Katie_Rekindled): goto(Bedroom_Phone_CallKatie_End_Rekindled)
+    else: goto(Bedroom_Phone_CallKatie_End_Default)
+end
 
 label(Bedroom_Phone_CallKatie_End_CameOut)
     say(Katie): Ok, it is pretty late I suppose.
@@ -1043,6 +1091,7 @@ label(Bedroom_Phone_CallKatie_End_CameOut)
     say: I'm just glad to know you'll still be around after I'm gone.
     say: And that you remember a girl named {ChosenName}. A girl who, for a brief moment, existed.
     goto(Bedroom_InitialChoice)
+end
 
 label(Bedroom_Phone_CallKatie_End_Rekindled)
     say(Katie): Ok, it is pretty late I suppose.
@@ -1058,6 +1107,7 @@ label(Bedroom_Phone_CallKatie_End_Rekindled)
     say: In another life, maybe we don't have to say goodbye.
     say: I'm just glad to know you'll still be around after I'm gone. I hope you can forgive me.
     goto(Bedroom_InitialChoice)
+end
 
 label(Bedroom_Phone_CallKatie_End_Default)
     say(Katie): Ok, it is pretty late I suppose.
@@ -1069,6 +1119,7 @@ label(Bedroom_Phone_CallKatie_End_Default)
     say: I guess you'll find out in the morning. After I'm long gone.
     say: And you'll probably never forgive me. But at least you'll be alive.
     goto(Bedroom_InitialChoice)
+end
 
 label(Bedroom_Phone_OpenSocial)
     say: I glance over my feed at possible take on the current situation, presented passionately by some anonymous user.
@@ -1106,6 +1157,7 @@ label(Bedroom_Phone_OpenSocial)
         choice(Bedroom_Phone_OpenVideos): Check my video feed
         choice_always(Bedroom_InitialChoice): Stop doomscrolling
     end
+end
 
 label(Bedroom_Phone_OpenVideos)
     countdown(false)
@@ -1135,6 +1187,7 @@ label(Bedroom_Phone_OpenVideos)
     say: Trillions of dollars of internet infrastructure have just ceased to exist.
     say: And now, it's my turn to cease to exist.
     goto(TimeoutEnding)
+end
 
 label(Bedroom_Phone_AskTheQuestion)
     say: Question? What question?
@@ -1193,12 +1246,14 @@ label(Bedroom_Phone_AskTheQuestion)
     say: Right now, I just need to tell someone.
     set(Gate_FullRealization, true)
     goto(Bedroom_InitialChoice)
+end
 
 label(Bedroom_Photos)
     say: I'm not sure quite what inspires me. I randomly reach for a photo album from the stack.
     say: I'll never understand quite how my mom organized these. I suppose that's why she was going to redo it.
     say: I open to a random page. It seems to just be a bunch of random photos of me.
     goto(Bedroom_Photos_Choice)
+end
 
 label(Bedroom_Photos_Choice)
     branch: I glance over all the photos on the page.
@@ -1207,6 +1262,7 @@ label(Bedroom_Photos_Choice)
         choice(Bedroom_Photos_BestFriend): Me and Katie at the beach
         choice_always(Bedroom_InitialChoice): That's enough for me.
     end
+end
 
 label(Bedroom_Photos_Astronaut)
     say: I wanted to be an astronaut so bad as a kid.
@@ -1224,6 +1280,7 @@ label(Bedroom_Photos_Astronaut)
     say: So that was it. No more astronaut dreams.
     set(Gate_SignAstronaut, true)
     goto(Bedroom_Photos_Choice)
+end
 
 label(Bedroom_Photos_Cat)
     say: Emilio. My parents found her on the roadside years before I was born.
@@ -1247,6 +1304,7 @@ label(Bedroom_Photos_Cat)
     set(Gate_SignCat, true)
     set(Unlock_Name_Emily, true)
     goto(Bedroom_Photos_Choice)
+end
 
 label(Bedroom_Photos_BestFriend)
     say: Katie Marshall. My best friend.
@@ -1260,7 +1318,7 @@ label(Bedroom_Photos_BestFriend)
     say: She just...
     say: Couldn't know.
     say: It just wouldn't be right.
-    say: Even thinking about her in a non-platonic way enough to send me into a spiral of shame and despair.
+    say: Even thinking about her in a non-platonic way was enough to send me into a spiral of shame and despair.
     say: So we just stayed friends.
     say: She always seemed so comfortable around me. The way girls seemed around each other.
     say: It made me so happy to just be somebody she trusted and cared for.
@@ -1277,6 +1335,7 @@ label(Bedroom_Photos_BestFriend)
     say: Still, though. There's not much left to lose if I call her now...
     set(Gate_MissBestFriend, true)
     goto(Bedroom_Photos_Choice)
+end
 
 label(Bedroom_Computer)
     say: I left a game running when I went to bed.
@@ -1287,6 +1346,7 @@ label(Bedroom_Computer)
         choice_always(Bedroom_InitialChoice): No, I don't have time to waste.
         choice(Bedroom_Computer_VideoGame_CharacterSelect): Why the hell not?
     end
+end
 
 label(Bedroom_Computer_VideoGame_CharacterSelect)
     countdown(false)
@@ -1297,6 +1357,7 @@ label(Bedroom_Computer_VideoGame_CharacterSelect)
         choice(Bedroom_Computer_VideoGame_Chungus): Chungus - male dwarf barbarian - level 8
         choice(Bedroom_Computer_VideoGame_Everest): Everest - male human warrior - level 172
     end
+end
 
 label(Bedroom_Computer_VideoGame_Azalea)
     say: Azalea. My most recent save.
@@ -1312,6 +1373,7 @@ label(Bedroom_Computer_VideoGame_Azalea)
     say: That was not so nice. But the devs seem to have cracked down on it more lately.
     set(Unlock_Name_Azalea, true)
     goto(Bedroom_Computer_VideoGame_Converge)
+end
 
 label(Bedroom_Computer_VideoGame_Chungus)
     say: Chungus. The joke character. I really just made the ugliest character I could possibly manage.
@@ -1324,6 +1386,7 @@ label(Bedroom_Computer_VideoGame_Chungus)
     say: I hope nobody saw him as a caricature making fun of people different from me.
     say: Well, no time to do anything about that now.
     goto(Bedroom_Computer_VideoGame_Converge)
+end
 
 label(Bedroom_Computer_VideoGame_Everest)
     say: My first character. Default male human warrior. Name just a letter off of mine.
@@ -1331,6 +1394,7 @@ label(Bedroom_Computer_VideoGame_Everest)
     say: Running around as "default male" never really bothered me; nobody perceived me as putting effort into how my character looks.which suited me fine.
     say: Well, back to the tried-and-true classic.
     goto(Bedroom_Computer_VideoGame_Converge)
+end
 
 label(Bedroom_Computer_VideoGame_Converge)
     say: The game word loads in. I'm in the main city that serves as the game's hub.
@@ -1363,8 +1427,9 @@ label(Bedroom_Computer_VideoGame_Converge)
     say: Or, no. Not crashed. Turned into a quickly dissipating cloud of atoms, along with the rest of the data center.
     say: Most of the internet was probably just knocked out in a single instant.
     say: No more social media. No more dating apps. No more LLMs.
-    say: Heh. One good thing to come out of this.
+    say: Heh. Some good things to come out of this.
     goto(TimeoutEnding)
+end
 
 ######################################### Try to Drive Alone ##############################################
 
@@ -1380,6 +1445,7 @@ label(TryToDriveAlone_Entry)
         choice_always(InitialChoice): Yeah. You're right.
         choice(TryToDriveAlone_TryToLeave): No. I can't. I need to go, even if it's alone.
     end
+end
 
 label(TryToDriveAlone_TryToLeave)
     say(Dad): Just where do you think you're going young man??
@@ -1401,6 +1467,7 @@ label(TryToDriveAlone_TryToLeave)
     say: But I can't. I can't steal my parents' car. I can't leave them alone like this.
     say: And with that I'm back in the house. I guess I'm not making some daring escape to a young-adult dystopian novel.
     goto(InitialChoice)
+end
 
 ######################################### Hangout With Friends ##############################################
 
@@ -1565,6 +1632,7 @@ label(FriendHangout_Drive)
     set(Gate_SecretRoad, true)
     set(Gate_BadFriendExperience, true)
     goto(FadeToBlackEnding)
+end
 
 ######################################### Shared Endings ##############################################
 
@@ -1575,6 +1643,7 @@ label(FadeToBlackEnding)
     bg(000000, 2)
     delay(2)
     goto_reset(LaterRun)
+end
 
 label(TimeoutEnding)
     timeout
@@ -1587,3 +1656,4 @@ label(TimeoutEnding)
     bg(000000, 3)
     delay(3)
     goto_reset(LaterRun)
+end

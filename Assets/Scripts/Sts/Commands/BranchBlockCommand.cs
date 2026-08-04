@@ -2,7 +2,7 @@
 using StillTime.Sts.Nodes;
 
 namespace StillTime.Sts.Commands {
-    public class BranchBlockCommand : TextCommand, ISequentialCommand, ISequenceTerminatingCommand {
+    public class BranchBlockCommand : TextCommand, ISequentialCommand {
         public List<IBranchSubCommand> SubCommands { get; } = new();
 
         public BranchBlockCommand(int lineNumber, string line, string speaker, string text) :
