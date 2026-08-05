@@ -1,22 +1,24 @@
 ﻿using System;
+using StillTime.Sts.Resources;
 using StillTime.Sts.Runtime;
 
 namespace StillTime.Sts.Nodes {
-    public class IntCondition : VariableCondition {
+    public class DecimalCondition : VariableCondition {
         public ComparisonOperator Operator { get; }
-        
-        public int ComparisonValue { get; }
-        
+
+        public decimal ComparisonValue { get; }
+
         public bool Invert { get; }
-        
-        public IntCondition(Variable variable, ComparisonOperator op, int comparisonValue, bool invert) : base(variable) {
+
+        public DecimalCondition(Variable variable, ComparisonOperator op, decimal comparisonValue, bool invert) :
+            base(variable) {
             Operator = op;
             ComparisonValue = comparisonValue;
             Invert = invert;
         }
-        
+
         public override bool CheckCondition(TraversalState traversalState) {
-            int value = traversalState.GetVariableValue<int>(Variable);
+            decimal value = traversalState.GetVariableValue(Variable).NumberValue;
 
             return Operator switch {
                 ComparisonOperator.Equal => value == ComparisonValue,
@@ -26,7 +28,7 @@ namespace StillTime.Sts.Nodes {
                 ComparisonOperator.GreaterOrEqual => value >= ComparisonValue,
                 ComparisonOperator.LessOrEqual => value <= ComparisonValue,
                 _ => throw new ArgumentOutOfRangeException(),
-            } ^  Invert;
+            } ^ Invert;
         }
     }
 

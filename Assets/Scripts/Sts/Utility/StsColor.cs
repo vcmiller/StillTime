@@ -2,14 +2,14 @@
 using System.Globalization;
 
 namespace StillTime.Sts.Utility {
-    public struct StsColor {
+    public struct StsColor : IEquatable<StsColor> {
         public float R;
         public float G;
         public float B;
         public float A;
 
         public float this[int index] {
-            get => index switch {
+            readonly get => index switch {
                 0 => R,
                 1 => G,
                 2 => B,
@@ -43,13 +43,13 @@ namespace StillTime.Sts.Utility {
             A = a;
         }
 
-        public string ToHexString(bool includeAlpha = false) {
+        public readonly string ToHexString(bool includeAlpha = false) {
             Span<char> span = stackalloc char[includeAlpha ? 8 : 6];
             ToHexString(span);
             return span.ToString();
         }
 
-        public void ToHexString(Span<char> span) {
+        public readonly void ToHexString(Span<char> span) {
             switch (span.Length) {
                 case 3:
                     FormatComponents(span, 1, 3);
@@ -69,7 +69,7 @@ namespace StillTime.Sts.Utility {
             }
         }
 
-        public void FormatComponents(Span<char> hex, int cSize, int cCount) {
+        public readonly void FormatComponents(Span<char> hex, int cSize, int cCount) {
             int cMax = (1 << (cSize * 4)) - 1;
 
             for (int i = 0; i < cCount; i++) {
@@ -112,6 +112,26 @@ namespace StillTime.Sts.Utility {
             }
 
             return true;
+        }
+
+        public bool Equals(StsColor other) {
+            return R.Equals(other.R) && G.Equals(other.G) && B.Equals(other.B) && A.Equals(other.A);
+        }
+
+        public override bool Equals(object obj) {
+            return obj is StsColor other && Equals(other);
+        }
+
+        public override int GetHashCode() {
+            return HashCode.Combine(R, G, B, A);
+        }
+
+        public static bool operator ==(StsColor left, StsColor right) {
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(StsColor left, StsColor right) {
+            return !left.Equals(right);
         }
     }
 }

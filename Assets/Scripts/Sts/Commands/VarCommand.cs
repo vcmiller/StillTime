@@ -1,26 +1,25 @@
 ﻿using System.Collections.Generic;
 using StillTime.Sts.Nodes;
+using StillTime.Sts.Resources;
+using StillTime.Sts.Utility;
 
 namespace StillTime.Sts.Commands {
     public class VarCommand : Command, IResourceCommand {
-        public VarType Type { get; set; }
+        public StsValueType Type { get; set; }
         public string Name { get; }
-        public VarScope Scope { get; set; }
+        public string Scope { get; set; }
 
         public VarCommand(int lineNumber, string line, string type, string name, string scope) :
             base(lineNumber, line) {
             Type = type switch {
-                "int" => VarType.Int,
-                "bool" => VarType.Bool,
-                "string" => VarType.String,
+                "number" or "num" => StsValueType.Number,
+                "color" => StsValueType.Color,
+                "bool" => StsValueType.Bool,
+                "string" or "str" => StsValueType.String,
                 _ => throw new ParsingException(lineNumber, line, $"Invalid var type {type}"),
             };
             Name = name;
-            Scope = scope switch {
-                "run" => VarScope.Run,
-                "global" => VarScope.Global,
-                _ => throw new ParsingException(lineNumber, line, $"Invalid var scope {scope}"),
-            };
+            Scope = scope;
         }
 
         public void CreateResources(Dictionary<string, Resource> resources,
@@ -28,16 +27,10 @@ namespace StillTime.Sts.Commands {
             Variable variable = new(Name, Type, Scope);
             resources.Add(Name, variable);
         }
-    }
 
-    public enum VarType {
-        Int,
-        Bool,
-        String,
-    }
-
-    public enum VarScope {
-        Run,
-        Global,
+        public void ValidateResources(Dictionary<string, Resource> resourceDictionary,
+                                      Dictionary<string, INode> nodeDictionary) {
+            _ = CommandUtility.GetResource<Scope>(this, Scope, resourceDictionary);
+        }
     }
 }

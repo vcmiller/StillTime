@@ -1,16 +1,18 @@
 ﻿using System;
 using StillTime.Sts.Commands;
+using StillTime.Sts.Resources;
 using StillTime.Sts.Runtime;
+using StillTime.Sts.Utility;
 
 namespace StillTime.Sts.Nodes {
     public class IncrementVariableNode : SequentialNode {
         public Variable Variable { get; }
 
-        public int Increment { get; }
+        public decimal Increment { get; }
 
-        public IncrementVariableNode(Variable variable, int increment) {
-            if (variable.Type != VarType.Int) {
-                throw new Exception("Increment is only valid for int variable.");
+        public IncrementVariableNode(Variable variable, decimal increment) {
+            if (variable.Type != StsValueType.Number) {
+                throw new Exception("Increment is only valid for number variable.");
             }
 
             Variable = variable;
@@ -19,8 +21,9 @@ namespace StillTime.Sts.Nodes {
 
         public override void ApplyToState(ref MutableTraversalState state) {
             base.ApplyToState(ref state);
-            int previousValue = state.GetVariableValue<int>(Variable);
-            state.SetVariableValue(Variable, previousValue + Increment);
+            StsValue previousValue = state.GetVariableValue(Variable);
+            StsValue newValue = new(previousValue.NumberValue + Increment);
+            state.SetVariableValue(Variable, newValue);
         }
     }
 }

@@ -16,40 +16,41 @@ speaker(ForumUser2, c22382): immortal_snail
 speaker(ForumUser3, 23c278): WanderingPanda_986
 speaker(ForumUser4, fff700): [MOD] CatGirlLover67
 
-######################################### Gate Declarations ##############################################
+######################################### Var Declarations ##############################################
+
+# Scopes
+scope(Scope_Global)
+scope(Scope_Run)
 
 # Story gates
-var(bool, Gate_PartialRealization, global)
-var(bool, Gate_FullRealization, global)
-var(bool, Gate_BadFriendExperience, global)
-var(bool, Gate_MissBestFriend, global)
-var(bool, Gate_ParentsNeedTime, global)
-var(bool, Gate_ComingOutPrep, global)
-var(bool, Gate_SecretRoad, global)
-var(bool, Gate_GirlDream, global)
+var(bool, Gate_PartialRealization, Scope_Global)
+var(bool, Gate_FullRealization, Scope_Global)
+var(bool, Gate_BadFriendExperience, Scope_Global)
+var(bool, Gate_MissBestFriend, Scope_Global)
+var(bool, Gate_ParentsNeedTime, Scope_Global)
+var(bool, Gate_ComingOutPrep, Scope_Global)
+var(bool, Gate_SecretRoad, Scope_Global)
+var(bool, Gate_GirlDream, Scope_Global)
 
 # Sign gates
-var(bool, Gate_SignLockerRoom, global)
-var(bool, Gate_SignWantSister, global)
-var(bool, Gate_SignHaircut, global)
-var(bool, Gate_SignAstronaut, global)
-var(bool, Gate_SignCat, global)
+var(bool, Gate_SignLockerRoom, Scope_Global)
+var(bool, Gate_SignWantSister, Scope_Global)
+var(bool, Gate_SignHaircut, Scope_Global)
+var(bool, Gate_SignAstronaut, Scope_Global)
+var(bool, Gate_SignCat, Scope_Global)
 
 # Unlockable names
-var(bool, Unlock_Name_Hazel, global)
-var(bool, Unlock_Name_Emily, global)
-var(bool, Unlock_Name_Azalea, global)
+var(bool, Unlock_Name_Hazel, Scope_Global)
+var(bool, Unlock_Name_Emily, Scope_Global)
+var(bool, Unlock_Name_Azalea, Scope_Global)
 
 # Conversation states
-var(int, Num_Alienation_Choice, run)
-var(bool, Katie_Rekindled, run)
-var(bool, Katie_CameOut, run)
+var(num, Num_Alienation_Choice, Scope_Run)
+var(bool, Katie_Rekindled, Scope_Run)
+var(bool, Katie_CameOut, Scope_Run)
 
 # Chosen name. Set by a branch with unlockable options.
-var(string, ChosenName, global)
-
-# Default value. Theoretically this should never be used.
-set(ChosenName, Everett)
+var(string, ChosenName, Scope_Global)
 
 ######################################### Introduction Scene ##############################################
 
@@ -527,6 +528,7 @@ label(ParentConversation_ComingOut_Confident_Driving_Alone_Highway)
     say: <b>INTERLUDE:</b> We need to survive, and to take care of one another.
     say: <b>INTERLUDE:</b> If you choose to keep playing, you may find that there is hope even in the darkest circumstances.
     say: <b>INTERLUDE:</b> There is always still time.
+    reset(Scope_Run)
     goto_reset(LaterRun)
 end
 
@@ -548,6 +550,7 @@ label(ParentConversation_ComingOut_Confident_Driving_Alone_SecretRoad)
     clear
     bg(000000, 2)
     delay(2)
+    reset(Scope_Run)
     goto_reset(LaterRun)
 end
 
@@ -718,6 +721,7 @@ label(Bedroom_PetTheCat_Sleep)
     bg(000000, 2)
     delay(2)
     if(Gate_PartialRealization): goto(Bedroom_PetTheCat_Sleep_PartialRealization)
+    reset(Scope_Run)
     else: goto_reset(LaterRun)
 end
 
@@ -743,6 +747,7 @@ label(Bedroom_PetTheCat_Sleep_PartialRealization)
     say: I see the same fear in his eyes.
     say: But I'm not him. I'm not afraid. I'm her. The her that saved me. The me that saved him.
     set(Gate_GirlDream, true)
+    reset(Scope_Run)
     goto_reset(LaterRun)
 end
 
@@ -1642,6 +1647,7 @@ label(FadeToBlackEnding)
     clear
     bg(000000, 2)
     delay(2)
+    reset(Scope_Run)
     goto_reset(LaterRun)
 end
 
@@ -1655,5 +1661,6 @@ label(TimeoutEnding)
     delay(1)
     bg(000000, 3)
     delay(3)
+    reset(Scope_Run)
     goto_reset(LaterRun)
 end

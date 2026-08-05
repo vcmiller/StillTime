@@ -9,7 +9,6 @@ namespace StillTime.Sts.Nodes {
             state.CountdownValue = null;
             state.VisitedNodesCurrentRun.Clear();
             state.NodeForTimeout = null;
-            state.RunVariables.Clear();
         }
     }
 }

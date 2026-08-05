@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using StillTime.Sts.Nodes;
+using StillTime.Sts.Resources;
 
 namespace StillTime.Sts.Commands {
     public class LabelBlockCommand : Command, IResourceCommand, ISubtreeCommand {

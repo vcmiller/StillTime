@@ -1,4 +1,5 @@
-﻿using StillTime.Sts.Runtime;
+﻿using StillTime.Sts.Resources;
+using StillTime.Sts.Runtime;
 
 namespace StillTime.Sts.Nodes {
     public abstract class VariableCondition : ICondition {

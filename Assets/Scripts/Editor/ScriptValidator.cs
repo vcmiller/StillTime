@@ -52,7 +52,7 @@ namespace StillTime.Editor {
             } catch (ParsingException ex) {
                 string relativePath = Path.GetRelativePath(".", path);
                 int line = ex.LineNumber + 1;
-                Debug.LogError($"<a href=\"{relativePath}\" line=\"{line}\">{relativePath}</a>: {ex.Message}");
+                Debug.LogError($"<a href=\"{relativePath}\" line=\"{line}\">{relativePath}</a>: {ex}");
             }
         }
     }

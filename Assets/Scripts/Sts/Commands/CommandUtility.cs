@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using StillTime.Sts.Nodes;
+using StillTime.Sts.Resources;
+using StillTime.Sts.Utility;
 
 namespace StillTime.Sts.Commands {
     public static class CommandUtility {
@@ -47,11 +49,6 @@ namespace StillTime.Sts.Commands {
 
             if (condition.All(c => c == '_' || char.IsLetterOrDigit(c))) {
                 Variable variable = GetResource<Variable>(command, condition, resources);
-                if (variable.Type != VarType.Bool) {
-                    throw new ParsingException(command.LineNumber, command.Line,
-                                               $"Cannot use variable of type {variable.Type} as a condition by itself");
-                }
-
                 return new BoolCondition(variable, !invert);
             }
 
@@ -63,17 +60,17 @@ namespace StillTime.Sts.Commands {
                 string rhs = condition.AsSpan(index + str.Length).Trim().ToString();
 
                 Variable variable = GetResource<Variable>(command, lhs, resources);
-                if (variable.Type != VarType.Int) {
+                if (variable.Type != StsValueType.Number) {
                     throw new ParsingException(command.LineNumber, command.Line,
-                                               $"Cannot use variable of type {variable.Type} as an int operand");
+                                               $"Cannot use variable of type {variable.Type} as a number operand");
                 }
 
-                if (!int.TryParse(rhs, out int rhsInt)) {
+                if (!decimal.TryParse(rhs, out decimal rhsDecimal)) {
                     throw new ParsingException(command.LineNumber, command.Line,
                                                $"Failed to parse value {rhs} as int.");
                 }
 
-                return new IntCondition(variable, op, rhsInt, invert);
+                return new DecimalCondition(variable, op, rhsDecimal, invert);
             }
 
             throw new ParsingException(command.LineNumber, command.Line, $"Failed to parse condition {condition}");

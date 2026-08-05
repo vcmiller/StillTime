@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using StillTime.Sts.Nodes;
+using StillTime.Sts.Resources;
 
 namespace StillTime.Sts.Commands {
     public class IfCommand : Command, ISequentialCommand {

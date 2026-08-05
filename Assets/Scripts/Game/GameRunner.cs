@@ -5,6 +5,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using StillTime.Sts.Nodes;
+using StillTime.Sts.Resources;
 using StillTime.Sts.Runtime;
 using StillTime.Sts.Utility;
 using UnityEngine;
@@ -244,8 +245,7 @@ namespace StillTime.Game {
 
                     TraversalState previousStateAtNode = stack.FindLast(s => s.CurrentNode == possibleNext);
                     if (previousStateAtNode != null &&
-                        previousStateAtNode.GlobalVariables.SequenceEqual(state.GlobalVariables) &&
-                        previousStateAtNode.RunVariables.SequenceEqual(state.RunVariables)) {
+                        previousStateAtNode.Variables.SequenceEqual(state.Variables)) {
                         continue;
                     }
 

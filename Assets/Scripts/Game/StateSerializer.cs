@@ -4,8 +4,8 @@ using System.Linq;
 using System.Runtime.Serialization;
 using Infohazard.Core;
 using Newtonsoft.Json.Linq;
-using StillTime.Sts.Commands;
 using StillTime.Sts.Nodes;
+using StillTime.Sts.Resources;
 using StillTime.Sts.Runtime;
 using StillTime.Sts.Utility;
 
@@ -13,8 +13,7 @@ namespace StillTime.Game {
     public static class StateSerializer {
         public static SerializedTraversalState SerializeState(TraversalState state) {
             return new SerializedTraversalState {
-                RunVariables = state.RunVariables.ToDictionary(v => v.Key.Identifier, v => new JValue(v.Value)),
-                GlobalVariables = state.GlobalVariables.ToDictionary(v => v.Key.Identifier, v => new JValue(v.Value)),
+                Variables = state.Variables.ToDictionary(v => v.Key.Identifier, v => new JValue(v.Value)),
                 VisitedNodesCurrentRun = state.VisitedNodesCurrentRun.ToList(g => g.FullIdentifier),
                 VisitedNodesOverall = state.VisitedNodesOverall.ToList(g => g.FullIdentifier),
                 CurrentNode = state.CurrentNode?.FullIdentifier,
@@ -38,13 +37,17 @@ namespace StillTime.Game {
                 }
             }
 
+            Dictionary<Variable, StsValue> variables = new();
+            ConvertVariables(graph, serializedState.GlobalVariables, variables);
+            ConvertVariables(graph, serializedState.RunVariables, variables);
+            ConvertVariables(graph, serializedState.Variables, variables);
+
             return new TraversalState(
                 currentNode,
                 nodeForTimeout,
                 serializedState.ShowCountdown,
                 serializedState.CountdownValue,
-                ConvertVariables(graph, serializedState.RunVariables),
-                ConvertVariables(graph, serializedState.GlobalVariables),
+                variables,
                 serializedState.VisitedNodesCurrentRun.SelectWhere<string, INode>(graph.TryGetNode),
                 serializedState.VisitedNodesOverall.SelectWhere<string, INode>(graph.TryGetNode),
                 StsColor.TryParseHex(serializedState.BgColor, out StsColor bgColor)
@@ -54,25 +57,28 @@ namespace StillTime.Game {
             );
         }
 
-        private static Dictionary<Variable, object> ConvertVariables(GameGraph graph, Dictionary<string, JValue> values) {
-            Dictionary<Variable, object> result = new();
+        private static void ConvertVariables(
+            GameGraph graph,
+            Dictionary<string, JValue> src,
+            Dictionary<Variable, StsValue> dest) {
 
-            if (values == null) return result;
+            if (src == null) return;
 
-            foreach ((string key, JValue jValue) in values) {
+            foreach ((string key, JValue jValue) in src) {
                 if (!graph.TryGetVariable(key, out Variable variable)) continue;
 
-                object value = variable.Type switch {
-                    VarType.Int => jValue.ToObject<int>(),
-                    VarType.Bool => jValue.ToObject<bool>(),
-                    VarType.String => jValue.ToObject<string>(),
+                StsValue value = variable.Type switch {
+                    StsValueType.Number => new StsValue(jValue.ToObject<decimal>()),
+                    StsValueType.Color => new StsValue(
+                        StsColor.TryParseHex(jValue.ToObject<string>(), out StsColor color) ? color : default),
+                    StsValueType.Bool => new StsValue(jValue.ToObject<bool>()),
+                    StsValueType.String => new StsValue(jValue.ToObject<string>()),
+                    StsValueType.None => default,
                     _ => throw new Exception("Invalid variable type."),
                 };
 
-                result[variable] = value;
+                dest[variable] = value;
             }
-
-            return result;
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.Logging;
+using StillTime.Sts.Resources;
 using StillTime.Sts.Runtime;
 using StillTime.Sts.Utility;
 
@@ -44,8 +45,7 @@ namespace StillTime.Sts.Nodes {
                 null,
                 false,
                 null,
-                new Dictionary<Variable, object>(),
-                new Dictionary<Variable, object>(),
+                new Dictionary<Variable, StsValue>(),
                 Enumerable.Empty<INode>(),
                 Enumerable.Empty<INode>(),
                 new StsColor(0, 0, 0),

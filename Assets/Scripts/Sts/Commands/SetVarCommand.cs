@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using StillTime.Sts.Nodes;
+using StillTime.Sts.Resources;
+using StillTime.Sts.Utility;
 
 namespace StillTime.Sts.Commands {
     public class SetVarCommand : Command, ISequentialCommand {
@@ -16,7 +18,7 @@ namespace StillTime.Sts.Commands {
                                     Dictionary<string, INode> nodeDictionary,
                                     List<INode> createdNodes) {
             Variable variable = CommandUtility.GetResource<Variable>(this, VarName, resourceDictionary);
-            if (!variable.TryParseValue(Value, out object varValue)) {
+            if (!variable.TryParseValue(Value, out StsValue varValue)) {
                 throw new ParsingException(LineNumber, Line, $"Invalid value {Value} for var type {variable.Type}");
             }
 

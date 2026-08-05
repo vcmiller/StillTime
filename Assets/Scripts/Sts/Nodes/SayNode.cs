@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using StillTime.Sts.Resources;
 using StillTime.Sts.Runtime;
 
 namespace StillTime.Sts.Nodes {

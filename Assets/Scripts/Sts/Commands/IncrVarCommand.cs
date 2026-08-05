@@ -1,13 +1,15 @@
 ﻿using System.Collections.Generic;
 using StillTime.Sts.Nodes;
+using StillTime.Sts.Resources;
+using StillTime.Sts.Utility;
 
 namespace StillTime.Sts.Commands {
     public class IncrVarCommand : Command, ISequentialCommand {
         public string VarName { get; }
 
-        public int Value { get; }
+        public decimal Value { get; }
 
-        public IncrVarCommand(int lineNumber, string line, string varName, int value) : base(lineNumber, line) {
+        public IncrVarCommand(int lineNumber, string line, string varName, decimal value) : base(lineNumber, line) {
             VarName = varName;
             Value = value;
         }
@@ -18,8 +20,8 @@ namespace StillTime.Sts.Commands {
                                     List<INode> createdNodes) {
             Variable variable = CommandUtility.GetResource<Variable>(this, VarName, resourceDictionary);
 
-            if (variable.Type != VarType.Int) {
-                throw new ParsingException(LineNumber, Line, "Increment is only valid for int variable");
+            if (variable.Type != StsValueType.Number) {
+                throw new ParsingException(LineNumber, Line, "Increment is only valid for number variable");
             }
 
             IncrementVariableNode incrementVariableNode = new(variable, Value);

@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using StillTime.Sts.Nodes;
+using StillTime.Sts.Resources;
 using StillTime.Sts.Utility;
 
 namespace StillTime.Sts.Runtime {
     public class TraversalState {
-        public IReadOnlyDictionary<Variable, object> RunVariables { get; }
-
-        public IReadOnlyDictionary<Variable, object> GlobalVariables { get; }
+        public IReadOnlyDictionary<Variable, StsValue> Variables { get; }
 
         public ReadOnlySet<INode> VisitedNodesCurrentRun { get; }
 
@@ -30,8 +29,7 @@ namespace StillTime.Sts.Runtime {
             INode nodeForTimeout,
             bool showCountdown,
             int? countdownValue,
-            IReadOnlyDictionary<Variable, object> runVariables,
-            IReadOnlyDictionary<Variable, object> globalVariables,
+            IReadOnlyDictionary<Variable, StsValue> variables,
             IEnumerable<INode> visitedNodesCurrentRun,
             IEnumerable<INode> visitedNodesOverall,
             StsColor bgColor,
@@ -40,8 +38,7 @@ namespace StillTime.Sts.Runtime {
             NodeForTimeout = nodeForTimeout;
             ShowCountdown = showCountdown;
             CountdownValue = countdownValue;
-            RunVariables = new Dictionary<Variable, object>(runVariables);
-            GlobalVariables = new Dictionary<Variable, object>(globalVariables);
+            Variables = new Dictionary<Variable, StsValue>(variables);
             VisitedNodesCurrentRun = new ReadOnlySet<INode>(visitedNodesCurrentRun);
             VisitedNodesOverall = new ReadOnlySet<INode>(visitedNodesOverall);
             BgColor = bgColor;
@@ -53,31 +50,20 @@ namespace StillTime.Sts.Runtime {
             NodeForTimeout = mutableState.NodeForTimeout;
             ShowCountdown = mutableState.ShowCountdown;
             CountdownValue = mutableState.CountdownValue;
-            RunVariables = mutableState.RunVariables;
-            GlobalVariables = mutableState.GlobalVariables;
+            Variables = mutableState.Variables;
             VisitedNodesCurrentRun = new ReadOnlySet<INode>(mutableState.VisitedNodesCurrentRun);
             VisitedNodesOverall = new ReadOnlySet<INode>(mutableState.VisitedNodesOverall);
             BgColor = mutableState.BgColor;
             WasCurrentNodeUnexplored = wasCurrentNodeUnexplored;
         }
 
-        public T GetVariableValue<T>(Variable variable) {
-            if (typeof(T) != variable.DefaultValue.GetType()) {
-                throw new InvalidOperationException($"Trying to get variable {variable.Identifier} value with invalid type {typeof(T)}");
-            }
-            return GetVariableValue(variable) is T t ? t : default;
-        }
-
-        public object GetVariableValue(Variable variable) {
-            return RunVariables.GetValueOrDefault(variable) ??
-                   GlobalVariables.GetValueOrDefault(variable) ??
-                   variable.DefaultValue;
+        public StsValue GetVariableValue(Variable variable) {
+            return Variables.TryGetValue(variable, out StsValue value) ? value : variable.DefaultValue;
         }
 
         private MutableTraversalState ToMutable() {
             return new MutableTraversalState {
-                RunVariables = new Dictionary<Variable, object>(RunVariables),
-                GlobalVariables = new Dictionary<Variable, object>(GlobalVariables),
+                Variables = new Dictionary<Variable, StsValue>(Variables),
                 VisitedNodesCurrentRun = new HashSet<INode>(VisitedNodesCurrentRun),
                 VisitedNodesOverall = new HashSet<INode>(VisitedNodesOverall),
                 CurrentNode = CurrentNode,

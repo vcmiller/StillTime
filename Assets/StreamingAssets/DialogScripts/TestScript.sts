@@ -1,6 +1,7 @@
 ﻿# this is a comment
+scope(run)
 var(bool, Gate1, run)
-var(int, Gate2, run)
+var(num, Gate2, run)
 bg(aaaaaa)
 goto(NodeName)
 
