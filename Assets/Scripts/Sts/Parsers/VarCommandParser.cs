@@ -1,14 +1,17 @@
-﻿using StillTime.Sts.Commands;
+﻿using System.Collections.Generic;
+using StillTime.Sts.Commands;
+using StillTime.Sts.Commands.Interfaces;
 
 namespace StillTime.Sts.Parsers {
     [CustomCommandParser("var")]
     public class VarCommandParser : ICommandParser {
-        public Command ParseCommand(string[] lines, ref int lineNumber, string cmd, string[] args, string text,
-                                    bool isTextContinued) {
-            int originalLineNumber = lineNumber;
-            string line = lines[lineNumber++];
-            ParsingUtility.ValidateCommand(line, originalLineNumber, cmd, args, text, 3, 3, false);
-            return new VarCommand(originalLineNumber, line, args[0], args[1], args[2]);
+        public void ParseCommand(ParsingState state, List<ICommand> commands) {
+            LineTokens tokens = Tokenizer.TokenizeAndAdvance(state);
+            Tokenizer.ValidateTokens(tokens, 3, 4, false);
+            string defaultValue = tokens.Arguments.Length == 4 ? tokens.Arguments[3] : null;
+            VarCommand command = new(tokens.LineNumber, tokens.OriginalLine, tokens.Arguments[0], tokens.Arguments[1],
+                                     tokens.Arguments[2], defaultValue);
+            commands.Add(command);
         }
     }
 }

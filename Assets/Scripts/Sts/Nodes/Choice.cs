@@ -7,27 +7,23 @@ namespace StillTime.Sts.Nodes {
 
         public INode Next { get; }
 
-        public bool BypassVisitedCheck { get; }
-
         public List<ICondition> Conditions { get; } = new();
 
-        public Choice(string text, INode next, bool bypassVisitedCheck) {
+        public Choice(string text, INode next) {
             Text = text;
             Next = next;
-            BypassVisitedCheck = bypassVisitedCheck;
         }
 
-        public string GetText(TraversalState state) {
+        public virtual string GetText(StateContainer state) {
             return Text;
         }
 
-        public bool IsAvailable(TraversalState state) {
-            if (!BypassVisitedCheck && state.VisitedNodesCurrentRun.Contains(Next)) return false;
+        public virtual bool IsAvailable(StateContainer state) {
             if (!Conditions.TrueForAll(g => g.CheckCondition(state))) return false;
             return true;
         }
 
-        public INode GetNextNode(TraversalState state) {
+        public virtual INode GetNextNode(StateContainer state) {
             return Next;
         }
     }

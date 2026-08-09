@@ -1,15 +1,18 @@
 ﻿using System.Collections.Generic;
+using StillTime.Sts.Commands.Interfaces;
+using StillTime.Sts.Commands.Utility;
 using StillTime.Sts.Nodes;
 using StillTime.Sts.Resources;
 using StillTime.Sts.Utility;
 
 namespace StillTime.Sts.Commands {
     public class VarCommand : Command, IResourceCommand {
-        public StsValueType Type { get; set; }
+        public StsValueType Type { get; }
         public string Name { get; }
-        public string Scope { get; set; }
+        public string Scope { get; }
+        public string DefaultValue { get; }
 
-        public VarCommand(int lineNumber, string line, string type, string name, string scope) :
+        public VarCommand(int lineNumber, string line, string type, string name, string scope, string defaultValue) :
             base(lineNumber, line) {
             Type = type switch {
                 "number" or "num" => StsValueType.Number,
@@ -20,17 +23,25 @@ namespace StillTime.Sts.Commands {
             };
             Name = name;
             Scope = scope;
+            DefaultValue = defaultValue;
         }
 
-        public void CreateResources(Dictionary<string, Resource> resources,
-                                    Dictionary<string, INode> nodeDictionary) {
-            Variable variable = new(Name, Type, Scope);
-            resources.Add(Name, variable);
+        public void CreateResources(GraphData graphData) {
+
+            StsValue defaultValue;
+            if (string.IsNullOrEmpty(DefaultValue)) {
+                defaultValue = StsValue.Default(Type);
+            } else if (!StsValue.TryParse(DefaultValue, Type, out defaultValue)) {
+                throw new ParsingException(
+                    LineNumber, Line, $"Failed to parse var default value of type {Type}: '{defaultValue}'");
+            }
+
+            Variable variable = new(Name, Type, Scope, defaultValue);
+            graphData.Resources.Add(Name, variable);
         }
 
-        public void ValidateResources(Dictionary<string, Resource> resourceDictionary,
-                                      Dictionary<string, INode> nodeDictionary) {
-            _ = CommandUtility.GetResource<Scope>(this, Scope, resourceDictionary);
+        public void ValidateResources(GraphData graphData) {
+            _ = graphData.GetResource<Scope>(this, Scope);
         }
     }
 }

@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using StillTime.Sts.Commands.Interfaces;
+using StillTime.Sts.Commands.Utility;
 using StillTime.Sts.Nodes;
 using StillTime.Sts.Resources;
 using StillTime.Sts.Utility;
@@ -14,20 +16,15 @@ namespace StillTime.Sts.Commands {
             Value = value;
         }
 
-        public void ApplyToSequence(ref ISequentialNode nextNode,
-                                    Dictionary<string, Resource> resourceDictionary,
-                                    Dictionary<string, INode> nodeDictionary,
-                                    List<INode> createdNodes) {
-            Variable variable = CommandUtility.GetResource<Variable>(this, VarName, resourceDictionary);
+        public void ApplyToSequence(NodeSequenceBuilder builder, GraphData graphData) {
+            Variable variable = graphData.GetResource<Variable>(this, VarName);
 
             if (variable.Type != StsValueType.Number) {
                 throw new ParsingException(LineNumber, Line, "Increment is only valid for number variable");
             }
 
             IncrementVariableNode incrementVariableNode = new(variable, Value);
-            createdNodes.Add(incrementVariableNode);
-            nextNode.Next = incrementVariableNode;
-            nextNode = incrementVariableNode;
+            builder.Append(incrementVariableNode);
         }
     }
 }

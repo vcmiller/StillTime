@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using StillTime.Sts.Commands.Interfaces;
+using StillTime.Sts.Commands.Utility;
 using StillTime.Sts.Nodes;
 using StillTime.Sts.Resources;
 using StillTime.Sts.Utility;
@@ -13,19 +15,14 @@ namespace StillTime.Sts.Commands {
             Value = value;
         }
 
-        public void ApplyToSequence(ref ISequentialNode nextNode,
-                                    Dictionary<string, Resource> resourceDictionary,
-                                    Dictionary<string, INode> nodeDictionary,
-                                    List<INode> createdNodes) {
-            Variable variable = CommandUtility.GetResource<Variable>(this, VarName, resourceDictionary);
-            if (!variable.TryParseValue(Value, out StsValue varValue)) {
+        public void ApplyToSequence(NodeSequenceBuilder builder, GraphData graphData) {
+            Variable variable = graphData.GetResource<Variable>(this, VarName);
+            if (!StsValue.TryParse(Value, variable.Type, out StsValue varValue)) {
                 throw new ParsingException(LineNumber, Line, $"Invalid value {Value} for var type {variable.Type}");
             }
 
             SetVariableNode setVariableNode = new(variable, varValue);
-            createdNodes.Add(setVariableNode);
-            nextNode.Next = setVariableNode;
-            nextNode = setVariableNode;
+            builder.Append(setVariableNode);
         }
     }
 }

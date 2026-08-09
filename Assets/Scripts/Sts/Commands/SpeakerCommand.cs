@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using StillTime.Sts.Commands.Interfaces;
+using StillTime.Sts.Commands.Utility;
 using StillTime.Sts.Nodes;
 using StillTime.Sts.Resources;
 using StillTime.Sts.Utility;
@@ -16,10 +18,9 @@ namespace StillTime.Sts.Commands {
             Text = text;
         }
 
-        public void CreateResources(Dictionary<string, Resource> resources,
-                                    Dictionary<string, INode> nodeDictionary) {
+        public void CreateResources(GraphData graphData) {
             Speaker speaker = new(Name, Color, Text);
-            resources.Add(Name, speaker);
+            graphData.Resources.Add(Name, speaker);
         }
     }
 }

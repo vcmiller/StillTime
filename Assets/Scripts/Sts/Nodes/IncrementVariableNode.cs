@@ -2,6 +2,7 @@
 using StillTime.Sts.Commands;
 using StillTime.Sts.Resources;
 using StillTime.Sts.Runtime;
+using StillTime.Sts.Runtime.Components;
 using StillTime.Sts.Utility;
 
 namespace StillTime.Sts.Nodes {
@@ -19,11 +20,12 @@ namespace StillTime.Sts.Nodes {
             Increment = increment;
         }
 
-        public override void ApplyToState(ref MutableTraversalState state) {
-            base.ApplyToState(ref state);
-            StsValue previousValue = state.GetVariableValue(Variable);
+        public override void ApplyToState(StateContainer state) {
+            base.ApplyToState(state);
+            VariablesComponent variables = state.GetOrCreate<VariablesComponent>();
+            StsValue previousValue = variables.GetVariableValue(Variable);
             StsValue newValue = new(previousValue.NumberValue + Increment);
-            state.SetVariableValue(Variable, newValue);
+            variables.SetVariableValue(Variable, newValue);
         }
     }
 }

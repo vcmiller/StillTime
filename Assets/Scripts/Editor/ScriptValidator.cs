@@ -2,9 +2,13 @@
 using System.Collections.Generic;
 using System.IO;
 using StillTime.Game;
+using StillTime.Sts;
 using StillTime.Sts.Commands;
+using StillTime.Sts.Commands.Interfaces;
+using StillTime.Sts.Commands.Utility;
 using StillTime.Sts.Nodes;
 using StillTime.Sts.Parsers;
+using StillTime.Utility;
 using UnityEditor;
 using UnityEngine;
 
@@ -14,8 +18,14 @@ namespace StillTime.Editor {
         private static readonly Dictionary<string, DateTime> LastValidatedFileDateTimes = new();
 
         static ScriptValidator() {
+            StsLibraryConfiguration.Run();
             EditorApplication.focusChanged += HandleFocusChanged;
-            ValidateScripts();
+
+            try {
+                ValidateScripts(false);
+            } catch (Exception ex) {
+                Debug.LogException(ex);
+            }
 
             string[] ext = EditorSettings.projectGenerationUserExtensions;
             if (Array.IndexOf(ext, "sts") < 0) {
@@ -27,18 +37,34 @@ namespace StillTime.Editor {
 
         private static void HandleFocusChanged(bool value) {
             if (!value) return;
-            ValidateScripts();
+
+            try {
+                ValidateScripts(false);
+            }  catch (Exception ex) {
+                Debug.LogException(ex);
+            }
         }
 
-        private static void ValidateScripts() {
+        [MenuItem("Sts/Validate")]
+        public static void ForceValidate() {
+            ValidateScripts(true);
+        }
+
+        private static void ValidateScripts(bool force) {
             foreach (string scriptPath in Directory.GetFiles(Application.streamingAssetsPath, "*.sts", SearchOption.AllDirectories)) {
                 DateTime lastModifiedTime = File.GetLastWriteTime(scriptPath);
 
-                if (LastValidatedFileDateTimes.TryGetValue(scriptPath, out DateTime lastValidateTime) &&
+                if (!force &&
+                    LastValidatedFileDateTimes.TryGetValue(scriptPath, out DateTime lastValidateTime) &&
                     lastValidateTime >= lastModifiedTime)
                     continue;
 
-                ValidateScript(scriptPath);
+                try {
+                    ValidateScript(scriptPath);
+                } catch (Exception ex) {
+                    Debug.LogException(ex);
+                }
+
                 LastValidatedFileDateTimes[scriptPath] = lastModifiedTime;
             }
         }
@@ -46,7 +72,7 @@ namespace StillTime.Editor {
         private static void ValidateScript(string path) {
             try {
                 string scriptText = File.ReadAllText(path);
-                List<Command> commands = ScriptParser.ParseScript(scriptText);
+                List<ICommand> commands = ScriptParser.ParseScript(scriptText);
                 GameGraph graph = GraphBuilder.BuildGraph(commands);
                 graph.Validate();
             } catch (ParsingException ex) {

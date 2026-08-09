@@ -1,20 +1,19 @@
 ﻿using System.Collections.Generic;
 using StillTime.Sts.Commands;
+using StillTime.Sts.Commands.Interfaces;
 
 namespace StillTime.Sts.Parsers {
     [CustomCommandParser("elif")]
     public class ElseIfCommandParser : ICommandParser {
-        public Command ParseCommand(string[] lines, ref int lineNumber, string cmd, string[] args, string text,
-                                    bool isTextContinued) {
-            int originalLineNumber = lineNumber;
-            string line = lines[lineNumber];
+        public void ParseCommand(ParsingState state, List<ICommand> commands) {
+            LineTokens tokens = Tokenizer.TokenizeAndAdvance(state);
+            Tokenizer.ValidateTokens(tokens, 1, 1, false);
+            ElseIfCommand command = new(tokens.LineNumber, tokens.OriginalLine, tokens.Arguments);
+            commands.Add(command);
 
-            List<Command> commands = ParsingUtility.ParseCondBlockCommand(cmd, args, text, lines, ref lineNumber, true);
-
-            ElseIfCommand command = new(originalLineNumber, line, args);
-            command.Commands.AddRange(commands);
-
-            return command;
+            if (!string.IsNullOrEmpty(tokens.Text)) {
+                state.Prepend(tokens.LineNumber, tokens.Text);
+            }
         }
     }
 }

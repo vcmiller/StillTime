@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using StillTime.Sts.Commands.Interfaces;
+using StillTime.Sts.Commands.Utility;
 using StillTime.Sts.Nodes;
 using StillTime.Sts.Resources;
 
@@ -18,6 +20,10 @@ namespace StillTime.Sts.Commands {
             createdNodes.Add(node);
             nextNode.Next = node;
             nextNode = node;
+        }
+
+        public void ApplyToSequence(NodeSequenceBuilder builder, GraphData graphData) {
+            builder.Append(new DelayNode(Time));
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using StillTime.Sts.Resources;
 using StillTime.Sts.Runtime;
+using StillTime.Sts.Runtime.Components;
 using StillTime.Sts.Utility;
 
 namespace StillTime.Sts.Nodes {
@@ -18,9 +19,9 @@ namespace StillTime.Sts.Nodes {
             Value = value;
         }
 
-        public override void ApplyToState(ref MutableTraversalState state) {
-            base.ApplyToState(ref state);
-            state.SetVariableValue(Variable, Value);
+        public override void ApplyToState(StateContainer state) {
+            base.ApplyToState(state);
+            state.GetOrCreate<VariablesComponent>().SetVariableValue(Variable, Value);
         }
     }
 }

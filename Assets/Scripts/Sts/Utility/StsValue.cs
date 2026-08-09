@@ -83,6 +83,37 @@ namespace StillTime.Sts.Utility {
                 _ => throw new ArgumentOutOfRangeException(),
             };
         }
+
+        public static bool TryParse(string str, StsValueType type, out StsValue value) {
+            switch (type) {
+                case StsValueType.Number:
+                    bool isInt = decimal.TryParse(str, out decimal decValue);
+                    value = new StsValue(decValue);
+                    return isInt;
+                case StsValueType.Color:
+                    bool isColor = StsColor.TryParseHex(str, out StsColor colorValue);
+                    value = new StsValue(colorValue);
+                    return isColor;
+                case StsValueType.Bool:
+                    bool isBool = bool.TryParse(str, out bool boolValue);
+                    value = new StsValue(boolValue);
+                    return isBool;
+                case StsValueType.String:
+                    value = new StsValue(str);
+                    return true;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+
+        public static StsValue Default(StsValueType type) => type switch {
+            StsValueType.Number => new StsValue(0),
+            StsValueType.Color => new StsValue(default(StsColor)),
+            StsValueType.String => new StsValue(string.Empty),
+            StsValueType.Bool => new StsValue(false),
+            StsValueType.None => default,
+            _ => throw new ArgumentOutOfRangeException(),
+        };
     }
 
     public enum StsValueType {

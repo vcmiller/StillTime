@@ -4,9 +4,13 @@ using System.IO;
 using Cysharp.Threading.Tasks;
 using Infohazard.Core;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using StillTime.Sts.Commands;
+using StillTime.Sts.Commands.Interfaces;
+using StillTime.Sts.Commands.Utility;
 using StillTime.Sts.Nodes;
 using StillTime.Sts.Parsers;
+using StillTime.Utility;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -20,6 +24,7 @@ namespace StillTime.Game {
         private const string SaveGameKey = "StillTime.SaveData";
 
         private void Start() {
+            StsLibraryConfiguration.Run();
             LoadFromWebAsync().Forget();
         }
 
@@ -40,7 +45,7 @@ namespace StillTime.Game {
         }
 
         private void LoadFromScriptText(string scriptText) {
-            List<Command> commands = ScriptParser.ParseScript(scriptText);
+            List<ICommand> commands = ScriptParser.ParseScript(scriptText);
             GameGraph graph = GraphBuilder.BuildGraph(commands);
             graph.Validate();
 
@@ -52,8 +57,7 @@ namespace StillTime.Game {
                 _gameRunner.StartNewGame();
             } else {
                 try {
-                    SerializedTraversalState serializedState =
-                        JsonConvert.DeserializeObject<SerializedTraversalState>(saveData);
+                    JToken serializedState = JToken.Parse(saveData);
                     _gameRunner.LoadGame(serializedState);
                 } catch (Exception ex) {
                     Debug.LogException(ex);
@@ -75,7 +79,7 @@ namespace StillTime.Game {
         }
 
         private void SaveGame() {
-            SerializedTraversalState saveData = _gameRunner.SaveGame();
+            JToken saveData = _gameRunner.SaveGame();
             string json = JsonConvert.SerializeObject(saveData);
             PlayerPrefs.SetString(SaveGameKey, json);
         }

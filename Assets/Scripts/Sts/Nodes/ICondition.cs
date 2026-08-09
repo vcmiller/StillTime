@@ -2,6 +2,6 @@
 
 namespace StillTime.Sts.Nodes {
     public interface ICondition {
-        public bool CheckCondition(TraversalState traversalState);
+        public bool CheckCondition(StateContainer traversalState);
     }
 }

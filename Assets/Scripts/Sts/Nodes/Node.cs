@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using StillTime.Sts.Runtime;
@@ -20,8 +21,10 @@ namespace StillTime.Sts.Nodes {
             return GetType().Name;
         }
 
-        public abstract IEnumerable<INode> GetPossibleNextNodes(TraversalState state);
+        public abstract IEnumerable<INode> GetPossibleNextNodes(StateContainer state);
 
-        public virtual void ApplyToState(ref MutableTraversalState state) { }
+        public virtual void ApplyToState(StateContainer state) { }
+
+        public virtual void RegisterStateTypes(HashSet<Type> stateTypes) { }
     }
 }

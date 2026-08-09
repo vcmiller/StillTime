@@ -1,25 +1,28 @@
-﻿using StillTime.Sts.Commands;
+﻿using System.Collections.Generic;
+using StillTime.Sts.Commands;
+using StillTime.Sts.Commands.Interfaces;
 using StillTime.Sts.Utility;
 
 namespace StillTime.Sts.Parsers {
     [CustomCommandParser("bg")]
     public class BgCommandParser : ICommandParser {
-        public Command ParseCommand(string[] lines, ref int lineNumber, string cmd, string[] args, string text,
-                                    bool isTextContinued) {
-            int originalLineNumber = lineNumber;
-            string line = lines[lineNumber++];
+        public void ParseCommand(ParsingState state, List<ICommand> commands) {
+            LineTokens tokens = Tokenizer.TokenizeAndAdvance(state);
+            Tokenizer.ValidateTokens(tokens, 1, 2, false);
 
-            ParsingUtility.ValidateCommand(line, originalLineNumber, cmd, args, text, 1, 2, false);
-            if (!StsColor.TryParseHex(args[0], out StsColor bgColor)) {
-                throw new ParsingException(originalLineNumber, line, $"Invalid color value {args[1]}");
+            if (!StsColor.TryParseHex(tokens.Arguments[0], out StsColor bgColor)) {
+                throw new ParsingException(tokens.LineNumber, tokens.OriginalLine,
+                                           $"Invalid color value {tokens.Arguments[0]}");
             }
 
             float bgTime = 0;
-            if (args.Length > 1 && !float.TryParse(args[1], out bgTime)) {
-                throw new ParsingException(originalLineNumber, line, $"Invalid float value {args[1]}");
+            if (tokens.Arguments.Length > 1 && !float.TryParse(tokens.Arguments[1], out bgTime)) {
+                throw new ParsingException(tokens.LineNumber, tokens.OriginalLine,
+                                           $"Invalid float value {tokens.Arguments[1]}");
             }
 
-            return new BgCommand(originalLineNumber, line, bgColor, bgTime);
+            BgCommand command = new(tokens.LineNumber, tokens.OriginalLine,bgColor, bgTime);
+            commands.Add(command);
         }
     }
 }

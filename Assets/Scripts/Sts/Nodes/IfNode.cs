@@ -14,7 +14,7 @@ namespace StillTime.Sts.Nodes {
             Conditions = conditions;
         }
 
-        public INode GetSingleNextNode(TraversalState state) {
+        public INode GetSingleNextNode(StateContainer state) {
             if (Conditions.All(c => c.CheckCondition(state))) {
                 return TrueBranch;
             } else {
@@ -22,7 +22,7 @@ namespace StillTime.Sts.Nodes {
             }
         }
 
-        public override IEnumerable<INode> GetPossibleNextNodes(TraversalState state) {
+        public override IEnumerable<INode> GetPossibleNextNodes(StateContainer state) {
             yield return GetSingleNextNode(state);
         }
     }

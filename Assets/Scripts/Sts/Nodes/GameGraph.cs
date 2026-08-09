@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.Logging;
 using StillTime.Sts.Resources;
 using StillTime.Sts.Runtime;
+using StillTime.Sts.Runtime.Components;
 using StillTime.Sts.Utility;
 
 namespace StillTime.Sts.Nodes {
@@ -13,13 +15,17 @@ namespace StillTime.Sts.Nodes {
 
         public IReadOnlyDictionary<string, Resource> ResourcesByIdentifier { get; }
 
+        public IReadOnlyList<Type> StateComponentTypes { get; }
+
         public GameGraph(
             INode rootNode,
             IReadOnlyDictionary<string, INode> nodesByIdentifier,
-            IReadOnlyDictionary<string, Resource> resourcesByIdentifier) {
+            IReadOnlyDictionary<string, Resource> resourcesByIdentifier,
+            List<Type> stateComponentTypes) {
             RootNode = rootNode;
             NodesByIdentifier = nodesByIdentifier;
             ResourcesByIdentifier = resourcesByIdentifier;
+            StateComponentTypes = stateComponentTypes;
         }
 
         public void Validate() {
@@ -31,34 +37,29 @@ namespace StillTime.Sts.Nodes {
                 if (!seenNodes.Add(node)) continue;
 
                 if (string.IsNullOrEmpty(node.FullIdentifier)) {
-                    StsLibrary.Logger.LogError(
-                        "Node {Result} has empty identifier. Creation stack trace:\n{StackTrace}",
-                        node,
-                        node.CreationStackTrace);
+                    StsLibrary.LogError(
+                        $"Node {node} has empty identifier. Creation stack trace:\n{node.CreationStackTrace}");
                 }
             }
         }
 
-        public TraversalState BuildInitialState() {
-            return new TraversalState(
-                RootNode,
-                null,
-                false,
-                null,
-                new Dictionary<Variable, StsValue>(),
-                Enumerable.Empty<INode>(),
-                Enumerable.Empty<INode>(),
-                new StsColor(0, 0, 0),
-                true);
+        public StateContainer BuildEmptyState() {
+            StateContainer container = new();
+
+            foreach (Type type in StateComponentTypes) {
+                IStateComponent component = (IStateComponent)Activator.CreateInstance(type);
+                container.Set(type, component);
+            }
+
+            return container;
         }
 
-        public bool TryGetVariable(string name, out Variable variable) {
-            if (ResourcesByIdentifier.TryGetValue(name, out Resource resource) &&
-                resource is Variable temp) {
-                variable = temp;
+        public bool TryGetResource<T>(string name, out T result) where T : Resource {
+            if (ResourcesByIdentifier.TryGetValue(name, out Resource resource) && resource is T temp) {
+                result = temp;
                 return true;
             } else {
-                variable = null;
+                result = null;
                 return false;
             }
         }

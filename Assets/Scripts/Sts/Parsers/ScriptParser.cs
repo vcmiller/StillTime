@@ -1,21 +1,16 @@
 ﻿using System.Collections.Generic;
 using StillTime.Sts.Commands;
+using StillTime.Sts.Commands.Interfaces;
 
 namespace StillTime.Sts.Parsers {
     public static class ScriptParser {
-        public static List<Command> ParseScript(string scriptContent) {
+        public static List<ICommand> ParseScript(string scriptContent) {
             string[] lines = scriptContent.Split('\n');
-            List<Command> commands = new();
+            List<ICommand> commands = new();
+            ParsingState state = new(lines, 0);
 
-            for (int i = 0; i < lines.Length;) {
-                Command command = CommandParserDelegator.ParseCommand(lines, ref i);
-                if (command == null) continue;
-
-                if (command is not (ISequentialCommand or IResourceCommand)) {
-                    throw new ParsingException(command.LineNumber, command.Line, "Invalid command at root level");
-                }
-
-                commands.Add(command);
+            while (!state.IsEnded) {
+                CommandParserDelegator.ParseLine(state, commands);
             }
 
             return commands;

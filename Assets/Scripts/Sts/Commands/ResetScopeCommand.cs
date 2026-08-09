@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using StillTime.Sts.Commands.Interfaces;
+using StillTime.Sts.Commands.Utility;
 using StillTime.Sts.Nodes;
 using StillTime.Sts.Resources;
 
@@ -10,14 +11,10 @@ namespace StillTime.Sts.Commands {
             Scope = scope;
         }
 
-        public void ApplyToSequence(ref ISequentialNode nextNode, Dictionary<string, Resource> resourceDictionary,
-                                    Dictionary<string, INode> nodeDictionary,
-                                    List<INode> createdNodes) {
-            Scope scope = CommandUtility.GetResource<Scope>(this, Scope, resourceDictionary);
+        public void ApplyToSequence(NodeSequenceBuilder builder, GraphData graphData) {
+            Scope scope = graphData.GetResource<Scope>(this, Scope);
             ResetScopeNode node = new(scope);
-            createdNodes.Add(node);
-            nextNode.Next = node;
-            nextNode = node;
+            builder.Append(node);
         }
     }
 }

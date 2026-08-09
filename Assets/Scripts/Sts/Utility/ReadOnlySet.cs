@@ -42,7 +42,7 @@ namespace StillTime.Sts.Utility {
                 TOther current = converter(item);
 
                 if (current is null) {
-                    StsLibrary.Logger.LogError("Encountered item with null conversion value: {Item}", item);
+                    StsLibrary.LogError($"Encountered item with null conversion value: {item}");
                     continue;
                 }
 

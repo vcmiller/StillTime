@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using StillTime.Sts.Resources;
 using StillTime.Sts.Runtime;
+using StillTime.Sts.Runtime.Components;
 
 namespace StillTime.Sts.Nodes {
     public class ResetScopeNode : SequentialNode {
@@ -10,13 +11,11 @@ namespace StillTime.Sts.Nodes {
             Scope = scope;
         }
 
-        public override void ApplyToState(ref MutableTraversalState state) {
-            base.ApplyToState(ref state);
+        public override void ApplyToState(StateContainer state) {
+            base.ApplyToState(state);
 
-            foreach (Variable variable in state.Variables.Keys.ToList()) {
-                if (variable.ScopeId == Scope.Identifier) {
-                    state.Variables.Remove(variable);
-                }
+            foreach (IScopedComponent scopedComponent in state.Components.Values.OfType<IScopedComponent>()) {
+                scopedComponent.ResetScope(Scope);
             }
         }
     }

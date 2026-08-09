@@ -1,38 +1,19 @@
 ﻿using System.Collections.Generic;
 using StillTime.Sts.Commands;
+using StillTime.Sts.Commands.Interfaces;
 
 namespace StillTime.Sts.Parsers {
     [CustomCommandParser("if")]
     public class IfCommandParser : ICommandParser {
-        public Command ParseCommand(string[] lines, ref int lineNumber, string cmd, string[] args, string text,
-                                    bool isTextContinued) {
-            int originalLineNumber = lineNumber;
-            string line = lines[lineNumber];
+        public void ParseCommand(ParsingState state, List<ICommand> commands) {
+            LineTokens tokens = Tokenizer.TokenizeAndAdvance(state);
+            Tokenizer.ValidateTokens(tokens, 1, 1, false, true);
+            IfCommand command = new(tokens.LineNumber, tokens.OriginalLine, tokens.Arguments);
+            commands.Add(command);
 
-            List<Command> commands = ParsingUtility.ParseCondBlockCommand(cmd, args, text, lines, ref lineNumber, true);
-
-            IfCommand ifCommand = new(originalLineNumber, line, args);
-            ifCommand.Commands.AddRange(commands);
-
-            while (lineNumber < lines.Length) {
-                int cmdOriginalLineNumber = lineNumber;
-                Command subCommand = CommandParserDelegator.ParseCommand(lines, ref lineNumber);
-
-                if (subCommand == null) continue;
-
-                if (subCommand is ElseIfCommand elseIfCommand) {
-                    ifCommand.ElseIfCommands.Add(elseIfCommand);
-                    continue;
-                } else if (subCommand is ElseCommand elseCommand) {
-                    ifCommand.ElseCommand = elseCommand;
-                    break;
-                }
-
-                lineNumber = cmdOriginalLineNumber;
-                break;
+            if (!string.IsNullOrEmpty(tokens.Text)) {
+                state.Prepend(tokens.LineNumber, tokens.Text);
             }
-
-            return ifCommand;
         }
     }
 }

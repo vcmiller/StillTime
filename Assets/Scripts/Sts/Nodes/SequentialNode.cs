@@ -2,14 +2,14 @@
 using StillTime.Sts.Runtime;
 
 namespace StillTime.Sts.Nodes {
-    public class SequentialNode : Node, ISequentialNode {
+    public abstract class SequentialNode : Node, ISequentialNode {
         public INode Next { get; set; }
 
-        public override IEnumerable<INode> GetPossibleNextNodes(TraversalState state) {
+        public override IEnumerable<INode> GetPossibleNextNodes(StateContainer state) {
             yield return GetSingleNextNode(state);
         }
 
-        public virtual INode GetSingleNextNode(TraversalState state) {
+        public virtual INode GetSingleNextNode(StateContainer state) {
             return Next;
         }
     }

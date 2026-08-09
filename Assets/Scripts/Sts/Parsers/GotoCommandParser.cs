@@ -1,16 +1,14 @@
-﻿using StillTime.Sts.Commands;
+﻿using System.Collections.Generic;
+using StillTime.Sts.Commands;
+using StillTime.Sts.Commands.Interfaces;
 
 namespace StillTime.Sts.Parsers {
     [CustomCommandParser("goto")]
-    [CustomCommandParser("goto_reset")]
     public class GotoCommandParser : ICommandParser {
-        public Command ParseCommand(string[] lines, ref int lineNumber, string cmd, string[] args, string text,
-                                    bool isTextContinued) {
-            int originalLineNumber = lineNumber;
-            string line = lines[lineNumber++];
-            ParsingUtility.ValidateCommand(line, originalLineNumber, cmd, args, text, 1, 1, false);
-            bool reset = cmd is "goto_reset";
-            return new GotoCommand(originalLineNumber, line, args[0], reset);
+        public void ParseCommand(ParsingState state, List<ICommand> commands) {
+            LineTokens tokens = Tokenizer.TokenizeAndAdvance(state);
+            Tokenizer.ValidateTokens(tokens, 1, 1, false);
+            commands.Add(new GotoCommand(tokens.LineNumber, tokens.OriginalLine, tokens.Arguments[0]));
         }
     }
 }

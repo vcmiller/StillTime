@@ -11,11 +11,11 @@ namespace StillTime.Sts.Nodes {
             Cost = speaker != null ? text.Length / 12 : 5;
         }
 
-        public override IEnumerable<INode> GetPossibleNextNodes(TraversalState state) {
+        public override IEnumerable<INode> GetPossibleNextNodes(StateContainer state) {
             yield return Next;
         }
 
-        public INode GetSingleNextNode(TraversalState state) {
+        public INode GetSingleNextNode(StateContainer state) {
             return Next;
         }
     }

@@ -1,5 +1,5 @@
 ﻿using StillTime.Sts.Resources;
-using StillTime.Sts.Runtime;
+using StillTime.Sts.Runtime.Components;
 
 namespace StillTime.Sts.Nodes {
     public class BoolCondition : VariableCondition {
@@ -9,8 +9,8 @@ namespace StillTime.Sts.Nodes {
             Value = value;
         }
 
-        public override bool CheckCondition(TraversalState traversalState) {
-            return traversalState.GetVariableValue(Variable).ToBool() == Value;
+        protected override bool CheckCondition(VariablesComponent variables) {
+            return variables.GetVariableValue(Variable).ToBool() == Value;
         }
     }
 }

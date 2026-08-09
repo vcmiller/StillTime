@@ -1,0 +1,66 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Newtonsoft.Json.Linq;
+using StillTime.Sts.Nodes;
+using StillTime.Sts.Resources;
+using StillTime.Sts.Utility;
+
+namespace StillTime.Sts.Runtime.Components {
+    public class VariablesComponent : IScopedComponent {
+        public Dictionary<Variable, StsValue> Variables { get; }
+
+        public VariablesComponent() {
+            Variables = new Dictionary<Variable, StsValue>();
+        }
+
+        public VariablesComponent(Dictionary<Variable, StsValue> variables) {
+            Variables = variables;
+        }
+
+        public void SetVariableValue(Variable variable, StsValue value) {
+            if (variable.DefaultValue.GetType() != value.GetType()) {
+                throw new ArgumentException($"Invalid value {value} specified for variable {variable}.");
+            }
+
+            Variables[variable] = value;
+        }
+
+        public StsValue GetVariableValue(Variable variable) {
+            return Variables.TryGetValue(variable, out StsValue value) ? value : variable.DefaultValue;
+        }
+
+        public void ResetScope(Scope scope) {
+            foreach (Variable variable in Variables.Keys.ToArray()) {
+                if (variable.ScopeId != scope.Identifier) continue;
+                Variables.Remove(variable);
+            }
+        }
+
+        public IStateComponent Clone() {
+            return new VariablesComponent(new Dictionary<Variable, StsValue>(Variables));
+        }
+
+        public JToken Serialize() {
+            JObject obj = new();
+            foreach ((Variable variable, StsValue value) in Variables) {
+                obj[variable.Identifier] = value.ToString();
+            }
+
+            return obj;
+        }
+
+        public bool Deserialize(GameGraph graph, JToken token) {
+            if (token is not JObject obj) return false;
+            foreach ((string key, JToken subToken) in obj) {
+                if (!graph.TryGetResource(key, out Variable variable) ||
+                    subToken.Type != JTokenType.String ||
+                    !StsValue.TryParse(subToken.ToObject<string>(), variable.Type, out StsValue value)) continue;
+
+                Variables[variable] = value;
+            }
+
+            return true;
+        }
+    }
+}

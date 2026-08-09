@@ -2,6 +2,6 @@
 
 namespace StillTime.Sts.Nodes {
     public interface ISingleNextNode : INode {
-        public INode GetSingleNextNode(TraversalState state);
+        public INode GetSingleNextNode(StateContainer state);
     }
 }

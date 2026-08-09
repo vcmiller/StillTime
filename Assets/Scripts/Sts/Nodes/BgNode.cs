@@ -1,4 +1,6 @@
-﻿using StillTime.Sts.Runtime;
+﻿using StillTime.Sts.Resources;
+using StillTime.Sts.Runtime;
+using StillTime.Sts.Runtime.Components;
 using StillTime.Sts.Utility;
 
 namespace StillTime.Sts.Nodes {
@@ -7,14 +9,18 @@ namespace StillTime.Sts.Nodes {
 
         public float Time { get; }
 
-        public BgNode(StsColor color, float time) {
+        public Variable Variable { get; }
+
+        public BgNode(StsColor color, float time, Variable variable) {
             Color = color;
             Time = time;
+            Variable = variable;
         }
 
-        public override void ApplyToState(ref MutableTraversalState state) {
-            base.ApplyToState(ref state);
-            state.BgColor = Color;
+        public override void ApplyToState(StateContainer state) {
+            base.ApplyToState(state);
+            VariablesComponent component = state.GetOrCreate<VariablesComponent>();
+            component.SetVariableValue(Variable, new StsValue(Color));
         }
     }
 }

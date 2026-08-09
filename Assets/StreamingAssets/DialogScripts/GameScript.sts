@@ -52,11 +52,21 @@ var(bool, Katie_CameOut, Scope_Run)
 # Chosen name. Set by a branch with unlockable options.
 var(string, ChosenName, Scope_Global)
 
+var(num, Countdown, Scope_Run, -1)
+
+var(bool, InterruptTimeoutCountdownZero_Enabled, Scope_Run, false)
+interrupt(InterruptTimeoutCountdownZero, TimeoutEnding, Scope_Run, Countdown == 0)
+
+######################################### Macros ##########################################################
+
+macro(choice_once, target, conditions...): text
+    choice($target, !visited(Scope_Run, $target), $conditions): {$text}
+!end
+
 ######################################### Introduction Scene ##############################################
 
 label(Intro)
     bg(0D2411)
-    timeout(TimeoutEnding)
     say: Hello! Welcome to my little text adventure, created for the GMTK Game Jam 2026.
     say: Before we get started, I want you to know this game deals with some heavy topics, including:
     say: Death and grief
@@ -87,20 +97,21 @@ label(FirstRun)
     say: The asshole in charge is giving a speech from a bunker, ranting about the fire and fury that will rain down on our enemies.
     say: The view changes to a map showing every major city in the US. Each one has a timer next to it, counting down.
     say: I find us, nothing more than a little dot on a screen. With a number next to it. <color=orange>00:56:31</color>.
-    countdown(true, 3391)
+    set(Countdown, 3391)
+    set(InterruptTimeoutCountdownZero_Enabled, true)
     say: My parents don't say anything. I think I see a tear in my dad's eye.
     goto(InitialChoice)
 end
 
 label(LaterRun)
     bg(0D2411)
-    timeout(TimeoutEnding)
     say: It's a warm, rainy July evening. I'm in bed, passing in and out of sleep.
     say: My brain is processing something it hasn't decided is a dream or a... memory?
     say: My phone blasts an alarm. Wait. I've heard this before. Right?
     say: I head to the living room. See the TV. How do I know what's happening? Did I just dream this?
     say: On the TV, there's a map of major US cities, all showing little timers. Next to us is a number: <color=orange>00:56:31</color>.
-    countdown(true, 3391)
+    set(Countdown, 3391)
+    set(InterruptTimeoutCountdownZero_Enabled, true)
     say: My parents don't say anything. I think I see a tear in my dad's eye.
     say: There's something important I need to remember. Or a lot of things.
     goto(InitialChoice)
@@ -108,9 +119,9 @@ end
 
 label(InitialChoice)
     branch: Nobody seems to want to break the silence.
-        choice(ParentConversation_Entry): Mom... Dad...
-        choice_always(Bedroom_Entry): I need to be alone.
-        choice(TryToDriveAlone_Entry): What are you doing? We need to get out of here!
+        choice_once(ParentConversation_Entry): Mom... Dad...
+        choice(Bedroom_Entry): I need to be alone.
+        choice_once(TryToDriveAlone_Entry): What are you doing? We need to get out of here!
     end
 end
 
@@ -124,11 +135,11 @@ label(ParentConversation_Entry)
     cost(60)
     say(Mom): If this is it, I'm so glad we're here together.
     branch(Dad): I just... Everett...
-        choice(ParentConversation_ChooseTopic_Warm): I really love you both.
-        choice(ParentConversation_ChooseTopic_Angry): It's not fair!
-        choice(ParentConversation_ChooseTopic): ...
-        choice(ParentConversation_ComingOut, Gate_FullRealization): I need to tell you both something. This might be kind of a shock.
-        choice_always(InitialChoice): I don't feel like talking right now.
+        choice_once(ParentConversation_ChooseTopic_Warm): I really love you both.
+        choice_once(ParentConversation_ChooseTopic_Angry): It's not fair!
+        choice_once(ParentConversation_ChooseTopic): ...
+        choice_once(ParentConversation_ComingOut, Gate_FullRealization): I need to tell you both something. This might be kind of a shock.
+        choice(InitialChoice): I don't feel like talking right now.
     end
 end
 
@@ -153,12 +164,12 @@ end
 
 label(ParentConversation_Childhood_Choice)
     branch(Mom): I just keep wondering what's going on in your head.
-        choice(ParentConversation_Childhood_WellBehaved): I only ever know how to follow the rules.
-        choice(ParentConversation_Childhood_Lonely): I just feel so lonely.
-        choice(ParentConversation_Childhood_FitIn): I tried so hard to fit in.
-        choice(ParentConversation_Alienation, Gate_BadFriendExperience): Even now, I feel like I don't belong.
-        choice(ParentConversation_ComingOut, Gate_FullRealization): Actually, I think I know. This might be kind of a shock.
-        choice_always(InitialChoice): I'm sorry! I just don't know how to talk about this.
+        choice_once(ParentConversation_Childhood_WellBehaved): I only ever know how to follow the rules.
+        choice_once(ParentConversation_Childhood_Lonely): I just feel so lonely.
+        choice_once(ParentConversation_Childhood_FitIn): I tried so hard to fit in.
+        choice_once(ParentConversation_Alienation, Gate_BadFriendExperience): Even now, I feel like I don't belong.
+        choice_once(ParentConversation_ComingOut, Gate_FullRealization): Actually, I think I know. This might be kind of a shock.
+        choice(InitialChoice): I'm sorry! I just don't know how to talk about this.
     end
 end
 
@@ -251,12 +262,12 @@ end
 
 label(ParentConversation_Alienation_Choice)
     branch(Mom): Please just tell us what's bothering you.
-        choice_always(InitialChoice): I can't.
-        choice(ParentConversation_Alienation_Choice_Haircut, Gate_SignHaircut): I've never been happy with how I look.
-        choice(ParentConversation_Alienation_Choice_BestFriend, Gate_MissBestFriend): I feel so much closer to female friends.
-        choice(ParentConversation_Alienation_Choice_LockerRoom, Gate_SignLockerRoom): I'm so uncomfortable around men.
-        choice(ParentConversation_Alienation_Choice_Sister, Gate_SignWantSister): Why do I specifically wish I had a sister?
-        choice(ParentConversation_Realization, Num_Alienation_Choice >= 4): What if... I'm not supposed to be a boy at all?
+        choice(InitialChoice): I can't.
+        choice_once(ParentConversation_Alienation_Choice_Haircut, Gate_SignHaircut): I've never been happy with how I look.
+        choice_once(ParentConversation_Alienation_Choice_BestFriend, Gate_MissBestFriend): I feel so much closer to female friends.
+        choice_once(ParentConversation_Alienation_Choice_LockerRoom, Gate_SignLockerRoom): I'm so uncomfortable around men.
+        choice_once(ParentConversation_Alienation_Choice_Sister, Gate_SignWantSister): Why do I specifically wish I had a sister?
+        choice_once(ParentConversation_Realization, Num_Alienation_Choice >= 4): What if... I'm not supposed to be a boy at all?
     end
 end
 
@@ -329,11 +340,11 @@ label(ParentConversation_Realization)
     say: I'll say I'm a man and everything will be fine.
     say: Well not the nuclear armageddon part. But the awkward silence will be fine.
     branch: Ok, for real this time.
-        choice(ParentConversation_Realization_BackOut): I'm a man.
-        choice(ParentConversation_Realization_BackOut): I wish I was a real man.
-        choice(ParentConversation_Realization_BackOut): I'm Everett Barnes.
-        choice(ParentConversation_Realization_BackOut): Sorry I misspoke.
-        choice(ParentConversation_Realization_Accept): <sub>I think I wish I was a girl.</sub>
+        choice_once(ParentConversation_Realization_BackOut): I'm a man.
+        choice_once(ParentConversation_Realization_BackOut): I wish I was a real man.
+        choice_once(ParentConversation_Realization_BackOut): I'm Everett Barnes.
+        choice_once(ParentConversation_Realization_BackOut): Sorry I misspoke.
+        choice_once(ParentConversation_Realization_Accept): <sub>I think I wish I was a girl.</sub>
     end
 end
 
@@ -356,7 +367,7 @@ label(ParentConversation_Realization_Accept)
     say(Mom): Of course we love you no matter what.
     say(Mom): I just don't know what we can do about that now.
     say(Self): Yeah. I don't know. I'm sorry.
-    countdown(false)
+    set(Countdown, -1)
     say: I should be panicking. I'm about to die and I just realized how meaningless my life as a man has been.
     say: And I had to turn our last moments into an awkward... what? Coming out? Coming out as what?
     say: But I'm not thinking about the end.
@@ -379,8 +390,8 @@ end
 
 label(ParentConversation_ComingOut)
     branch(Dad): What it it son? You can tell us anything.
-        choice(ParentConversation_ComingOut_Confident, Gate_ComingOutPrep, Gate_SignWantSister): Mom, Dad, I'm trans.
-        choice(ParentConversation_ComingOut_NotConfident): I think I might be trans.
+        choice_once(ParentConversation_ComingOut_Confident, Gate_ComingOutPrep, Gate_SignWantSister): Mom, Dad, I'm trans.
+        choice_once(ParentConversation_ComingOut_NotConfident): I think I might be trans.
     end
 end
 
@@ -405,13 +416,13 @@ label(ParentConversation_ComingOut_Confident)
     say(Dad): I wish we had more time to get to know you, but I truly am thankful, like your mom said.
     say: He pulls us both in for a group hug.
     branch: I could stay like this forever. For the rest of my life.
-        choice(ParentConversation_ComingOut_Confident_Ending): Stay like this forever.
-        choice(ParentConversation_ComingOut_Confident_Choice): Actually, there's something else.
+        choice_once(ParentConversation_ComingOut_Confident_Ending): Stay like this forever.
+        choice_once(ParentConversation_ComingOut_Confident_Choice): Actually, there's something else.
     end
 end
 
 label(ParentConversation_ComingOut_Confident_Ending)
-    countdown(false)
+    set(Countdown, -1)
     say: I'm not sure how long it lasts. Time just stands still.
     say: I've been here hugging my parents for hours. Days. Years. A fraction of a second.
     say: It could never be enough time.
@@ -437,9 +448,9 @@ end
 
 label(ParentConversation_ComingOut_Confident_Choice)
     branch(Mom): It seems like something else is on your mind Ever... I mean {ChosenName}! I'm sorry!
-        choice(Bedroom_Entry): I need to be alone for a bit.
-        choice(ParentConversation_ComingOut_Confident_Driving): We need to get out of here!
-        choice(ParentConversation_ComingOut_Confident_Ending): Never mind. It's not important.
+        choice_once(Bedroom_Entry): I need to be alone for a bit.
+        choice_once(ParentConversation_ComingOut_Confident_Driving): We need to get out of here!
+        choice_once(ParentConversation_ComingOut_Confident_Ending): Never mind. It's not important.
     end
 end
 
@@ -453,9 +464,9 @@ label(ParentConversation_ComingOut_Confident_Driving)
     say(Mom): I would have loved to get to know you as you are.
     say(Mom): But if it's a choice between dying on the freeway while sitting in traffic, and spending my last moments in my home with the two people I love most, I know what I'm choosing.
     branch: What now then?
-        choice(ParentConversation_ComingOut_Confident_Ending): Yeah. You're right.
-        choice(ParentConversation_ComingOut_Confident_Driving_Alone): No. I can't. I need to go, even if it's alone.
-        choice(ParentConversation_ComingOut_Confident_Driving_Together, Gate_ParentsNeedTime, Gate_SecretRoad): Oh my god. I've got it!
+        choice_once(ParentConversation_ComingOut_Confident_Ending): Yeah. You're right.
+        choice_once(ParentConversation_ComingOut_Confident_Driving_Alone): No. I can't. I need to go, even if it's alone.
+        choice_once(ParentConversation_ComingOut_Confident_Driving_Together, Gate_ParentsNeedTime, Gate_SecretRoad): Oh my god. I've got it!
     end
 end
 
@@ -486,9 +497,9 @@ label(ParentConversation_ComingOut_Confident_Driving_Alone)
     say: Without really thinking about it, I'm in the car. Driving down city streets towards the highway.
     cost(180)
     branch: What in the actual fuck am I doing?
-        choice(ParentConversation_ComingOut_Confident_Driving_Alone_GoBack): This is wrong. I have to go back.
-        choice(ParentConversation_ComingOut_Confident_Driving_Alone_Highway): No. I have to keep going.
-        choice(ParentConversation_ComingOut_Confident_Driving_Alone_SecretRoad, Gate_SecretRoad): Wait... the secret road!
+        choice_once(ParentConversation_ComingOut_Confident_Driving_Alone_GoBack): This is wrong. I have to go back.
+        choice_once(ParentConversation_ComingOut_Confident_Driving_Alone_Highway): No. I have to keep going.
+        choice_once(ParentConversation_ComingOut_Confident_Driving_Alone_SecretRoad, Gate_SecretRoad): Wait... the secret road!
     end
 end
 
@@ -509,7 +520,7 @@ label(ParentConversation_ComingOut_Confident_Driving_Alone_Highway)
     say: Even if an intercontinental ballistic missile wasn't hurtling towards us at hypersonic speed, this would feel like the apocalypse.
     say: I won't escape on the freeway. I'm not even going to get <i>onto</i> the freeway.
     say: I'm going to die and there's not a fucking thing I can do.
-    countdown(false)
+    set(Countdown, -1)
     say: Oh god.
     say: Oh fuck.
     say: Is this the end?
@@ -529,7 +540,7 @@ label(ParentConversation_ComingOut_Confident_Driving_Alone_Highway)
     say: <b>INTERLUDE:</b> If you choose to keep playing, you may find that there is hope even in the darkest circumstances.
     say: <b>INTERLUDE:</b> There is always still time.
     reset(Scope_Run)
-    goto_reset(LaterRun)
+    goto(LaterRun)
 end
 
 label(ParentConversation_ComingOut_Confident_Driving_Alone_SecretRoad)
@@ -551,7 +562,7 @@ label(ParentConversation_ComingOut_Confident_Driving_Alone_SecretRoad)
     bg(000000, 2)
     delay(2)
     reset(Scope_Run)
-    goto_reset(LaterRun)
+    goto(LaterRun)
 end
 
 label(ParentConversation_ComingOut_Confident_Driving_Alone_GoBack)
@@ -647,7 +658,7 @@ label(ParentConversation_ComingOut_NotConfident)
     say: Does anyone actually care how I feel?
     say(Mom): I'm sorry. I just can't lose my son right now. And you will always be my son.
     say(Mom): I need us to be whole, to be together, to be content with each other and who we are right now.
-    countdown(false)
+    set(Countdown, -1)
     say: Because of course I should be upset.
     say: Of course I should be hating myself because everyone knows trans people hate themselves. Ourselves.
     say: Because being trans is trying to be someone you aren't.
@@ -688,11 +699,11 @@ end
 
 label(Bedroom_InitialChoice)
     branch: I stand in the middle of the room.
-    choice(Bedroom_PetTheCat): Pet the cat
-    choice_always(Bedroom_Phone): Pick up my phone
-    choice(Bedroom_Photos): Take a look at the photos
-    choice(Bedroom_Computer): Open the laptop
-    choice_always(InitialChoice): Head back to the living room
+    choice_once(Bedroom_PetTheCat): Pet the cat
+    choice(Bedroom_Phone): Pick up my phone
+    choice_once(Bedroom_Photos): Take a look at the photos
+    choice_once(Bedroom_Computer): Open the laptop
+    choice(InitialChoice): Head back to the living room
     end
 end
 
@@ -708,21 +719,24 @@ label(Bedroom_PetTheCat)
     say: This is a happy animal who hasn't got a fucking clue what's going on in the world outside.
     cost(437)
     branch: Honestly, I could stay here forever.
-    choice(Bedroom_PetTheCat_Sleep): Stay here forever
-    choice(Bedroom_PetTheCat_Leave): Pull myself away
+    choice_once(Bedroom_PetTheCat_Sleep): Stay here forever
+    choice_once(Bedroom_PetTheCat_Leave): Pull myself away
     end
 end
 
 label(Bedroom_PetTheCat_Sleep)
-    countdown(false)
+    set(Countdown, -1)
     say: I keep petting her for I don't know how long.
     say: The purring calms me down and without really realizing it, I lie down on the bed.
     say: My last conscious thought as I fade into sleep: this is not such a bad way to go.
+    clear
     bg(000000, 2)
     delay(2)
     if(Gate_PartialRealization): goto(Bedroom_PetTheCat_Sleep_PartialRealization)
-    reset(Scope_Run)
-    else: goto_reset(LaterRun)
+    else:
+        reset(Scope_Run)
+        goto(LaterRun)
+    end
 end
 
 label(Bedroom_PetTheCat_Sleep_PartialRealization)
@@ -748,7 +762,7 @@ label(Bedroom_PetTheCat_Sleep_PartialRealization)
     say: But I'm not him. I'm not afraid. I'm her. The her that saved me. The me that saved him.
     set(Gate_GirlDream, true)
     reset(Scope_Run)
-    goto_reset(LaterRun)
+    goto(LaterRun)
 end
 
 label(Bedroom_PetTheCat_Leave)
@@ -766,11 +780,11 @@ label(Bedroom_Phone)
     say: I've always felt a bit like I'm pretending to be someone when I'm around them. I just don't want that right now.
     say: Still, he's been a pretty good friend to me even if he and the rest of them like to give me shit.
     branch: What am I even doing on my phone?
-        choice(Bedroom_Phone_CallReed): Call Reed back
-        choice(Bedroom_Phone_CallKatie, Gate_MissBestFriend): Call Katie
-        choice(Bedroom_Phone_OpenSocial): Open social media
-        choice(Bedroom_Phone_AskTheQuestion, Gate_PartialRealization): Ask the question
-        choice_always(Bedroom_InitialChoice): Never mind
+        choice_once(Bedroom_Phone_CallReed): Call Reed back
+        choice_once(Bedroom_Phone_CallKatie, Gate_MissBestFriend): Call Katie
+        choice_once(Bedroom_Phone_OpenSocial): Open social media
+        choice_once(Bedroom_Phone_AskTheQuestion, Gate_PartialRealization): Ask the question
+        choice(Bedroom_InitialChoice): Never mind
     end
 end
 
@@ -834,21 +848,21 @@ label(Bedroom_Phone_CallKatie)
     say: I'm sobbing. She must not even know yet. And I don't think I have the heart to tell her.
     say: If one person in my life was going to survive this, I'm just so happy that it's her.
     branch(Katie): Everett? What's wrong?
-        choice(Bedroom_Phone_CallKatie_MissYou): I just miss you so much.
-        choice(Bedroom_Phone_CallKatie_HowThingsWent): I'm so sorry for how things went.
-        choice(Bedroom_Phone_CallKatie_ComingOut, Gate_FullRealization): I needed to tell someone. I'm trans!
-        choice(Bedroom_Phone_CallKatie_End): I should go.
+        choice_once(Bedroom_Phone_CallKatie_MissYou): I just miss you so much.
+        choice_once(Bedroom_Phone_CallKatie_HowThingsWent): I'm so sorry for how things went.
+        choice_once(Bedroom_Phone_CallKatie_ComingOut, Gate_FullRealization): I needed to tell someone. I'm trans!
+        choice_once(Bedroom_Phone_CallKatie_End): I should go.
     end
 end
 
 label(Bedroom_Phone_CallKatie_Choice_Return)
     branch(Katie): Is... there anything else you wanted to talk about?
-        choice(Bedroom_Phone_CallKatie_MissYou, !Katie_CameOut): I just miss you so much.
-        choice(Bedroom_Phone_CallKatie_HowThingsWent, !Katie_CameOut): I'm so sorry for how things went.
-        choice(Bedroom_Phone_CallKatie_ComingOut, Gate_FullRealization): I needed to tell someone. I'm trans!
-        choice(Bedroom_Phone_CallKatie_PrepareForParents, Katie_CameOut): Do you think you could help me figure out how to tell my parents?
-        choice(Bedroom_Phone_CallKatie_Reading, Katie_CameOut, Katie_Rekindled): Um. Do you think you could, maybe, like read to me or something?
-        choice_always(Bedroom_Phone_CallKatie_End): I should go.
+        choice_once(Bedroom_Phone_CallKatie_MissYou, !Katie_CameOut): I just miss you so much.
+        choice_once(Bedroom_Phone_CallKatie_HowThingsWent, !Katie_CameOut): I'm so sorry for how things went.
+        choice_once(Bedroom_Phone_CallKatie_ComingOut, Gate_FullRealization): I needed to tell someone. I'm trans!
+        choice_once(Bedroom_Phone_CallKatie_PrepareForParents, Katie_CameOut): Do you think you could help me figure out how to tell my parents?
+        choice_once(Bedroom_Phone_CallKatie_Reading, Katie_CameOut, Katie_Rekindled): Um. Do you think you could, maybe, like read to me or something?
+        choice(Bedroom_Phone_CallKatie_End): I should go.
     end
 end
 
@@ -948,10 +962,10 @@ end
 
 label(Bedroom_Phone_CallKatie_ComingOut_Converge)
     branch(Katie): Is there a name you'd like me to use?
-        choice(Bedroom_Phone_CallKatie_ComingOut_SetName_Evelyn): Evelyn? It's similar enough to my given name, might be easier for people.
-        choice(Bedroom_Phone_CallKatie_ComingOut_SetName_Hazel, Unlock_Name_Hazel): Maybe Hazel. The name of my sister, who never got a chance to live.
-        choice(Bedroom_Phone_CallKatie_ComingOut_SetName_Emily, Unlock_Name_Emily): I kind of like Emily. After our old cat Emilio.
-        choice(Bedroom_Phone_CallKatie_ComingOut_SetName_Azalea, Unlock_Name_Azalea): I like how Azalea sounds. My MMO character. Don't judge.
+        choice_once(Bedroom_Phone_CallKatie_ComingOut_SetName_Evelyn): Evelyn? It's similar enough to my given name, might be easier for people.
+        choice_once(Bedroom_Phone_CallKatie_ComingOut_SetName_Hazel, Unlock_Name_Hazel): Maybe Hazel. The name of my sister, who never got a chance to live.
+        choice_once(Bedroom_Phone_CallKatie_ComingOut_SetName_Emily, Unlock_Name_Emily): I kind of like Emily. After our old cat Emilio.
+        choice_once(Bedroom_Phone_CallKatie_ComingOut_SetName_Azalea, Unlock_Name_Azalea): I like how Azalea sounds. My MMO character. Don't judge.
     end
 end
 
@@ -1054,7 +1068,7 @@ label(Bedroom_Phone_CallKatie_Reading)
     say(Katie): Ok. One sec, I'll be right back.
     say: I hear footsteps. Receding away then returning.
     say: She gives a little background, then starts reading.
-    countdown(false)
+    set(Countdown, -1)
     say: I hold onto her voice. Use it to anchor myself. To just live in the moment.
     say: Just sitting here, tucked in bed, the person I love taking care of me.
     say: I imagine that we're in the room together. That I'm resting my head in her lap as she reads to me.
@@ -1159,13 +1173,13 @@ label(Bedroom_Phone_OpenSocial)
     say: But that doesn't make any sense. I'm already the person I am.
     say: Everett Barnes: normal-ass dude. Not special in any way anyone cares about.
     branch: This is messing with my head. I need to do something else.
-        choice(Bedroom_Phone_OpenVideos): Check my video feed
-        choice_always(Bedroom_InitialChoice): Stop doomscrolling
+        choice_once(Bedroom_Phone_OpenVideos): Check my video feed
+        choice(Bedroom_InitialChoice): Stop doomscrolling
     end
 end
 
 label(Bedroom_Phone_OpenVideos)
-    countdown(false)
+    set(Countdown, -1)
     say: Time to switch apps. I just need something comforting to watch.
     say: There's a video of a dog chasing his tail. Round and round he goes.
     say: This goes on and on. He's barking, growling, getting really into the chase.
@@ -1185,7 +1199,7 @@ label(Bedroom_Phone_OpenVideos)
     say: A whole world born from the mind of one person.
     say: Funny that the world we live in is probably ending because of one person too. One keystroke. Ctrl+A, Del.
     say: I realize the video has stopped buffering. The little red dot catches up with the grey line and time stops.
-    countdown(true, 175)
+    set(Countdown, 175)
     say: Oh fuck. Fuck! My last hour alive and I spent it doomscrolling.
     say: The stopped video can probably only mean one thing. I might be the last person to ever watch it.
     say: Yeah. Nothing is working. The page won't refresh and nothing else will load either.
@@ -1262,10 +1276,10 @@ end
 
 label(Bedroom_Photos_Choice)
     branch: I glance over all the photos on the page.
-        choice(Bedroom_Photos_Astronaut): My astronaut costume
-        choice(Bedroom_Photos_Cat): Our old cat Emilio
-        choice(Bedroom_Photos_BestFriend): Me and Katie at the beach
-        choice_always(Bedroom_InitialChoice): That's enough for me.
+        choice_once(Bedroom_Photos_Astronaut): My astronaut costume
+        choice_once(Bedroom_Photos_Cat): Our old cat Emilio
+        choice_once(Bedroom_Photos_BestFriend): Me and Katie at the beach
+        choice(Bedroom_InitialChoice): That's enough for me.
     end
 end
 
@@ -1348,19 +1362,19 @@ label(Bedroom_Computer)
     say: Looks like I was booted to the main menu for being AFK. Gotta save on precious server costs.
     say: I suppose US_EAST_1 won't be faring any better than me in a few minutes.
     branch: Should I really be playing a video game right now?
-        choice_always(Bedroom_InitialChoice): No, I don't have time to waste.
-        choice(Bedroom_Computer_VideoGame_CharacterSelect): Why the hell not?
+        choice(Bedroom_InitialChoice): No, I don't have time to waste.
+        choice_once(Bedroom_Computer_VideoGame_CharacterSelect): Why the hell not?
     end
 end
 
 label(Bedroom_Computer_VideoGame_CharacterSelect)
-    countdown(false)
+    set(Countdown, -1)
     say: These are my last moments. I can choose how to spend them, damn it!
     say: On the character select screen I see the list of characters I've made.
     branch: CHOOSE SAVE FILE
-        choice(Bedroom_Computer_VideoGame_Azalea): Azalea - female elf assassin - level 25
-        choice(Bedroom_Computer_VideoGame_Chungus): Chungus - male dwarf barbarian - level 8
-        choice(Bedroom_Computer_VideoGame_Everest): Everest - male human warrior - level 172
+        choice_once(Bedroom_Computer_VideoGame_Azalea): Azalea - female elf assassin - level 25
+        choice_once(Bedroom_Computer_VideoGame_Chungus): Chungus - male dwarf barbarian - level 8
+        choice_once(Bedroom_Computer_VideoGame_Everest): Everest - male human warrior - level 172
     end
 end
 
@@ -1418,15 +1432,15 @@ label(Bedroom_Computer_VideoGame_Converge)
     say: For a lot of people in this game, it's their only connection to the outside world.
     say: The only place they feel like a real person. I've felt that way at times.
     say: All these people have come together to be with the only community they have before the end.
-    countdown(true, 322)
+    set(Countdown, 322)
     say: Oh, shit, I lost track of time. Time just flows differently when you're playing a game.
-    countdown(true, 301)
+    set(Countdown, 301)
     say: I keep expecting everyone to start counting down in unison. But the players here are all over North America.
     say: Some of them have more time left. Others less. Some might even be safe for now.
-    countdown(true, 235)
+    set(Countdown, 235)
     say: A few players freeze up, then vanish into thin air. Connection timed out.
     say: My mind can barely process what that means.
-    countdown(true, 175)
+    set(Countdown, 175)
     say: The game freezes. I see a spinny wheel of death, signaling the end of the world.
     say: I get kicked back to the menu with a connection error. Server must have crashed.
     say: Or, no. Not crashed. Turned into a quickly dissipating cloud of atoms, along with the rest of the data center.
@@ -1447,8 +1461,8 @@ label(TryToDriveAlone_Entry)
     say(Mom): I know you don't want this to be the end.
     say(Mom): But if it's a choice between spending my last moments on the freeway sitting in traffic, or in my home with the two people I love most, I know what I'm choosing.
     branch: What now then?
-        choice_always(InitialChoice): Yeah. You're right.
-        choice(TryToDriveAlone_TryToLeave): No. I can't. I need to go, even if it's alone.
+        choice(InitialChoice): Yeah. You're right.
+        choice_once(TryToDriveAlone_TryToLeave): No. I can't. I need to go, even if it's alone.
     end
 end
 
@@ -1642,25 +1656,24 @@ end
 ######################################### Shared Endings ##############################################
 
 label(FadeToBlackEnding)
-    timeout
-    countdown(false)
+    set(Countdown, -1)
     clear
     bg(000000, 2)
     delay(2)
     reset(Scope_Run)
-    goto_reset(LaterRun)
+    goto(LaterRun)
 end
 
 label(TimeoutEnding)
-    timeout
-    countdown(true, 0)
+    set(InterruptTimeoutCountdownZero_Enabled, false)
+    set(Countdown, 0)
     say: Time's up.
     clear
     bg(ffffff, 0.05)
-    countdown(false)
+    set(Countdown, -1)
     delay(1)
     bg(000000, 3)
     delay(3)
     reset(Scope_Run)
-    goto_reset(LaterRun)
+    goto(LaterRun)
 end

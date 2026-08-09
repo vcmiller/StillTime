@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using StillTime.Sts.Nodes;
+﻿using StillTime.Sts.Commands.Interfaces;
+using StillTime.Sts.Commands.Utility;
 using StillTime.Sts.Resources;
 
 namespace StillTime.Sts.Commands {
@@ -10,10 +10,9 @@ namespace StillTime.Sts.Commands {
             Identifier = identifier;
         }
 
-        public void CreateResources(Dictionary<string, Resource> resourceDictionary,
-                                    Dictionary<string, INode> nodeDictionary) {
+        public void CreateResources(GraphData graphData) {
             Scope scope = new(Identifier);
-            resourceDictionary.Add(Identifier, scope);
+            graphData.Resources.Add(Identifier, scope);
         }
     }
 }

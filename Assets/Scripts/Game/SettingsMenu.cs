@@ -1,4 +1,6 @@
 ﻿using System;
+using Newtonsoft.Json.Linq;
+using StillTime.Sts.Runtime.Components;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -8,19 +10,20 @@ namespace StillTime.Game {
         public Toggle _skipToggle;
         public Toggle _skipSeenToggle;
         public GameRunner _gameRunner;
+        public GameSettings _gameSettings;
         public TMP_InputField _jumpInput;
 
         private void OnEnable() {
-            _skipToggle.isOn = _gameRunner.SkipAnimations;
-            _skipSeenToggle.isOn = _gameRunner.SkipSeenDialogue;
+            _skipToggle.isOn = _gameSettings.SkipAnimations;
+            _skipSeenToggle.isOn = _gameSettings.SkipSeenDialogue;
         }
 
         public void ToggleAnimations(bool value) {
-            _gameRunner.SkipAnimations = value;
+            _gameSettings.SkipAnimations = value;
         }
 
         public void ToggleSkipSeen(bool value) {
-            _gameRunner.SkipSeenDialogue = value;
+            _gameSettings.SkipSeenDialogue = value;
         }
 
         public void ResetGame() {
@@ -32,10 +35,10 @@ namespace StillTime.Game {
             string text = _jumpInput.text;
             if (string.IsNullOrEmpty(text)) return;
 
-            SerializedTraversalState prevState = _gameRunner.SaveGame();
+            JToken prevState = _gameRunner.SaveGame();
             try {
-                SerializedTraversalState modState = prevState.Clone();
-                modState.CurrentNode = text;
+                JToken modState = prevState.DeepClone();
+                modState[nameof(CurrentNodeComponent)]![nameof(CurrentNodeComponent.CurrentNode)] = text;
                 _gameRunner.ClearGameState();
                 _gameRunner.LoadGame(modState);
             } catch (Exception ex) {

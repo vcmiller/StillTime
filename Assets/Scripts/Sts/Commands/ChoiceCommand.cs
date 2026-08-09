@@ -1,41 +1,34 @@
 ﻿using System.Collections.Generic;
+using StillTime.Sts.Commands.Interfaces;
+using StillTime.Sts.Commands.Utility;
 using StillTime.Sts.Nodes;
-using StillTime.Sts.Resources;
 
 namespace StillTime.Sts.Commands {
     public class ChoiceCommand : TextCommand, IBranchSubCommand {
         public string TargetLabel { get; }
         public IReadOnlyList<string> Conditions { get; }
-        public bool AlwaysAllow { get; }
 
         public ChoiceCommand(
             int lineNumber,
             string line,
             string text,
             string targetLabel,
-            bool alwaysAllow,
             IReadOnlyList<string> conditions) :
             base(lineNumber, line, null, text) {
             TargetLabel = targetLabel;
             Conditions = conditions;
-            AlwaysAllow = alwaysAllow;
         }
 
-        public IBranchOption CreateBranchOption(Dictionary<string, Resource> resourceDictionary,
-                                                Dictionary<string, INode> nodeDictionary) {
-
-            if (!nodeDictionary.TryGetValue(TargetLabel, out INode targetNode)) {
-                throw new ParsingException(LineNumber, Line, $"Choice command has invalid target label '{TargetLabel}'");
-            }
-
-            Choice choice = new(Text, targetNode, AlwaysAllow);
+        public void CreateBranchOptions(GraphData graphData, List<IBranchOption> options) {
+            INode targetNode = graphData.GetNode(this, TargetLabel);
+            Choice choice = new(Text, targetNode);
 
             foreach (string condStr in Conditions) {
-                ICondition cond = CommandUtility.ProcessCondition(this, condStr, resourceDictionary);
+                ICondition cond = CommandUtility.ProcessCondition(this, condStr, graphData);
                 choice.Conditions.Add(cond);
             }
 
-            return choice;
+            options.Add(choice);
         }
     }
 }

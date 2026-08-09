@@ -4,6 +4,8 @@ using System.Linq;
 using System.Reflection;
 using Microsoft.Extensions.Logging;
 using StillTime.Sts.Commands;
+using StillTime.Sts.Commands.Interfaces;
+using StillTime.Sts.Resources;
 
 namespace StillTime.Sts.Parsers {
     public static class CommandParserDelegator {
@@ -26,7 +28,8 @@ namespace StillTime.Sts.Parsers {
 
                         commandParser = tempParser;
                     } catch (Exception ex) {
-                        StsLibrary.Logger.LogError(ex, "Exception occurred instantiated command parser {Type}", type);
+                        StsLibrary.LogException(
+                            new Exception($"Exception occurred instantiated command parser {type}", ex));
                         continue;
                     }
 
@@ -37,35 +40,36 @@ namespace StillTime.Sts.Parsers {
             }
         }
 
-        public static Command ParseCommand(string[] lines, ref int lineNumber, string line = null) {
-            line ??= lines[lineNumber];
+        public static void ParseLine(ParsingState state, List<ICommand> commands) {
+            string line = state.CurrentLine;
 
-            ReadOnlySpan<char> actualSpan = ParsingUtility.GetActualSpanFromLine(line);
-            if (actualSpan.IsEmpty) {
-                lineNumber++;
-                return null;
+            while (!state.IsEnded) {
+                ReadOnlySpan<char> actualSpan = Tokenizer.GetActualSpanFromLine(line);
+
+                if (!actualSpan.IsEmpty) {
+                    break;
+                } else {
+                    state.MoveNext();
+                    line = state.CurrentLine;
+                }
             }
 
-            ParsingUtility.ReadCommandLine(
-                line,
-                lineNumber,
-                out string cmd,
-                out string text,
-                out string[] args,
-                out bool isTextContinued);
+            if (state.IsEnded) return;
 
-            if (!AllCommandParsers.TryGetValue(cmd, out ICommandParser parser)) {
-                throw new ParsingException(lineNumber, line, $"No parser found for command '{cmd}'");
+            string cmd = Tokenizer.TokenizeCommandName(state).ToString();
+
+            if (AllCommandParsers.TryGetValue(cmd, out ICommandParser parser)) {
+                parser.ParseCommand(state, commands);
+            } else if (state.Macros.TryGetValue(cmd, out Macro macro)) {
+                macro.ExpandCall(state);
+            } else {
+                throw new ParsingException(state.LineNumber, line, $"No parser or macro found for command '{cmd}'");
             }
 
-            int lineNumberBefore = lineNumber;
-            Command result = parser.ParseCommand(lines, ref lineNumber, cmd, args, text, isTextContinued);
-
-            if (lineNumber <= lineNumberBefore) {
-                lineNumber = lineNumberBefore + 1;
+            if (state.CurrentLine == line) {
+                throw new ParsingException(state.LineNumber, line,
+                                           $"Command '{cmd}' did not advance the parsing state");
             }
-
-            return result;
         }
     }
 }
