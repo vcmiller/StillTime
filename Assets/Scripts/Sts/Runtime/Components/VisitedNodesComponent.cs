@@ -24,12 +24,11 @@ namespace StillTime.Sts.Runtime.Components {
         }
 
         public void VisitNode(INode node, bool updateUnexplored) {
-            foreach (Scope key in _dictionary.Keys.ToList()) {
-                ScopeInfo info = _dictionary[key];
+            foreach (ScopeInfo info in _dictionary.Values) {
                 bool unexplored = info.VisitedNodes.Add(node);
-                if (!updateUnexplored) continue;
-                info.WasCurrentStateUnexplored = unexplored;
-                _dictionary[key] = info;
+                if (updateUnexplored) {
+                    info.WasCurrentStateUnexplored = unexplored;
+                }
             }
         }
 
@@ -53,35 +52,28 @@ namespace StillTime.Sts.Runtime.Components {
         }
 
         public JToken Serialize() {
-            JObject obj = new();
+            Dictionary<string, SerializedScopeInfo> data = new();
 
             foreach ((Scope scope, ScopeInfo info) in _dictionary) {
-                JArray nodes = new();
-                foreach (INode visitedNode in info.VisitedNodes) {
-                    nodes.Add(new JValue(visitedNode.FullIdentifier));
-                }
-
-                obj[scope.Identifier] = new JObject {
-                    [nameof(ScopeInfo.VisitedNodes)] = nodes,
-                    [nameof(ScopeInfo.WasCurrentStateUnexplored)] = info.WasCurrentStateUnexplored,
+                data[scope.Identifier] = new SerializedScopeInfo {
+                    VisitedNodes = info.VisitedNodes.Select(n => n.FullIdentifier).ToList(),
+                    WasCurrentStateUnexplored = info.WasCurrentStateUnexplored,
                 };
             }
 
-            return obj;
+            return JToken.FromObject(data);
         }
 
         public bool Deserialize(GameGraph graph, JToken token) {
-            if (token is not JObject obj) return false;
-            foreach ((string key, JToken subToken) in obj) {
-                if (!graph.TryGetResource(key, out Scope scope) ||
-                    !_dictionary.TryGetValue(scope, out ScopeInfo scopeInfo) ||
-                    subToken is not JObject subObj ||
-                    !subObj.TryGetValue(nameof(ScopeInfo.VisitedNodes), out JToken visitedNodesToken) ||
-                    visitedNodesToken is not JArray visitedNodesArray) continue;
+            Dictionary<string, SerializedScopeInfo> data = token.ToObject<Dictionary<string, SerializedScopeInfo>>();
 
-                foreach (JToken visitedNodeToken in visitedNodesArray) {
-                    if (visitedNodeToken.Type != JTokenType.String) continue;
-                    string visitedNodeId = visitedNodeToken.ToObject<string>();
+            foreach ((string key, SerializedScopeInfo dataItem) in data) {
+                if (!graph.TryGetResource(key, out Scope scope) ||
+                    !_dictionary.TryGetValue(scope, out ScopeInfo scopeInfo)) continue;
+
+                scopeInfo.WasCurrentStateUnexplored = dataItem.WasCurrentStateUnexplored;
+                if (dataItem.VisitedNodes == null) continue;
+                foreach (string visitedNodeId in dataItem.VisitedNodes) {
                     if (!graph.TryGetNode(visitedNodeId, out INode node)) continue;
                     scopeInfo.VisitedNodes.Add(node);
                 }
@@ -90,7 +82,7 @@ namespace StillTime.Sts.Runtime.Components {
             return true;
         }
 
-        private struct ScopeInfo {
+        private class ScopeInfo {
             public HashSet<INode> VisitedNodes;
             public bool WasCurrentStateUnexplored;
 
@@ -100,6 +92,11 @@ namespace StillTime.Sts.Runtime.Components {
                     WasCurrentStateUnexplored = WasCurrentStateUnexplored,
                 };
             }
+        }
+
+        private struct SerializedScopeInfo {
+            public List<string> VisitedNodes { get; set; }
+            public bool WasCurrentStateUnexplored { get; set; }
         }
     }
 }

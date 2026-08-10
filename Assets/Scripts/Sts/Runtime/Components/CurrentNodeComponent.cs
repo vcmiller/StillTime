@@ -1,25 +1,49 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Newtonsoft.Json.Linq;
 using StillTime.Sts.Nodes;
 
 namespace StillTime.Sts.Runtime.Components {
     public class CurrentNodeComponent : IStateComponent {
         public INode CurrentNode { get; set; }
 
+        public List<INode> NodeStack { get; } = new();
+
         public IStateComponent Clone() {
-            return new CurrentNodeComponent { CurrentNode = CurrentNode };
+            CurrentNodeComponent clone = new() { CurrentNode = CurrentNode };
+            clone.NodeStack.AddRange(NodeStack);
+            return clone;
         }
 
         public JToken Serialize() {
-            return new JValue(CurrentNode?.FullIdentifier);
+            SerializedData data = new() {
+                CurrentNode = CurrentNode.FullIdentifier,
+                Stack = NodeStack.Select(n => n.FullIdentifier).ToList(),
+            };
+
+            return JObject.FromObject(data);
         }
 
         public bool Deserialize(GameGraph graph, JToken token) {
-            if (token.Type != JTokenType.String) return false;
+            SerializedData data = token.ToObject<SerializedData>();
 
-            string id = token.ToObject<string>();
-            if (!graph.TryGetNode(id, out INode node)) return false;
+            if (!graph.TryGetNode(data.CurrentNode, out INode node)) return false;
             CurrentNode = node;
+
+            NodeStack.Clear();
+            if (data.Stack != null) {
+                foreach (string s in data.Stack) {
+                    if (!graph.TryGetNode(s, out INode stackNode)) continue;
+                    NodeStack.Add(stackNode);
+                }
+            }
+
             return true;
+        }
+
+        private class SerializedData {
+            public string CurrentNode { get; set; }
+            public List<string> Stack { get; set; }
         }
     }
 }

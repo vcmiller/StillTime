@@ -20,8 +20,7 @@ namespace StillTime.Sts.Nodes {
             Increment = increment;
         }
 
-        public override void ApplyToState(StateContainer state) {
-            base.ApplyToState(state);
+        public override void ApplyAfterAdvanceToSelf(GameGraph graph, StateContainer state) {
             VariablesComponent variables = state.GetOrCreate<VariablesComponent>();
             StsValue previousValue = variables.GetVariableValue(Variable);
             StsValue newValue = new(previousValue.NumberValue + Increment);

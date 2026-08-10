@@ -47,7 +47,10 @@ namespace StillTime.Game {
             }
 
             StateContainer state = _gameGraph.BuildEmptyState();
-            state.Deserialize(_gameGraph, data);
+            if (!state.Deserialize(_gameGraph, data)) {
+                throw new Exception("Failed to deserialize state");
+            }
+
             _cancellationTokenSource = new CancellationTokenSource();
             Run(state, _cancellationTokenSource.Token).Forget();
         }

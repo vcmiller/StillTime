@@ -17,8 +17,7 @@ namespace StillTime.Sts.Nodes {
             Variable = variable;
         }
 
-        public override void ApplyToState(StateContainer state) {
-            base.ApplyToState(state);
+        public override void ApplyAfterAdvanceToSelf(GameGraph graph, StateContainer state) {
             VariablesComponent component = state.GetOrCreate<VariablesComponent>();
             component.SetVariableValue(Variable, new StsValue(Color));
         }

@@ -42,20 +42,20 @@ namespace StillTime.Sts.Runtime.Components {
         }
 
         public JToken Serialize() {
-            JObject obj = new();
+            Dictionary<string, string> data = new();
             foreach ((Variable variable, StsValue value) in Variables) {
-                obj[variable.Identifier] = value.ToString();
+                data[variable.Identifier] = value.ToString();
             }
 
-            return obj;
+            return JToken.FromObject(data);
         }
 
         public bool Deserialize(GameGraph graph, JToken token) {
-            if (token is not JObject obj) return false;
-            foreach ((string key, JToken subToken) in obj) {
+            Dictionary<string, string> data = token.ToObject<Dictionary<string, string>>();
+
+            foreach ((string key, string strValue) in data) {
                 if (!graph.TryGetResource(key, out Variable variable) ||
-                    subToken.Type != JTokenType.String ||
-                    !StsValue.TryParse(subToken.ToObject<string>(), variable.Type, out StsValue value)) continue;
+                    !StsValue.TryParse(strValue, variable.Type, out StsValue value)) continue;
 
                 Variables[variable] = value;
             }

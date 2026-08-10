@@ -11,9 +11,7 @@ namespace StillTime.Sts.Nodes {
             Scope = scope;
         }
 
-        public override void ApplyToState(StateContainer state) {
-            base.ApplyToState(state);
-
+        public override void ApplyAfterAdvanceToSelf(GameGraph graph, StateContainer state) {
             foreach (IScopedComponent scopedComponent in state.Components.Values.OfType<IScopedComponent>()) {
                 scopedComponent.ResetScope(Scope);
             }

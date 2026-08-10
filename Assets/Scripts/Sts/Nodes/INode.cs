@@ -13,7 +13,9 @@ namespace StillTime.Sts.Nodes {
 
         public IEnumerable<INode> GetPossibleNextNodes(StateContainer state);
 
-        public void ApplyToState(StateContainer state);
+        public void ApplyAfterAdvanceToSelf(GameGraph graph, StateContainer state);
+
+        public void ApplyBeforeAdvanceFromSelf(GameGraph graph, StateContainer state, ref INode nextNode);
 
         public void RegisterStateTypes(HashSet<Type> stateTypes) { }
     }

@@ -18,9 +18,13 @@ namespace StillTime.Game {
                 stateProcessor.ProcessBeforeAdvance(graph, newState, ref nextNode);
             }
 
-            newState.GetOrCreate<CurrentNodeComponent>().CurrentNode = nextNode;
-            newState.GetOrCreate<VisitedNodesComponent>().VisitNode(nextNode, true);
-            nextNode.ApplyToState(newState);
+            CurrentNodeComponent currentComponent = newState.GetOrCreate<CurrentNodeComponent>();
+            VisitedNodesComponent visitedComponent = newState.GetOrCreate<VisitedNodesComponent>();
+
+            currentComponent.CurrentNode.ApplyBeforeAdvanceFromSelf(graph, newState, ref nextNode);
+            currentComponent.CurrentNode = nextNode;
+            visitedComponent.VisitNode(nextNode, true);
+            nextNode?.ApplyAfterAdvanceToSelf(graph, newState);
 
             foreach (StateProcessor stateProcessor in _stateProcessors) {
                 stateProcessor.ProcessAfterAdvance(graph, newState);
