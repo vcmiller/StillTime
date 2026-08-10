@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using StillTime.Sts.Parsers.Macros;
 using StillTime.Sts.Resources;
 
 namespace StillTime.Sts.Parsers {

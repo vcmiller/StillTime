@@ -6,7 +6,7 @@ using StillTime.Sts.Commands;
 
 namespace StillTime.Sts.Parsers.Macros {
     public class MacroParameters {
-        private static readonly Regex InterpRegex = new(@"\$[0-9a-zA-Z_]*");
+        private static readonly Regex InterpRegex = new(@"\$[0-9a-zA-Z_]+");
 
         private readonly List<MacroParameter> _normalParameters;
         private readonly List<MacroParameter> _optionalParameters;

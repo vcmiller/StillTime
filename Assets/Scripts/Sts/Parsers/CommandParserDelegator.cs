@@ -5,6 +5,7 @@ using System.Reflection;
 using Microsoft.Extensions.Logging;
 using StillTime.Sts.Commands;
 using StillTime.Sts.Commands.Interfaces;
+using StillTime.Sts.Parsers.Macros;
 using StillTime.Sts.Resources;
 
 namespace StillTime.Sts.Parsers {

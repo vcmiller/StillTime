@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using StillTime.Sts.Commands;
@@ -10,6 +10,9 @@ using StillTime.Sts.Utility;
 
 namespace StillTime.Sts.Parsers {
     public static class ExpressionParser {
+        private const string VisitedFunction = "visited";
+        private const string CompareExchangeFunction = "compex";
+
         private static readonly string[][] BinaryOperatorPrecedence = {
             new[] { "^" },
             new[] { "*", "/", "%" },
@@ -19,10 +22,6 @@ namespace StillTime.Sts.Parsers {
             new[] { "xor" },
             new[] { "and" },
             new[] { "or" },
-        };
-
-        private static string[] FunctionOperators = {
-            "visited",
         };
 
         private static readonly Dictionary<string, BinaryMathOperator> BinaryMathOperators = new() {
@@ -50,6 +49,11 @@ namespace StillTime.Sts.Parsers {
             { "xor", BinaryLogicOperator.Xor },
             { "and", BinaryLogicOperator.And },
             { "or", BinaryLogicOperator.Or },
+        };
+
+        private static readonly string[] FunctionOperators = {
+            VisitedFunction,
+            CompareExchangeFunction,
         };
 
         private static readonly Dictionary<string, int> BinaryOperatorPrecedenceMap;
@@ -218,16 +222,36 @@ namespace StillTime.Sts.Parsers {
                              .Select(arg => ParseExpression(command, graphData, arg))
                              .ToList();
 
-                if (funcOp == "visited") {
+                if (funcOp == VisitedFunction) {
                     if (arguments.Count != 2) {
                         throw new ParsingException(
-                            command.LineNumber, 
+                            command.LineNumber,
                             command.Line,
                             $"Expected 2 arguments for 'visited' function, got {arguments.Count}");
                     }
 
                     endIndex = index;
                     return new VisitedExpression(arguments[0], arguments[1]);
+                } else if (funcOp == CompareExchangeFunction) {
+                    if (arguments.Count is < 1 or > 3) {
+                        throw new ParsingException(
+                            command.LineNumber,
+                            command.Line,
+                            $"Expected [1..3] arguments for 'compex' function, got {arguments.Count}");
+                    }
+
+                    if (arguments[0] is not VariableExpression varEx) {
+                        throw new ParsingException(
+                            command.LineNumber,
+                            command.Line,
+                            $"Expected first argument of 'compex' function to be a variable, got {arguments[0]}");
+                    }
+
+                    endIndex = index;
+                    return new CompareExchangeExpression(
+                        varEx.Variable,
+                        arguments[1],
+                        arguments.Count == 3 ? arguments[2] : null);
                 }
             }
 

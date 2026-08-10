@@ -54,8 +54,8 @@ var(string, ChosenName, Scope_Global)
 
 var(num, Countdown, Scope_Run, -1)
 
-var(bool, InterruptTimeoutCountdownZero_Enabled, Scope_Run, false)
-interrupt(InterruptTimeoutCountdownZero, TimeoutEnding, Scope_Run, Countdown == 0)
+var(bool, InterruptTimeoutCountdownZero_Enabled, Scope_Run, true)
+interrupt(InterruptTimeoutCountdownZero, TimeoutEnding, Countdown == 0 and compex(InterruptTimeoutCountdownZero_Enabled))
 
 ////////////////////////////////////////// Macros //////////////////////////////////////////////////////////
 
@@ -106,7 +106,6 @@ label(FirstRun)
     say: The view changes to a map showing every major city in the US. Each one has a timer next to it, counting down.
     say: I find us, nothing more than a little dot on a screen. With a number next to it. <color=orange>00:56:31</color>.
     set(Countdown, 3391)
-    set(InterruptTimeoutCountdownZero_Enabled, true)
     say: My parents don't say anything. I think I see a tear in my dad's eye.
     goto(InitialChoice)
 end
@@ -119,7 +118,6 @@ label(LaterRun)
     say: I head to the living room. See the TV. How do I know what's happening? Did I just dream this?
     say: On the TV, there's a map of major US cities, all showing little timers. Next to us is a number: <color=orange>00:56:31</color>.
     set(Countdown, 3391)
-    set(InterruptTimeoutCountdownZero_Enabled, true)
     say: My parents don't say anything. I think I see a tear in my dad's eye.
     say: There's something important I need to remember. Or a lot of things.
     goto(InitialChoice)

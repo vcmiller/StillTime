@@ -15,10 +15,12 @@ namespace StillTime.Game {
             StateContainer newState = currentState.Clone();
 
             foreach (StateProcessor stateProcessor in _stateProcessors) {
-                stateProcessor.ProcessBeforeAdvance(graph, newState);
+                stateProcessor.ProcessBeforeAdvance(graph, newState, ref nextNode);
             }
 
             newState.GetOrCreate<CurrentNodeComponent>().CurrentNode = nextNode;
+            newState.GetOrCreate<VisitedNodesComponent>().VisitNode(nextNode);
+            nextNode.ApplyToState(newState);
 
             foreach (StateProcessor stateProcessor in _stateProcessors) {
                 stateProcessor.ProcessAfterAdvance(graph, newState);
