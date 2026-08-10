@@ -48,6 +48,7 @@ namespace StillTime.Sts.Nodes {
 
             foreach (Type type in StateComponentTypes) {
                 IStateComponent component = (IStateComponent)Activator.CreateInstance(type);
+                component.Initialize(this);
                 container.Set(type, component);
             }
 

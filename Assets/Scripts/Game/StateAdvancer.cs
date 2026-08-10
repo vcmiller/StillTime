@@ -19,7 +19,7 @@ namespace StillTime.Game {
             }
 
             newState.GetOrCreate<CurrentNodeComponent>().CurrentNode = nextNode;
-            newState.GetOrCreate<VisitedNodesComponent>().VisitNode(nextNode);
+            newState.GetOrCreate<VisitedNodesComponent>().VisitNode(nextNode, true);
             nextNode.ApplyToState(newState);
 
             foreach (StateProcessor stateProcessor in _stateProcessors) {

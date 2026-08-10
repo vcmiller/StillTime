@@ -23,9 +23,13 @@ namespace StillTime.Sts.Runtime.Components {
             }
         }
 
-        public void VisitNode(INode node) {
-            foreach (ScopeInfo scopeInfo in _dictionary.Values) {
-                scopeInfo.VisitedNodes.Add(node);
+        public void VisitNode(INode node, bool updateUnexplored) {
+            foreach (Scope key in _dictionary.Keys.ToList()) {
+                ScopeInfo info = _dictionary[key];
+                bool unexplored = info.VisitedNodes.Add(node);
+                if (!updateUnexplored) continue;
+                info.WasCurrentStateUnexplored = unexplored;
+                _dictionary[key] = info;
             }
         }
 
