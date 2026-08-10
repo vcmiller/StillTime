@@ -7,9 +7,13 @@ namespace StillTime.Sts.Parsers {
     public class ElseCommandParser : ICommandParser {
         public void ParseCommand(ParsingState state, List<ICommand> commands) {
             LineTokens tokens = Tokenizer.TokenizeAndAdvance(state);
-            Tokenizer.ValidateTokens(tokens, 0, 0, false);
+            Tokenizer.ValidateTokens(tokens, 0, 0, false, true);
             ElseCommand command = new(tokens.LineNumber, tokens.OriginalLine);
             commands.Add(command);
+
+            if (!string.IsNullOrEmpty(tokens.Text)) {
+                state.Prepend(tokens.LineNumber, tokens.Text);
+            }
         }
     }
 }

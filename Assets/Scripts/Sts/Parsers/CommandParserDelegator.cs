@@ -58,6 +58,8 @@ namespace StillTime.Sts.Parsers {
 
             string cmd = Tokenizer.TokenizeCommandName(state).ToString();
 
+            int version = state.Version;
+
             if (AllCommandParsers.TryGetValue(cmd, out ICommandParser parser)) {
                 parser.ParseCommand(state, commands);
             } else if (state.Macros.TryGetValue(cmd, out Macro macro)) {
@@ -66,7 +68,7 @@ namespace StillTime.Sts.Parsers {
                 throw new ParsingException(state.LineNumber, line, $"No parser or macro found for command '{cmd}'");
             }
 
-            if (state.CurrentLine == line) {
+            if (state.Version == version) {
                 throw new ParsingException(state.LineNumber, line,
                                            $"Command '{cmd}' did not advance the parsing state");
             }

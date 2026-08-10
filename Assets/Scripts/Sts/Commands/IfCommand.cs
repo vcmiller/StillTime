@@ -2,11 +2,13 @@
 using System.Linq;
 using StillTime.Sts.Commands.Interfaces;
 using StillTime.Sts.Commands.Utility;
+using StillTime.Sts.Expressions;
 using StillTime.Sts.Nodes;
+using StillTime.Sts.Parsers;
 
 namespace StillTime.Sts.Commands {
     public class IfCommand : Command, ISequentialCommand {
-        public IReadOnlyList<string> Conditions { get; }
+        public string Condition { get; }
 
         public List<ISequentialCommand> Commands { get; } = new();
 
@@ -14,8 +16,8 @@ namespace StillTime.Sts.Commands {
 
         public ElseCommand ElseCommand { get; set; }
 
-        public IfCommand(int lineNumber, string line, IReadOnlyList<string> conditions) : base(lineNumber, line) {
-            Conditions = conditions;
+        public IfCommand(int lineNumber, string line, string condition) : base(lineNumber, line) {
+            Condition = condition;
         }
 
         public override void GatherSubCommands(ref CommandGatheringState state) {
@@ -25,12 +27,9 @@ namespace StillTime.Sts.Commands {
         }
 
         public void ApplyToSequence(NodeSequenceBuilder builder, GraphData graphData) {
-            List<ICondition> conditions =
-                Conditions.Select(str => CommandUtility.ProcessCondition(this, str, graphData))
-                          .ToList();
-
-
-            IfNode firstIfNode = new(conditions);
+            IExpression expression = ExpressionParser.ParseExpression(this, graphData, Condition);
+            
+            IfNode firstIfNode = new(expression);
             builder.Append(firstIfNode);
 
             EmptyNode convergenceNode = new();
@@ -38,11 +37,8 @@ namespace StillTime.Sts.Commands {
 
             IfNode lastIfNode = firstIfNode;
             foreach (ElseIfCommand elseIf in ElseIfCommands) {
-                List<ICondition> elseIfConditions =
-                    elseIf.Conditions.Select(str => CommandUtility.ProcessCondition(this, str, graphData))
-                          .ToList();
-
-                IfNode nextIfNode = new(elseIfConditions);
+                IExpression elseIfCondition = ExpressionParser.ParseExpression(this, graphData, elseIf.Condition);
+                IfNode nextIfNode = new(elseIfCondition);
                 builder.Append(nextIfNode);
 
                 nextIfNode.TrueBranch = CreateBranch(builder, elseIf.Commands, convergenceNode, graphData);

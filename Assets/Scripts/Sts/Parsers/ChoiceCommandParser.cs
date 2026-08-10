@@ -7,14 +7,13 @@ namespace StillTime.Sts.Parsers {
     public class ChoiceCommandParser : ICommandParser {
         public void ParseCommand(ParsingState state, List<ICommand> commands) {
             LineTokens tokens = Tokenizer.TokenizeAndAdvance(state);
-            Tokenizer.ValidateTokens(tokens, 1, 100, true);
-            string[] conditions = tokens.Arguments[1..];
+            Tokenizer.ValidateTokens(tokens, 1, 2, true);
             ChoiceCommand choiceCommand = new(
                 tokens.LineNumber,
                 tokens.OriginalLine,
                 tokens.Text,
                 tokens.Arguments[0],
-                conditions);
+                tokens.Arguments.Length > 1 ? tokens.Arguments[1] : null);
 
             commands.Add(choiceCommand);
         }

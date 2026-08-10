@@ -1,28 +1,28 @@
 ﻿goto(Intro)
 
-######################################### Speakers ##############################################
+///////////////////////////////////////// Speakers //////////////////////////////////////////////
 
-speaker(Self, fde6ff): Me
-speaker(Mom, 8f00d1): Mom
-speaker(Dad, 007504): Dad
-speaker(Reed, ff7b00): Reed
-speaker(Jordan, 799100): Jordan
-speaker(Daniel, 008717): Daniel
-speaker(Katie, ff006f): Katie
-speaker(Author, c99e00): <b>AUTHOR'S NOTE</b>
-speaker(Interlude, 824077): <b>INTERLUDE</b>
-speaker(ForumUser1, fcba03): WaywardPlatypus_081
-speaker(ForumUser2, c22382): immortal_snail
-speaker(ForumUser3, 23c278): WanderingPanda_986
-speaker(ForumUser4, fff700): [MOD] CatGirlLover67
+speaker(Self, #fde6ff): Me
+speaker(Mom, #8f00d1): Mom
+speaker(Dad, #007504): Dad
+speaker(Reed, #ff7b00): Reed
+speaker(Jordan, #799100): Jordan
+speaker(Daniel, #008717): Daniel
+speaker(Katie, #ff006f): Katie
+speaker(Author, #c99e00): <b>AUTHOR'S NOTE</b>
+speaker(Interlude, #824077): <b>INTERLUDE</b>
+speaker(ForumUser1, #fcba03): WaywardPlatypus_081
+speaker(ForumUser2, #c22382): immortal_snail
+speaker(ForumUser3, #23c278): WanderingPanda_986
+speaker(ForumUser4, #fff700): [MOD] CatGirlLover67
 
-######################################### Var Declarations ##############################################
+///////////////////////////////////////// Var Declarations //////////////////////////////////////////////
 
-# Scopes
+// Scopes
 scope(Scope_Global)
 scope(Scope_Run)
 
-# Story gates
+// Story gates
 var(bool, Gate_PartialRealization, Scope_Global)
 var(bool, Gate_FullRealization, Scope_Global)
 var(bool, Gate_BadFriendExperience, Scope_Global)
@@ -32,24 +32,24 @@ var(bool, Gate_ComingOutPrep, Scope_Global)
 var(bool, Gate_SecretRoad, Scope_Global)
 var(bool, Gate_GirlDream, Scope_Global)
 
-# Sign gates
+// Sign gates
 var(bool, Gate_SignLockerRoom, Scope_Global)
 var(bool, Gate_SignWantSister, Scope_Global)
 var(bool, Gate_SignHaircut, Scope_Global)
 var(bool, Gate_SignAstronaut, Scope_Global)
 var(bool, Gate_SignCat, Scope_Global)
 
-# Unlockable names
+// Unlockable names
 var(bool, Unlock_Name_Hazel, Scope_Global)
 var(bool, Unlock_Name_Emily, Scope_Global)
 var(bool, Unlock_Name_Azalea, Scope_Global)
 
-# Conversation states
+// Conversation states
 var(num, Num_Alienation_Choice, Scope_Run)
 var(bool, Katie_Rekindled, Scope_Run)
 var(bool, Katie_CameOut, Scope_Run)
 
-# Chosen name. Set by a branch with unlockable options.
+// Chosen name. Set by a branch with unlockable options.
 var(string, ChosenName, Scope_Global)
 
 var(num, Countdown, Scope_Run, -1)
@@ -57,16 +57,24 @@ var(num, Countdown, Scope_Run, -1)
 var(bool, InterruptTimeoutCountdownZero_Enabled, Scope_Run, false)
 interrupt(InterruptTimeoutCountdownZero, TimeoutEnding, Scope_Run, Countdown == 0)
 
-######################################### Macros ##########################################################
+////////////////////////////////////////// Macros //////////////////////////////////////////////////////////
 
-macro(choice_once, target, conditions...): text
-    choice($target, !visited(Scope_Run, $target), $conditions): {$text}
+macro(choice_once, target, condition?): text
+    !if (condition)
+        choice($target, !visited(Scope_Run, $target) and ($condition)): $text
+    !else
+        choice($target, !visited(Scope_Run, $target)): $text
+    !end
 !end
 
-######################################### Introduction Scene ##############################################
+macro(cost, amount):
+    incr(Countdown, -$amount)
+!end
+
+////////////////////////////////////////// Introduction Scene //////////////////////////////////////////////
 
 label(Intro)
-    bg(0D2411)
+    bg(#0D2411)
     say: Hello! Welcome to my little text adventure, created for the GMTK Game Jam 2026.
     say: Before we get started, I want you to know this game deals with some heavy topics, including:
     say: Death and grief
@@ -104,7 +112,7 @@ label(FirstRun)
 end
 
 label(LaterRun)
-    bg(0D2411)
+    bg(#0D2411)
     say: It's a warm, rainy July evening. I'm in bed, passing in and out of sleep.
     say: My brain is processing something it hasn't decided is a dream or a... memory?
     say: My phone blasts an alarm. Wait. I've heard this before. Right?
@@ -125,7 +133,7 @@ label(InitialChoice)
     end
 end
 
-######################################### Parent Conversation ##############################################
+////////////////////////////////////////// Parent Conversation //////////////////////////////////////////////
 
 label(ParentConversation_Entry)
     say(Mom): Oh sweetie... I don't know what to say.
@@ -390,7 +398,7 @@ end
 
 label(ParentConversation_ComingOut)
     branch(Dad): What it it son? You can tell us anything.
-        choice_once(ParentConversation_ComingOut_Confident, Gate_ComingOutPrep, Gate_SignWantSister): Mom, Dad, I'm trans.
+        choice_once(ParentConversation_ComingOut_Confident, Gate_ComingOutPrep and Gate_SignWantSister): Mom, Dad, I'm trans.
         choice_once(ParentConversation_ComingOut_NotConfident): I think I might be trans.
     end
 end
@@ -466,7 +474,7 @@ label(ParentConversation_ComingOut_Confident_Driving)
     branch: What now then?
         choice_once(ParentConversation_ComingOut_Confident_Ending): Yeah. You're right.
         choice_once(ParentConversation_ComingOut_Confident_Driving_Alone): No. I can't. I need to go, even if it's alone.
-        choice_once(ParentConversation_ComingOut_Confident_Driving_Together, Gate_ParentsNeedTime, Gate_SecretRoad): Oh my god. I've got it!
+        choice_once(ParentConversation_ComingOut_Confident_Driving_Together, Gate_ParentsNeedTime and Gate_SecretRoad): Oh my god. I've got it!
     end
 end
 
@@ -532,7 +540,7 @@ label(ParentConversation_ComingOut_Confident_Driving_Alone_Highway)
     say: I want Katie.
     say: I want my sister.
     say: I'm all alone.
-    bg(000000, 2)
+    bg(#000000, 2)
     delay(2)
     say: <b>INTERLUDE:</b> Hey there. So, this is the darkest ending, by far, of my little text adventure.
     say: <b>INTERLUDE:</b> I want you to know, whoever you are, that it's going to be ok. Our world is not ending.
@@ -559,7 +567,7 @@ label(ParentConversation_ComingOut_Confident_Driving_Alone_SecretRoad)
     say: I banish the thought from my mind. They made their choice and I made mine.
     say: I'm going to survive this.
     clear
-    bg(000000, 2)
+    bg(#000000, 2)
     delay(2)
     reset(Scope_Run)
     goto(LaterRun)
@@ -634,7 +642,7 @@ label(ParentConversation_ComingOut_Confident_Driving_Together)
     if(Katie_CameOut): say(Self): {ChosenName}
     else: say(Self): {ChosenName} (yeah, I'll probably have to explain that when I see you)
     clear
-    bg(000000, 5)
+    bg(#000000, 5)
     delay(6)
     say(Author): Hey! You've reached the final ending. I genuinely appreciate you so much for playing through the whole story.
     say(Author): I hope <i>STILLTIME</i> has been meaningful to you in some way.
@@ -679,7 +687,7 @@ label(ParentConversation_ComingOut_NotConfident)
     goto(TimeoutEnding)
 end
 
-######################################### Bedroom ##############################################
+////////////////////////////////////////// Bedroom //////////////////////////////////////////////
 
 label(Bedroom_Entry)
     say: I absentmindedly walk up the stairs to my childhood bedroom.
@@ -730,7 +738,7 @@ label(Bedroom_PetTheCat_Sleep)
     say: The purring calms me down and without really realizing it, I lie down on the bed.
     say: My last conscious thought as I fade into sleep: this is not such a bad way to go.
     clear
-    bg(000000, 2)
+    bg(#000000, 2)
     delay(2)
     if(Gate_PartialRealization): goto(Bedroom_PetTheCat_Sleep_PartialRealization)
     else:
@@ -861,7 +869,7 @@ label(Bedroom_Phone_CallKatie_Choice_Return)
         choice_once(Bedroom_Phone_CallKatie_HowThingsWent, !Katie_CameOut): I'm so sorry for how things went.
         choice_once(Bedroom_Phone_CallKatie_ComingOut, Gate_FullRealization): I needed to tell someone. I'm trans!
         choice_once(Bedroom_Phone_CallKatie_PrepareForParents, Katie_CameOut): Do you think you could help me figure out how to tell my parents?
-        choice_once(Bedroom_Phone_CallKatie_Reading, Katie_CameOut, Katie_Rekindled): Um. Do you think you could, maybe, like read to me or something?
+        choice_once(Bedroom_Phone_CallKatie_Reading, Katie_CameOut and Katie_Rekindled): Um. Do you think you could, maybe, like read to me or something?
         choice(Bedroom_Phone_CallKatie_End): I should go.
     end
 end
@@ -1450,7 +1458,7 @@ label(Bedroom_Computer_VideoGame_Converge)
     goto(TimeoutEnding)
 end
 
-######################################### Try to Drive Alone ##############################################
+////////////////////////////////////////// Try to Drive Alone //////////////////////////////////////////////
 
 label(TryToDriveAlone_Entry)
     say(Dad): Of course we've thought about that.
@@ -1488,7 +1496,7 @@ label(TryToDriveAlone_TryToLeave)
     goto(InitialChoice)
 end
 
-######################################### Hangout With Friends ##############################################
+////////////////////////////////////////// Hangout With Friends //////////////////////////////////////////////
 
 label(FriendHangout_Drive)
     say: All of them are there. Reed driving, Jordan riding shotgun, Daniel in the back with me.
@@ -1653,12 +1661,12 @@ label(FriendHangout_Drive)
     goto(FadeToBlackEnding)
 end
 
-######################################### Shared Endings ##############################################
+////////////////////////////////////////// Shared Endings //////////////////////////////////////////////
 
 label(FadeToBlackEnding)
     set(Countdown, -1)
     clear
-    bg(000000, 2)
+    bg(#000000, 2)
     delay(2)
     reset(Scope_Run)
     goto(LaterRun)
@@ -1669,10 +1677,10 @@ label(TimeoutEnding)
     set(Countdown, 0)
     say: Time's up.
     clear
-    bg(ffffff, 0.05)
+    bg(#ffffff, 0.05)
     set(Countdown, -1)
     delay(1)
-    bg(000000, 3)
+    bg(#000000, 3)
     delay(3)
     reset(Scope_Run)
     goto(LaterRun)

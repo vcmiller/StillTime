@@ -8,7 +8,7 @@ namespace StillTime.Sts.Parsers {
         public void ParseCommand(ParsingState state, List<ICommand> commands) {
             LineTokens tokens = Tokenizer.TokenizeAndAdvance(state);
             Tokenizer.ValidateTokens(tokens, 1, 1, false, true);
-            IfCommand command = new(tokens.LineNumber, tokens.OriginalLine, tokens.Arguments);
+            IfCommand command = new(tokens.LineNumber, tokens.OriginalLine, tokens.Arguments[0]);
             commands.Add(command);
 
             if (!string.IsNullOrEmpty(tokens.Text)) {

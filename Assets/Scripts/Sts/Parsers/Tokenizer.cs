@@ -1,15 +1,16 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using StillTime.Sts.Commands;
 
 namespace StillTime.Sts.Parsers {
     public static class Tokenizer {
-        public static bool IsValidNameCharacter(char c) => c == '_' || char.IsLetterOrDigit(c);
+        public static bool IsValidCommandNameCharacter(char c) => c == '_' || char.IsLetterOrDigit(c);
 
-        public static bool IsValidName(ReadOnlySpan<char> s) {
+        public static bool IsValidCommandName(ReadOnlySpan<char> s) {
             for (int i = 0; i < s.Length; i++) {
-                if (!IsValidNameCharacter(s[i])) return false;
+                if (!IsValidCommandNameCharacter(s[i])) return false;
             }
 
             return true;
@@ -27,7 +28,7 @@ namespace StillTime.Sts.Parsers {
             int cmdEnd = 0;
             for (int i = 0; i < actualLineSpan.Length; i++) {
                 char c = actualLineSpan[i];
-                if (IsValidNameCharacter(c) || c == '!') {
+                if (IsValidCommandNameCharacter(c) || c == '!') {
                     cmdEnd++;
                 } else {
                     break;
@@ -43,13 +44,10 @@ namespace StillTime.Sts.Parsers {
 
             ReadOnlySpan<char> remaining = actualLineSpan[cmdEnd..].Trim();
             if (remaining.StartsWith("(")) {
-                int indexOfClose = remaining.IndexOf(')');
-                if (indexOfClose < 0) {
-                    throw new ParsingException(lineNumber, line, "Encounter '(' without ')'");
-                }
-
-                args = remaining[1..indexOfClose].ToString().Split(',').Select(s => s.Trim()).ToArray();
-                remaining = remaining[(indexOfClose + 1)..].Trim();
+                int argsEnd = 0;
+                List<string> argList = TokenizeArgumentList(lineNumber, line, remaining, ref argsEnd);
+                args = argList.Count > 0 ? argList.ToArray() : null;
+                remaining = remaining[argsEnd..].Trim();
             }
 
             if (remaining.IsEmpty) {
@@ -76,7 +74,7 @@ namespace StillTime.Sts.Parsers {
             int cmdEnd = 0;
             while (cmdEnd < actualSpan.Length) {
                 char curChar = actualSpan[cmdEnd];
-                if (!char.IsLetterOrDigit(curChar) && curChar != '_' && curChar != '!') break;
+                if (!IsValidCommandNameCharacter(curChar) && curChar != '!') break;
                 cmdEnd++;
             }
 
@@ -88,7 +86,7 @@ namespace StillTime.Sts.Parsers {
         }
 
         public static ReadOnlySpan<char> GetActualSpanFromLine(string line) {
-            int commentIndex = line.IndexOf('#');
+            int commentIndex = line.IndexOf("//", StringComparison.Ordinal);
 
             ReadOnlySpan<char> actualSpan = commentIndex >= 0 ? line.AsSpan(0, commentIndex) : line;
             return actualSpan.Trim();
@@ -136,6 +134,76 @@ namespace StillTime.Sts.Parsers {
                 throw new ParsingException(tokens.LineNumber, tokens.OriginalLine,
                                            $"Missing expected text for command {tokens.Command}");
             }
+        }
+
+        public static List<string> TokenizeArgumentList(
+            int lineNumber, 
+            string line, 
+            ReadOnlySpan<char> span,
+            ref int index) {
+            
+            SkipWhitespace(span, ref index);
+            EnsureNotAtEnd(lineNumber, line, span, index);
+            if (span[index++] != '(') {
+                throw new ParsingException(lineNumber, span.ToString(), $"Expected '(' at index {index}");
+            }
+
+            SkipWhitespace(span, ref index);
+
+            List<string> result = new();
+            while (EnsureNotAtEnd(lineNumber, line, span, index) && span[index] != ')') {
+                EnsureNotAtEnd(lineNumber, line, span, index);
+                string argument = TokenizeArgument(lineNumber, line, span, ref index);
+                result.Add(argument);
+                SkipWhitespace(span, ref index);
+                EnsureNotAtEnd(lineNumber, line, span, index);
+                if (span[index] != ',') continue;
+                
+                index++;
+                SkipWhitespace(span, ref index);
+            }
+            index++;
+
+            return result;
+        }
+
+        private static string TokenizeArgument(int lineNumber, string line, ReadOnlySpan<char> span, ref int index) {
+            int openCount = 0;
+
+            int end;
+            EnsureNotAtEnd(lineNumber, line, span, index);
+            for (end = index; end < span.Length; end++) {
+                char c = span[end];
+                if (c == '(') {
+                    openCount++;
+                } else if (c == ')') {
+                    if (openCount > 0) {
+                        openCount--;
+                    } else {
+                        break;
+                    }
+                } else if (c == ',' && openCount == 0) {
+                    break;
+                }
+            }
+
+            string result = span[index..end].ToString();
+            index = end;
+            return result;
+        }
+        
+        public static void SkipWhitespace(ReadOnlySpan<char> span, ref int index) {
+            while (index < span.Length && char.IsWhiteSpace(span[index])) {
+                index++;
+            }
+        }
+
+        public static bool EnsureNotAtEnd(int lineNumber, string line, ReadOnlySpan<char> span, int index) {
+            if (index >= span.Length) {
+                throw new ParsingException(lineNumber, line, "Unexpected end of line");
+            }
+
+            return true;
         }
     }
 }

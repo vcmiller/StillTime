@@ -11,7 +11,8 @@ using StillTime.Sts.Resources;
 namespace StillTime.Sts.Parsers {
     [CustomCommandParser("macro")]
     public class MacroCommandParser : ICommandParser {
-
+        private static readonly string[] StopBeforeCommandsForIf = { "!else", "!elif", "!end" };
+        
         public void ParseCommand(ParsingState state, List<ICommand> commands) {
             LineTokens tokens = Tokenizer.TokenizeAndAdvance(state);
             Tokenizer.ValidateTokens(tokens, 1, 1000, false, true);
@@ -58,9 +59,9 @@ namespace StillTime.Sts.Parsers {
                     defaultValue = null;
                 }
 
-                if (!Tokenizer.IsValidName(paramName)) {
+                if (!Tokenizer.IsValidCommandName(paramName)) {
                     throw new ParsingException(tokens.LineNumber, tokens.OriginalLine,
-                                               $"Invalid macro parameter name '{paramName}'");
+                        $"Invalid macro parameter name '{paramName}'");
                 }
 
                 if (paramType == MacroParameterType.VarArg) {
@@ -68,7 +69,7 @@ namespace StillTime.Sts.Parsers {
                         varArgsParam = new MacroParameter(paramName, MacroParameterType.VarArg, defaultValue);
                     } else {
                         throw new ParsingException(tokens.LineNumber, tokens.OriginalLine,
-                                                   $"VarArg parameter {paramName} only allowed as last parameter");
+                            $"VarArg parameter {paramName} only allowed as last parameter");
                     }
                 } else {
                     if (defaultValue != null) {
@@ -87,11 +88,11 @@ namespace StillTime.Sts.Parsers {
             }
 
             if (!string.IsNullOrEmpty(tokens.Text)) {
-                if (Tokenizer.IsValidName(tokens.Text)) {
+                if (Tokenizer.IsValidCommandName(tokens.Text)) {
                     textParam = new MacroParameter(tokens.Text, MacroParameterType.Text, string.Empty);
                 } else {
                     throw new ParsingException(tokens.LineNumber, tokens.OriginalLine,
-                                               $"Invalid macro parameter name '{tokens.Text}'");
+                        $"Invalid macro parameter name '{tokens.Text}'");
                 }
             }
 
@@ -102,14 +103,21 @@ namespace StillTime.Sts.Parsers {
         private static void ParseSubMacros(
             ParsingState state,
             MacroParameters macroParameters,
-            List<ISubMacro> subMacros) {
-
+            List<ISubMacro> subMacros,
+            string[]? stopBeforeCommands = null) {
             while (!state.IsEnded) {
                 string line = state.CurrentLine!;
                 ReadOnlySpan<char> actualRange = Tokenizer.GetActualSpanFromLine(line);
                 if (actualRange.IsEmpty) {
                     state.MoveNext();
                     continue;
+                }
+
+                if (stopBeforeCommands is { Length: > 0 } && actualRange.StartsWith("!")) {
+                    string cmdName = Tokenizer.TokenizeCommandName(state).ToString();
+                    if (Array.IndexOf(stopBeforeCommands, cmdName) != -1) {
+                        break;
+                    }
                 }
 
                 ISubMacro? subMacro = ParseSubMacro(state, actualRange, macroParameters);
@@ -123,7 +131,6 @@ namespace StillTime.Sts.Parsers {
             ParsingState state,
             ReadOnlySpan<char> actualRange,
             MacroParameters macroParameters) {
-
             macroParameters.ValidateMacroLine(state.LineNumber, state.CurrentLine!);
 
             if (!actualRange.StartsWith("!")) {
@@ -141,7 +148,7 @@ namespace StillTime.Sts.Parsers {
                         return ParseIfStatement(subTokens, state, macroParameters);
                     default:
                         throw new ParsingException(subTokens.LineNumber, subTokens.OriginalLine,
-                                                   $"Unrecognized macro command '{subTokens.Command}'");
+                            $"Unrecognized macro command '{subTokens.Command}'");
                 }
             }
         }
@@ -150,7 +157,6 @@ namespace StillTime.Sts.Parsers {
             LineTokens ifStartTokens,
             ParsingState state,
             MacroParameters macroParameters) {
-
             MacroIf ifSection = ParseIf(ifStartTokens, state, macroParameters);
             List<MacroIf> elseIfs = new();
             List<ISubMacro> elseSection = new();
@@ -177,11 +183,11 @@ namespace StillTime.Sts.Parsers {
                         break;
                     case "!else" when elseSection.Count == 0:
                         Tokenizer.ValidateTokens(subTokens, 0, 0, false);
-                        ParseSubMacros(state, macroParameters, elseSection);
+                        ParseSubMacros(state, macroParameters, elseSection, StopBeforeCommandsForIf);
                         break;
                     default:
                         throw new ParsingException(subTokens.LineNumber, subTokens.OriginalLine,
-                                                   $"Unexpected macro command '{subTokens.Command}'");
+                            $"Unexpected macro command '{subTokens.Command}'");
                 }
 
                 if (isEnd) break;
@@ -194,17 +200,16 @@ namespace StillTime.Sts.Parsers {
             LineTokens tokens,
             ParsingState state,
             MacroParameters macroParameters) {
-
             string[] conditions = tokens.Arguments;
             foreach (string condition in conditions) {
                 if (macroParameters.GetMacroParameter(condition) == null) {
                     throw new ParsingException(tokens.LineNumber, tokens.Text,
-                                               $"Unrecognized macro parameter '{condition}'");
+                        $"Unrecognized macro parameter '{condition}'");
                 }
             }
 
             List<ISubMacro> ifSection = new();
-            ParseSubMacros(state, macroParameters, ifSection);
+            ParseSubMacros(state, macroParameters, ifSection, StopBeforeCommandsForIf);
             return new MacroIf(macroParameters, conditions.ToList(), ifSection);
         }
     }

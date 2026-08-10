@@ -13,7 +13,8 @@ namespace StillTime.Sts.Commands {
 
         public void ApplyToSequence(NodeSequenceBuilder builder, GraphData graphData) {
             INode target = graphData.GetNode(this, TargetLabel);
-            builder.EndWithExternalNode(target);
+            GotoNode node = new(target);
+            builder.Append(node);
         }
     }
 }

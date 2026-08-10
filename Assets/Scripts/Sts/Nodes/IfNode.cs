@@ -1,21 +1,21 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
+using StillTime.Sts.Expressions;
 using StillTime.Sts.Runtime;
 
 namespace StillTime.Sts.Nodes {
     public class IfNode : Node, ISingleNextNode {
-        public IReadOnlyList<ICondition> Conditions { get; }
+        public IExpression Condition { get; }
 
         public INode TrueBranch { get; set; }
 
         public INode FalseBranch { get; set; }
 
-        public IfNode(IReadOnlyList<ICondition> conditions) {
-            Conditions = conditions;
+        public IfNode(IExpression condition) {
+            Condition = condition;
         }
 
         public INode GetSingleNextNode(StateContainer state) {
-            if (Conditions.All(c => c.CheckCondition(state))) {
+            if (Condition.Evaluate(state).ToBool()) {
                 return TrueBranch;
             } else {
                 return FalseBranch;

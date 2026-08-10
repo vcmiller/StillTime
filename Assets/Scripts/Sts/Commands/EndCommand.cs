@@ -7,7 +7,7 @@ namespace StillTime.Sts.Commands {
         public EndCommand(int lineNumber, string line) : base(lineNumber, line) { }
 
         public void ApplyToSequence(NodeSequenceBuilder builder, GraphData graphData) {
-            throw new InvalidOperationException("End command not expected to be applied.");
+            throw new ParsingException(LineNumber, Line, "End command not expected to be applied.");
         }
     }
 }

@@ -25,7 +25,7 @@ namespace StillTime.Sts.Commands.Utility {
 
         public T GetResource<T>(ICommand command, string name) {
             if (!Resources.TryGetValue(name, out Resource resource)) {
-                throw new ParsingException(command.LineNumber, command.Line, $"Invalid resource name {name}");
+                throw new ParsingException(command.LineNumber, command.Line, $"Invalid resource name '{name}'");
             }
 
             if (resource is not T typed) {

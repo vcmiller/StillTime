@@ -9,7 +9,7 @@ namespace StillTime.Sts.Commands {
         public ElseCommand(int lineNumber, string line) : base(lineNumber, line) { }
 
         public override void GatherSubCommands(ref CommandGatheringState state) {
-            CommandUtility.GatherSubCommands(this, ref state, Commands, true, true);
+            CommandUtility.GatherSubCommands(this, ref state, Commands);
         }
     }
 }

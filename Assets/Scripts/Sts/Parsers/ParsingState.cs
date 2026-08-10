@@ -16,7 +16,7 @@ namespace StillTime.Sts.Parsers {
 
         public int LineNumber => _reverseBufferedLines.Count > 0 ? _reverseBufferedLines[^1].LineNumber : _lineNumber;
 
-        public int BufferedLineCount => _reverseBufferedLines.Count;
+        public int Version { get; private set; } = 0;
 
         public string? CurrentLine => _reverseBufferedLines.Count > 0
             ? _reverseBufferedLines[^1].Line
@@ -39,18 +39,23 @@ namespace StillTime.Sts.Parsers {
             } else if (_lineNumber < _lines.Length) {
                 _lineNumber++;
             }
+            
+            Version++;
 
             return current;
         }
 
         public void Prepend(int lineNumber, string line) {
             _reverseBufferedLines.Add(new BufferedLine(lineNumber, line));
+            Version++;
         }
 
         public void PrependRange(IReadOnlyList<BufferedLine> lines) {
             for (int i = lines.Count - 1; i >= 0; i--) {
                 _reverseBufferedLines.Add(lines[i]);
             }
+            
+            Version++;
         }
 
         public struct BufferedLine {

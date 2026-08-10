@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using StillTime.Sts.Expressions;
 using StillTime.Sts.Runtime;
 
 namespace StillTime.Sts.Nodes {
@@ -7,11 +7,12 @@ namespace StillTime.Sts.Nodes {
 
         public INode Next { get; }
 
-        public List<ICondition> Conditions { get; } = new();
+        public IExpression Condition { get; }
 
-        public Choice(string text, INode next) {
+        public Choice(string text, INode next, IExpression condition = null) {
             Text = text;
             Next = next;
+            Condition = condition;
         }
 
         public virtual string GetText(StateContainer state) {
@@ -19,7 +20,7 @@ namespace StillTime.Sts.Nodes {
         }
 
         public virtual bool IsAvailable(StateContainer state) {
-            if (!Conditions.TrueForAll(g => g.CheckCondition(state))) return false;
+            if (Condition != null && !Condition.Evaluate(state).ToBool()) return false;
             return true;
         }
 
