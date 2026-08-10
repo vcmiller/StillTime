@@ -7,10 +7,7 @@ namespace StillTime.Sts.Nodes {
     public class BranchNode : TextNode {
         public List<IBranchOption> Options { get; } = new();
 
-        public BranchNode(string text, Speaker speaker) : base(text, speaker) {
-            // Estimation: 12 chars/sec normal speaking rate.
-            Cost = speaker != null ? text.Length / 12 : 0;
-        }
+        public BranchNode(string text, Speaker speaker) : base(text, speaker) { }
 
         public override IEnumerable<INode> GetPossibleNextNodes(StateContainer state) {
             return Options.Where(o => o.IsAvailable(state)).Select(o => o.GetNextNode(state));

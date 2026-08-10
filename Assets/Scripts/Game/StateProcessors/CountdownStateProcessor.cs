@@ -24,7 +24,7 @@ namespace StillTime.Game.StateProcessors {
 
         private static int GetCost(INode node) {
             return node switch {
-                SayNode sayNode => sayNode.Speaker != null ? sayNode.Text.Length / 12 : 5,
+                TextNode textNode => textNode.Speaker != null ? textNode.Text.Length / 12 : 5,
                 _ => 0,
             };
         }

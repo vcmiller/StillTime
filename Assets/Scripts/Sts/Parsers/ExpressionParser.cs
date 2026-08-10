@@ -250,8 +250,8 @@ namespace StillTime.Sts.Parsers {
                     endIndex = index;
                     return new CompareExchangeExpression(
                         varEx.Variable,
-                        arguments[1],
-                        arguments.Count == 3 ? arguments[2] : null);
+                        arguments.Count > 1 ? arguments[1] : null,
+                        arguments.Count > 2 ? arguments[2] : null);
                 }
             }
 

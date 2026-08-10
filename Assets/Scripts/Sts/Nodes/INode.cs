@@ -5,8 +5,6 @@ using StillTime.Sts.Runtime;
 
 namespace StillTime.Sts.Nodes {
     public interface INode {
-        int Cost { get; set; }
-
         string FullIdentifier { get; set; }
 
         public StackTrace CreationStackTrace { get; }
