@@ -1,13 +1,11 @@
-﻿using System.Collections.Generic;
-using System.Threading;
+﻿using System.Threading;
 using Cysharp.Threading.Tasks;
-using StillTime.Game.View;
 using StillTime.Sts.Nodes;
 using StillTime.Sts.Runtime;
 
 namespace StillTime.Game.NodeViewHandlers {
     public class ClearNodeViewHandler : NodeViewHandler<ClearNode> {
-        public List<GameViewComponent> _components;
+        public GameViewRoot _viewRoot;
 
         protected override UniTask<INode> HandleState(
             GameGraph graph,
@@ -15,8 +13,7 @@ namespace StillTime.Game.NodeViewHandlers {
             ClearNode node,
             CancellationToken cancellationToken) {
 
-            foreach (GameViewComponent component in _components)
-                component.Clear();
+            _viewRoot.Clear();
 
             return UniTask.FromResult(node.Next);
         }
