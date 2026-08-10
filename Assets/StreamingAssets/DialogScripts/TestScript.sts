@@ -1,8 +1,9 @@
 ﻿// this is a comment
-scope(run)
-var(bool, Gate1, run)
-var(num, Gate2, run)
-bg(aaaaaa)
+scope(Scope_Run)
+scope(Scope_Global)
+var(bool, Gate1, Scope_Run)
+var(num, Gate2, Scope_Run)
+bg(#aaaaaa)
 goto(NodeName)
 
 label(NodeName)
