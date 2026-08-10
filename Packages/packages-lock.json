@@ -14,6 +14,12 @@
       "dependencies": {},
       "hash": "a77ef3297fa5d0ffd18f737d85d9f7cc6b14fe3e"
     },
+    "com.infohazard.stilltimescript": {
+      "version": "file:com.infohazard.stilltimescript",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {}
+    },
     "com.unity.ai.navigation": {
       "version": "2.0.14",
       "depth": 0,

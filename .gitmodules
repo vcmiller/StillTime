@@ -1,0 +1,3 @@
+[submodule "Packages/com.infohazard.stilltimescript"]
+	path = Packages/com.infohazard.stilltimescript
+	url = https://github.com/infohazardgames/Infohazard.StillTimeScript
