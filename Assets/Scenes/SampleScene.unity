@@ -2366,6 +2366,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: StillTime::StillTime.Game.StateExplorer
   _stateAdvancer: {fileID: 1658734955}
   _exploredScopeName: Scope_Global
+  _ignoredVariables:
+  - Countdown
+  - __BuiltIn_BgCommand_Color
 --- !u!1 &956843019
 GameObject:
   m_ObjectHideFlags: 0
