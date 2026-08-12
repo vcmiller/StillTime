@@ -978,7 +978,7 @@ end
 label(Bedroom_Phone_CallKatie_ComingOut_SetName_Evelyn)
     say(Katie): Evelyn is pretty! I mean, I don't know if you should base it on other peoples' comfort. But I think it works.
     say(Self): Thanks. Yeah, I mean, I can always try something else if it ends up sounding too similar.
-    set(ChosenName, Evelyn)
+    set(ChosenName, "Evelyn")
     goto(Bedroom_Phone_CallKatie_ComingOut_SetName_Converge)
 end
 
@@ -988,7 +988,7 @@ label(Bedroom_Phone_CallKatie_ComingOut_SetName_Hazel)
     say(Self): Thanks. I just hope my parents don't mind.
     say(Katie): I think they'll see it as honoring her memory too.
     say(Katie): And hey, maybe it's what they would have named you if the doctor hadn't made a mistake on your birth certificate.
-    set(ChosenName, Hazel)
+    set(ChosenName, "Hazel")
     goto(Bedroom_Phone_CallKatie_ComingOut_SetName_Converge)
 end
 
@@ -1000,7 +1000,7 @@ label(Bedroom_Phone_CallKatie_ComingOut_SetName_Emily)
     say(Self): What's that supposed to mean?
     say(Katie): Oh, you'll figure it out. You're on the internet plenty.
     say: I guess I won't get an explanation.
-    set(ChosenName, Emily)
+    set(ChosenName, "Emily")
     goto(Bedroom_Phone_CallKatie_ComingOut_SetName_Converge)
 end
 
@@ -1010,7 +1010,7 @@ label(Bedroom_Phone_CallKatie_ComingOut_SetName_Azalea)
     say: Blood rushes to my cheeks. I don't think anyone has called me beautiful before. Definitely not a beautiful girl.
     say: And this is coming from Katie!
     say: Not sure exactly how she meant it though. Best not to assume.
-    set(ChosenName, Azalea)
+    set(ChosenName, "Azalea")
     goto(Bedroom_Phone_CallKatie_ComingOut_SetName_Converge)
 end
 

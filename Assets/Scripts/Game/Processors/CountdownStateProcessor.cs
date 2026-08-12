@@ -17,14 +17,16 @@ namespace StillTime.Game.Processors {
 
             if (countdownValue <= 0) return;
 
-            int cost = GetCost(state.GetOrCreate<CurrentNodeComponent>().CurrentNode);
+            int cost = GetCost(state.GetOrCreate<CurrentNodeComponent>().CurrentNode, state);
             decimal newValue = Math.Max(0, countdownValue - cost);
             variables.SetVariableValue(variable, new StsValue(newValue));
         }
 
-        private static int GetCost(INode node) {
+        private static int GetCost(INode node, StateContainer state) {
             return node switch {
-                TextNode textNode => textNode.Speaker != null ? textNode.Text.Length / 12 : 5,
+                TextNode textNode => textNode.Speaker != null
+                    ? textNode.TextExpression.Evaluate(state).StringValue.Length / 12
+                    : 5,
                 _ => 0,
             };
         }
