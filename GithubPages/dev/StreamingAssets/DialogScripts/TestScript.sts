@@ -42,5 +42,4 @@ end
 
 label(PushLabel)
     say: This is a pushed label
-    pop
 end
