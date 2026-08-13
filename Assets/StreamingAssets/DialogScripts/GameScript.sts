@@ -2,7 +2,7 @@
 
 ///////////////////////////////////////// Speakers //////////////////////////////////////////////
 
-speaker(Self, #fde6ff): Me
+speaker(Self, MyColor): Me
 speaker(Mom, #8f00d1): Mom
 speaker(Dad, #007504): Dad
 speaker(Reed, #ff7b00): Reed
@@ -56,6 +56,8 @@ var(num, Countdown, Scope_Run, -1)
 
 var(bool, InterruptTimeoutCountdownZero_Enabled, Scope_Run, true)
 interrupt(InterruptTimeoutCountdownZero, TimeoutEnding, Countdown == 0 and compex(InterruptTimeoutCountdownZero_Enabled))
+
+var(color, MyColor, Scope_Global, #5BCEFA)
 
 ////////////////////////////////////////// Macros //////////////////////////////////////////////////////////
 
@@ -1270,6 +1272,7 @@ label(Bedroom_Phone_AskTheQuestion)
     say: And for now, those questions will have to wait.
     say: Right now, I just need to tell someone.
     set(Gate_FullRealization, true)
+    set(MyColor, #FF8EC5)
     goto(Bedroom_InitialChoice)
 end
 
