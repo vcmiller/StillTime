@@ -69,7 +69,7 @@ macro(choice_once, target, condition?): text
     !end
 !end
 
-macro(cost, amount):
+macro(cost, amount)
     incr(Countdown, -$amount)
 !end
 
